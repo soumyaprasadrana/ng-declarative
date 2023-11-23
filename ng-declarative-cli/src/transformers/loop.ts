@@ -1,11 +1,10 @@
 import { Logger } from "../logger/logger";
+import {  processChildren } from "./utils";
 
-export function processAttributes(
-  attributes: any,
-  node: any,
-  metadata: any
-): string {
-  const METHOD = "processAttributes";
+export async function transform(metadata: any, node: any, compiler: any) {
+  const METHOD = "transform";
+  function processAttributes(attributes:any, node:any, metadata:any){
+    const METHOD = "processAttributes";
   const tagName = Object.keys(node)[0];
   //Logger.debug("Attributes", attributes);
   Logger.debug(tagName);
@@ -78,76 +77,48 @@ export function processAttributes(
       attributes.some((attr: { name: string }) => attr.name === key)
     ) // Only include attributes present in the metadata
     .map(([ key, value ]) => {
-    let dom =``;
+    let dom:any ={};
       const attribute = attributes.find(
         (attr: { name: string }) => attr.name === key
       );
-      if(attribute.objectbinding){
-        dom = `${attribute
-        ? `[${attribute.mappedInputAttribute}]`
-        : `[${key}]`}="${attribute.transform ? attribute.transform(value) : value}"`;
-      }
-      else if(exports.isBindingString(value)){
-        dom = `${attribute
-        ? `[${attribute.mappedInputAttribute}]`
-        : `[${key}]`}="${exports.removeBindingCharacters(value)}"`;
-      }
-      else{
-      dom =
-      `${attribute
-        ? attribute.mappedInputAttribute
-        : key}="${attribute.transform ? attribute.transform(value) : value}"`;
-      }
-      return dom;
-    })
-    .join(" ");
-}
-export function removeBindingCharacters(str: any): string {
-  const bindingCharacters = "%%";
-  
-  if (str.startsWith(bindingCharacters) && str.endsWith(bindingCharacters)) {
-    // Remove the binding characters from the start and end
-    return str.slice(bindingCharacters.length, -bindingCharacters.length);
-  }
-
-  // Return the original string if it doesn't have the expected binding characters
-  return str;
-}
-
-export function isBindingString(str: string): boolean {
-  return str.startsWith("%%") && str.endsWith("%%");
-}
-
-export async function processChildren(children: any, compiler: any,parentNode:any) {
-  const METHOD = "processChildren";
-  Logger.debug(METHOD + " :: entry ");
-  Logger.debug(METHOD + " :: children ::", children);
-
-  // Use Promise.all to wait for all asynchronous operations and collect the results
-  const results = await Promise.all(
-    Object.keys(children).map(async (childName) => {
-      if (Array.isArray(children[childName])) {
-        // Check if there are multiple identical children
-        if (children[childName].length > 1) {
-          // If there are multiple identical children, process each one
-          return await Promise.all(
-            children[childName].map(async (child: any) => {
-              console.log(`Child ${childName}:`, child);
-              // Wait for the asynchronous operation to complete and return the result
-              return await compiler.processNode({ [childName]: child },parentNode);
-            })
-          );
-        } else {
-          // If there is only one child, process it directly
-          const child = { [childName]: children[childName][0] };
-          console.log(`Child ${childName}:`, child);
-          // Wait for the asynchronous operation to complete and return the result
-          return compiler.processNode(child,parentNode);
+      
+    
+        let valueString:string ="" +value;
+        dom["key"] = key;
+        dom["value"] = attribute.transform ? attribute.transform(value) : value;
+        dom["isBinding"] = false;
+        if(valueString.startsWith("app.")){
+          dom["isBinding"] = true;
+          dom["appBinding"] = true;
+        }else if(valueString.startsWith("appCtrl.")){
+          dom["controllerBinding"] = true;
+          dom["isBinding"] = true;
         }
-      }
-    })
-  );
+      
+      return dom;
+    });
+  }
+  //Logger.debug(METHOD + " :: Metadata", metadata);
+  const nodeName = Object.keys(node)[0];
 
-  // Flatten the array of results
-  return results.flat();
+  const attributes = processAttributes(metadata.attributes, node, metadata);
+  //Logger.debug("Attributes", attributes);
+
+  const children = await processChildren(node[nodeName], compiler, node);
+  
+  console.log("Children ", children);
+  console.log("Attributes ", attributes);
+  const id = compiler.getAttributeFromNode(node,"id");
+  const items = compiler.getAttributeFromNode(node,"items");  
+  compiler.addLoop({
+    id: id,
+    attributes: attributes,
+    template: `${children.toString().replace(/(>,+<)/g, "><").replace(/,</g, "<")}`,
+    component: "Loop"+id,
+    iteratable : items
+  });
+ 
+  return `<app-loop-${id}/>`;
 }
+ 
+

@@ -22,6 +22,9 @@ export class Compiler {
   private appTitle: string = "Ng Declarative App Title";
   private appController: any = null;
   private appControllerFileName: any = null;
+  private currentRoute: string = "";
+  private loops: any = [];
+
   private ngDeclarativeComponents = [
     "Application",
     "Label",
@@ -31,6 +34,14 @@ export class Compiler {
   ];
   private ngDeclarativeModule = "NgDeclarativeModule";
   private ngDeclarativeServices = [ "ApplicationService" ];
+
+  public setCurrentRoute(routeid: any) {
+    this.currentRoute = routeid;
+  }
+
+  public getCurrentRoute(routeid: any) {
+    this.currentRoute = routeid;
+  }
 
   private readComponentMetadata(componentName: string): any | null {
     const filePath = path.join(this.registryPath, `${componentName}.js`);
@@ -79,6 +90,10 @@ export class Compiler {
 
   public addRoute(route: any) {
     this.routes.push(route);
+  }
+
+  public addLoop(loop: any) {
+    this.loops.push(loop);
   }
 
   private async processNode(node: any, parentNode: any) {
@@ -152,6 +167,7 @@ export class Compiler {
     //Handle Route
     if (nodeName == "route") {
       this.processRoute(templateS, node);
+      this.setCurrentRoute(this.getAttributeFromNode(node, "id"));
     }
     if (nodeName == "signal") {
       this.processSignal(node, parentNode);
@@ -204,7 +220,9 @@ export class Compiler {
   private processRoute(template: string, node: any) {
     const uri = this.getAttributeFromNode(node, "uri");
     const id = this.getAttributeFromNode(node, "id");
-    const updatedTemplateString = template.replace(/(>,+<)/g, "><");
+    const updatedTemplateString = template
+      .replace(/(>,+<)/g, "><")
+      .replace(/,</g, "<");
 
     if (uri == null) {
       throw new Error("Error while processing route; invalid URI ");
@@ -295,6 +313,41 @@ export class Compiler {
     // Flatten the array of results
     return results.flat();
   }
+
+  private createLoopComponents() {
+    for (var loop of this.loops) {
+      const fileContent = `
+      import { Component } from '@angular/core';
+      import {
+        ${this.ngDeclarativeServices.join(",")}
+      } from "ng-declarative-commponents";
+
+    @Component({
+        selector: 'app-loop-${loop.id}',
+        template: \`
+         @defer(on immediate) {
+            @for(item of ${loop.iteratable};track item){
+              ${loop.template}
+            }
+        }
+        \`,
+        styles: [\`
+          :host{
+            display:contents;
+          }
+        \`]
+    })
+    export class ${loop.component} {
+        public appCtrl:any;
+        constructor(public app: ApplicationService){
+            this.appCtrl = this.app.getAppController();
+        }
+    }
+      `;
+      fs.writeFileSync(loop.file_path, fileContent);
+    }
+  }
+
   private createRouteComponents() {
     for (var route of this.routes) {
       const fileContent = `
@@ -325,6 +378,23 @@ export class ${route.component} {
     }
     return content;
   }
+
+  private buildLoopsImportStatement(): string {
+    let content = ``;
+    for (var loop of this.loops) {
+      content += `import { ${loop.component} } from "./${loop.component}.component";`;
+    }
+    return content;
+  }
+
+  private buildLoopsDeclarationString() {
+    let res = "";
+    for (var loop of this.loops) {
+      res += `${loop.component},`;
+    }
+    return res;
+  }
+
   private buildRoutesDeclarationString() {
     let res = "";
     for (var route of this.routes) {
@@ -351,9 +421,11 @@ export class ${route.component} {
     `;
     return content;
   }
+
   private stringifyList(list: any[]): string {
     return `[${list.map((item) => JSON.stringify(item)).join(", ")}]`;
   }
+
   private createAngularAppStructure(workspace: string) {
     const workspaceWithDist = path.join("dist", workspace);
     const workspacePath = path.join(workspaceWithDist, "src");
@@ -369,7 +441,7 @@ export class ${route.component} {
       "tsconfig.app.json"
     );
     for (var signal of this.appSignals) {
-      console.log(signal);
+      console.log("==> DEBUG ==> SIGNALS", signal);
     }
 
     for (var index in this.routes) {
@@ -378,12 +450,23 @@ export class ${route.component} {
         this.routes[index].component + ".component.ts"
       );
     }
+
+    for (var index in this.loops) {
+      this.loops[index].file_path = path.join(
+        workspacePath,
+        this.loops[index].component + ".component.ts"
+      );
+    }
+
     // Create directories if they don't exist
     if (!fs.existsSync(workspacePath)) {
       fs.mkdirSync(workspacePath, { recursive: true });
     }
     //create dynamic routes comonents
     this.createRouteComponents();
+
+    //Create Loops Component
+    this.createLoopComponents();
 
     //Check for app controller if exits copy to the angular app dir
     if (this.appController != null) {
@@ -411,6 +494,9 @@ export class ${route.component} {
 
     const routeImportStatements = this.buildRoutesImportStatement();
     const routesDeclaration = this.buildRoutesList();
+
+    const loopImportStatements = this.buildLoopsImportStatement();
+
     // Create main.ts
     const mainContent = `import { Component,NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -427,6 +513,8 @@ import {
 } from "ng-declarative-commponents";
 
 ${routeImportStatements}
+
+${loopImportStatements}
 
 ${this.appController
       ? `import { ${this.appControllerFileName.replace(
@@ -462,7 +550,7 @@ export class App {
 
 @NgModule({
   declarations: [
-   App,${this.buildRoutesDeclarationString()}
+   App,${this.buildRoutesDeclarationString()}${this.buildLoopsDeclarationString()}
   ],
   imports: [
     CommonModule,
@@ -552,23 +640,23 @@ Thumbs.db
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "next",
-    "@angular/common": "next",
-    "@angular/compiler": "next",
-    "@angular/core": "next",
-    "@angular/forms": "next",
-    "@angular/platform-browser": "next",
-    "@angular/platform-browser-dynamic": "next",
-    "@angular/router": "next",
+    "@angular/animations": "^17.0.0",
+    "@angular/common": "^17.0.0",
+    "@angular/compiler": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/forms": "^17.0.0",
+    "@angular/platform-browser": "^17.0.0",
+    "@angular/platform-browser-dynamic": "^17.0.0",
+    "@angular/router": "^17.0.0",
     "moment": "^2.18.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "next",
-    "@angular/cli": "next",
-    "@angular/compiler-cli": "next",
+    "@angular-devkit/build-angular": "^17.0.0",
+    "@angular/cli": "^17.0.0",
+    "@angular/compiler-cli": "^17.0.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.10.0",

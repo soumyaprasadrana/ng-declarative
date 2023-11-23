@@ -151,7 +151,7 @@ ng-declarative-components/dist
 ng-declarative-components/.angular
 ng-declarative-components/projects/ng-declarative-components/node_modules
 # profiling files
-chrome-profiler-events*.json
+chrome-profiler-events*.json 
 
 # IDEs and editors
 /.idea

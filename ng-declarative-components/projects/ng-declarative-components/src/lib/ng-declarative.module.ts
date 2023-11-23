@@ -8,11 +8,27 @@ import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-
+import { LoopComponent } from "./ng-declarative-components-loop.component";
 @NgModule({
   imports: [ CommonModule, RouterModule ],
   providers: [ ApplicationService ],
-  declarations: [ Application, Link, Block, Label, RouteComponent, Base ],
-  exports: [ Application, Link, Block, Label, RouteComponent, Base ],
+  declarations: [
+    Application,
+    Link,
+    Block,
+    Label,
+    RouteComponent,
+    Base,
+    LoopComponent,
+  ],
+  exports: [
+    Application,
+    Link,
+    Block,
+    Label,
+    RouteComponent,
+    Base,
+    LoopComponent,
+  ],
 })
 export class NgDeclarativeModule {}
