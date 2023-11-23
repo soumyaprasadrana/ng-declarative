@@ -1,0 +1,14 @@
+{
+  "name": "ng-declarative-components",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/router": "^17.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^15.1.2",
+    "bootstrap": "^5.3.2",
+    "tslib": "^2.3.0"
+  },
+  "dependencies": {},
+  "sideEffects": false
+}

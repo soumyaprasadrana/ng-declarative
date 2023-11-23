@@ -1,0 +1,38 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+.callout {
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #eee;
+  border-left-width: .25rem;
+  border-radius: .25rem;
+  h4 {
+    margin-top: 0;
+    margin-bottom: .25rem;
+  }
+  p:last-child {
+    margin-bottom: 0;
+  }
+  code {
+    border-radius: .25rem;
+  }
+  & + .bs-callout {
+    margin-top: -.25rem;
+  }
+}
+@each $name,
+  $color in ("primary",$primary),
+  ("secondary",$secondary),
+  ("success",$success),
+  ("info",$info),
+  ("warning",$warning),
+  ("danger",$danger),
+  ("light",$light),
+  ("dark",$dark) {
+  .callout-#{$name} {
+    border-left-color: $color;
+    h4 {
+      color: $color;
+    }
+  }
+}
