@@ -7,7 +7,7 @@ import {
 } from "./utils";
 
 export const metadata = {
-  tag: "block",
+  tag: "form",
   attributes: getBaseAttributes([
     {
       name: "direction",
@@ -41,6 +41,7 @@ export const metadata = {
       required: false,
       mappedInputAttribute: "alignItems",
       type: "string",
+      defaultValue: "center",
       allowedValues: "start | end | center | stretch | baseline",
       transform: transformAlignItems,
     },
@@ -63,8 +64,28 @@ export const metadata = {
       validate: validateBoolean,
     },
 
+    {
+      name: "action",
+      required: false,
+      mappedInputAttribute: "formAction",
+      type: "object",
+      objectbinding: true,
+      bindingtransform: (value: any) => {
+        if (exports.isBindingString(value)) {
+          return exports.removeBindingCharacters(value);
+        } else {
+          return value;
+        }
+      },
+      bindingkeytransform: (key: any, value: any) => {
+        const methodPattern = /^([\w\.]+\([^\)]*\))*$/;
+        const result = methodPattern.test(value) ? "(click)" : "[" + key + "]";
+        return result;
+      }
+    }
+
 
   ]),
   allowedChildren: ["*"],
-  declarativeComponentTag: "ng-declarative-block",
+  declarativeComponentTag: "ng-declarative-form",
 };

@@ -1,14 +1,43 @@
 import {
+  addChildToDOMElement,
   getBaseAttributes,
   transformAlignItems,
   transformDirection,
   transformJustifyContent,
+  transformWidth,
   validateBoolean,
 } from "./utils";
 
 export const metadata = {
-  tag: "block",
+  tag: "foldable-block-header",
+  customprocess: true,
+  processor: async (
+    node: any,
+    parentNode: any,
+    metadata: any,
+    transform: any,
+    compiler: any
+  ) => {
+    const template = await transform(metadata, node, compiler);
+    const id = compiler.getAttributeFromNode(node, "id");
+    const header = compiler.getAttributeFromNode(node, "header-value");
+    const childAddedDOM = addChildToDOMElement(template, "ng-declarative-block", `<button ngbAccordionButton >${header}</button>`);
+    console.log(childAddedDOM);
+
+    return childAddedDOM;
+
+  },
   attributes: getBaseAttributes([
+    {
+      name: "width",
+      required: false,
+      mappedInputAttribute: "width",
+      type: "string",
+      allowedValues:
+        "auto | slim | narrow | compact | mid | medium | wide | spacious | broad | extensive | full",
+      defaultValue: "full",
+      transform: transformWidth,
+    },
     {
       name: "direction",
       required: false,
@@ -54,17 +83,17 @@ export const metadata = {
       transform: transformJustifyContent,
     },
     {
-      name: "skip-flex",
+      name: "ngbAccordionHeader",
       required: false,
-      objectbinding: true,
-      mappedInputAttribute: "skipFlexClasses",
-      type: "boolean",
-      allowedValues: "true | false",
-      validate: validateBoolean,
+      type: "directive",
     },
-
-
+    {
+      name: "header-value",
+      required: false,
+      mappedInputAttribute: "headerValue",
+      type: "string",
+    },
   ]),
-  allowedChildren: ["*"],
+  allowedChildren: null,
   declarativeComponentTag: "ng-declarative-block",
 };

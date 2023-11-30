@@ -1,3 +1,4 @@
+;
 export function transformDeclarativeKeywordsWithPxValues(value: any) {
   if (!value.includes("define-")) {
     switch (value) {
@@ -64,15 +65,15 @@ export function transformDeclarativeKeywordsWithPxValuesForBorder(value: any) {
       case "small":
         return "2px solid";
       case "medium":
-        return "4px";
+        return "4px solid";
       case "large":
-        return "8px";
+        return "8px solid";
       case "extra-large":
-        return "16px";
+        return "16px solid";
       case "thick":
-        return "18px";
+        return "18px solid";
       case "thicker":
-        return "20px";
+        return "20px solid";
       default:
         return value; // Default to the original value if not recognized
     }
@@ -100,6 +101,10 @@ export function transformJustifyContent(value: string): string {
   } else {
     return value.split("-")[1];
   }
+}
+
+export function validateBoolean(value: any) {
+  return value == "true" || value == "false" ? true : false;
 }
 
 // For alignItems
@@ -222,14 +227,56 @@ export function getBaseAttributes(addtionalAttributesList: any) {
   const baseAtrrList = [
     {
       name: "background-color",
+      description: "Sets background color to a component",
       required: false,
       mappedInputAttribute: "backgroundColor",
       type: "string",
     },
     {
       name: "border",
+      description: "Sets border to a component",
       required: false,
       mappedInputAttribute: "border",
+      type: "string",
+      allowedValues:
+        "none | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+    },
+    {
+      name: "border-start",
+      description: "Sets border start to a component",
+      required: false,
+      mappedInputAttribute: "borderStart",
+      type: "string",
+      allowedValues:
+        "none | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+    },
+    {
+      name: "border-end",
+      description: "Sets border end to a component",
+      required: false,
+      mappedInputAttribute: "borderEnd",
+      type: "string",
+      allowedValues:
+        "none | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+    },
+    {
+      name: "border-top",
+      description: "Sets border top to a component",
+      required: false,
+      mappedInputAttribute: "borderTop",
+      type: "string",
+      allowedValues:
+        "none | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+    },
+    {
+      name: "border-bottom",
+      description: "Sets border bottm to a component",
+      required: false,
+      mappedInputAttribute: "borderBottom",
       type: "string",
       allowedValues:
         "none | minimal | small | medium | large | extra-large | thick | thicker",
@@ -400,14 +447,88 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       required: false,
       mappedInputAttribute: "onClickEvent",
       type: "object",
+      bindingtransform: (value: any) => {
+        if (exports.isBindingString(value)) {
+          return exports.removeBindingCharacters(value);
+        } else {
+          return value;
+        }
+      },
+      bindingkeytransform: (key: any, value: any) => {
+        const methodPattern = /^([\w\.]+\([^\)]*\))*$/;
+        const result = methodPattern.test(value) ? "(click)" : "[" + key + "]";
+        return result;
+      }
     },
     {
       name: "on-click-args",
       required: false,
       mappedInputAttribute: "onClickEventArgs",
       type: "object",
+      bindingtransform: (value: any) => {
+        if (exports.isBindingString(value)) {
+          return "[" + exports.removeBindingCharacters(value) + "]";
+        } else {
+          return value;
+        }
+      },
+
+    },
+    {
+      name: "hidden",
+      objectbinding: true,
+      required: false,
+      mappedInputAttribute: "hidden",
+      type: "object",
     },
   ];
 
-  return [ ...baseAtrrList, ...addtionalAttributesList ];
+  return [...baseAtrrList, ...addtionalAttributesList];
+}
+
+export function removeBindingCharacters(str: any): string {
+  const bindingCharacters = "%%";
+
+  if (str.startsWith(bindingCharacters) && str.endsWith(bindingCharacters)) {
+    // Remove the binding characters from the start and end
+    return str.slice(bindingCharacters.length, -bindingCharacters.length);
+  }
+
+  // Return the original string if it doesn't have the expected binding characters
+  return str;
+}
+
+export function isBindingString(str: string): boolean {
+  return str.startsWith("%%") && str.endsWith("%%");
+}
+
+export function updateDOMAttribute(domString: string, selector: string, attributeName: string, attributeValue: string): string {
+
+  return '';
+}
+
+export function addChildToDOMElement(htmlString: string, parentSelector: string, childHtml: string): string {
+  const parentRegex = new RegExp(`<${parentSelector}[^>]*>`);
+  const parentMatch: any = htmlString.match(parentRegex);
+
+  if (parentMatch) {
+    const parentStartTag = parentMatch[0];
+    const parentEndTag = `</${parentSelector}>`;
+
+    const parentEndIndex: any = htmlString.indexOf(parentEndTag, parentMatch.index);
+
+    if (parentEndIndex !== -1) {
+      const parentContent = htmlString.substring(parentMatch.index + parentStartTag.length, parentEndIndex);
+      const modifiedHtml =
+        htmlString.substring(0, parentEndIndex) +
+        childHtml +
+        parentEndTag +
+        htmlString.substring(parentEndIndex + parentEndTag.length); // Adjusted here
+
+      return modifiedHtml;
+    }
+  }
+
+  console.error(`Parent element with selector "${parentSelector}" not found.`);
+  return htmlString; // Return the original HTML if the parent element is not found
 }

@@ -1,5 +1,3 @@
-// declarative-label.component.ts
-import { CommonModule } from "@angular/common";
 import { Component, ElementRef, Input, OnInit, ViewEncapsulation } from "@angular/core";
 import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
@@ -34,14 +32,16 @@ export class Label extends Base implements OnInit {
   @Input() calloutDesc: string = "";
 
   constructor(elementRef: ElementRef,
-     animationService: AnimationService,
-     app: ApplicationService) {
-      super(elementRef,animationService,app);
-      console.log("=>Label == > DEBUG",this.app)
+    animationService: AnimationService,
+    app: ApplicationService) {
+    super(elementRef, animationService, app);
 
-     }
+  }
 
-  override ngOnInit() {}
+  override ngOnInit() {
+    console.log("===>> DEBUG LABEL TEXT =", this.text)
+
+  }
 
   getLabelClasses(): string {
     // Apply Bootstrap classes along with custom class
@@ -49,7 +49,59 @@ export class Label extends Base implements OnInit {
     if (this.theme && this.theme != "") {
       switch (this.theme) {
         case "callout":
-          classes += " callout callout-primary";
+          classes = classes + " callout callout-primary ";
+          break;
+        case "heading-smallest":
+          classes = classes + " h6 ";
+          break;
+        case "heading-small":
+          classes = classes + " h5 ";
+          break;
+        case "heading-large":
+          classes = classes + " h3 ";
+          break;
+        case "heading-larger":
+          classes = classes + " h2 ";
+          break;
+        case "heading-largest":
+          classes = classes + " h1 ";
+          break;
+        case "heading-normal":
+          classes = classes + " h4 ";
+          break;
+        case "display-smallest":
+          classes = classes + " display-6 ";
+          break;
+        case "display-small":
+          classes = classes + " display-5 ";
+          break;
+        case "display-large":
+          classes = classes + " display-3 ";
+          break;
+        case "display-larger":
+          classes = classes + " display-2 ";
+          break;
+        case "display-largest":
+          classes = classes + " display-1 ";
+          break;
+        case "display-normal":
+          classes = classes + " display-4 ";
+          break;
+        case "lead":
+          classes = classes + " lead ";
+          break;
+        case "mark":
+          classes = classes + " mark ";
+          break;
+        case "small":
+          classes = classes + " small ";
+          break;
+        case "underline":
+          classes = classes + " text-decoration-underline ";
+          break;
+        case "linethrough":
+          classes = classes + " text-decoration-line-through ";
+          break;
       }
     }
     return classes;
@@ -57,10 +109,9 @@ export class Label extends Base implements OnInit {
 
   getLabelStyles(): { [key: string]: string } {
     let styles: any = this.getComponentStyles();
-    if(this.fontSize) styles["font-size"] = this.fontSize;
-    if(this.fontWeight) styles["font-weight"] = this.fontWeight;
+    if (this.fontSize) styles["font-size"] = this.fontSize;
+    if (this.fontWeight) styles["font-weight"] = this.fontWeight;
     if (this.color) styles.color = this.color;
-    console.log("==> DEBUG ==> Label ==> Styles",styles);
     return styles;
   }
 }

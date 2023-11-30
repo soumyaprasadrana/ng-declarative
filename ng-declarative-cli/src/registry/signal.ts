@@ -21,5 +21,6 @@ export const metadata = {
     },
   ],
   allowedChildren: null,
+  allowedInParent: ["ng-declarative-app"],
   declarativeComponentTag: null,
 };

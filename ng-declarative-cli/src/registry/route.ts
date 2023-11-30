@@ -13,7 +13,13 @@ export const metadata = {
       mappedInputAttribute: "uri",
       type: "string",
     },
+    {
+      name: "controller",
+      required: false,
+      mappedInputAttribute: "controller",
+      type: "string",
+    },
   ],
-  allowedChildren: [ "*" ],
+  allowedChildren: ["*"],
   declarativeComponentTag: "ng-declarative-route",
 };

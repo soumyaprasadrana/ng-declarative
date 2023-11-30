@@ -6,20 +6,43 @@ import { Injectable, signal } from "@angular/core";
 export class ApplicationService {
   signals: any = {};
   routes: any = {};
+  datasets: any = {};
   appController: any;
-  constructor() {}
+  currentRoute: any;
+  constructor() {
+    console.log("Application Service Initiated.");
+  }
+  addDataset(key: any, dataset: any) {
+    this.datasets[key] = dataset;
+  }
   setSignals(signals: any) {
-    console.log("==DEBUG", signals);
     this.signals = signals;
   }
   setRoutes(routes: any) {
     this.routes = routes;
+  }
+  handleFrameworkError(err: any) {
+    console.error(err);
+  }
+  getCurrentRoute() {
+    console.log(this.currentRoute);
+    return this.currentRoute;
+
+  }
+  setCurrentRoute(currentRoute: any) {
+    this.currentRoute = currentRoute;
   }
   setAppController(appCtrl: any) {
     this.appController = appCtrl;
   }
   getAppController() {
     return this.appController;
+  }
+  getChild(component: any, child: any) {
+    console.log(component, child);
+  }
+  getElementRef() {
+    ``
   }
   createAppSignal(signalMetaData: any) {
     if (!signalMetaData.name || !signalMetaData.type) {

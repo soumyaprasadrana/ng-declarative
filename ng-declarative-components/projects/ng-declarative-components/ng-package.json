@@ -4,5 +4,7 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "allowedNonPeerDependencies": [ "tslib" ]
+  "allowedNonPeerDependencies": [ "tslib", "@ng-bootstrap/ng-bootstrap",
+    "bootstrap",
+    "bootstrap-icons"  ]
 }

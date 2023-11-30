@@ -20,6 +20,6 @@ export const metadata = {
       type: "string",
     },
   ],
-  allowedChildren: [ "route", "signal" ],
+  allowedChildren: ["route", "signal", "dataset"],
   declarativeComponentTag: "ng-declarative-app",
 };

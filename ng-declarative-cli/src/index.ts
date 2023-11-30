@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { buildApp, createApp, serveApp } from "./lib/cli";
-import createCommand from "./commands/create";
-import serveCommand from "./commands/serve";
+import { buildApp, createApp, getHelp, serveApp } from "./lib/cli";
 
 const program = new Command();
 
 program
   .command("build")
   .description("Build the ng-declarative app")
-  .action(() => {
-    buildApp();
+  .option("-w, --watch", "Watch for changes")
+  .action((options) => {
+    buildApp(options.watch);
   });
 
 program
@@ -20,6 +19,15 @@ program
   .description("Create a new ng-declarative app")
   .action((name) => {
     createApp(name);
+  });
+
+program
+  .command("help")
+  .argument("[component]", "Optional: Component name")
+  .argument("[attribute]", "Optional: Attribute name")
+  .description("Get help for declarative components")
+  .action((component = null, attribute = null) => {
+    getHelp(component, attribute);
   });
 
 program

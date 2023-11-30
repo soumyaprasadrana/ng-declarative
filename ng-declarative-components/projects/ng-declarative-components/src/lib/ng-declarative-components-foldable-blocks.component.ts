@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import {
   Component,
   Input,
@@ -7,38 +6,40 @@ import {
   EventEmitter,
   ElementRef,
   AfterViewInit,
-  QueryList,
-  ContentChildren,
   HostListener,
   ViewChild,
-  ViewChildren,
 } from "@angular/core";
 import { AnimationService } from "./ng-declarative-animation.service";
 import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
 
 @Component({
-  selector: "ng-declarative-block",
+  selector: "ng-declarative-foldable-blocks",
   template: `
     <div
       [ngClass]="blockClasses"
       [ngStyle]="blockStyle"
       [class]="customClass"
       [style.height]="height"
-      [style.width]="width"
+      [style.width]="width" 
+      [closeOthers]="closeOthers"
+      [destroyOnHide]="destroyOnHide"
+      [animation]="disableAnimation"
       #blockRef
+      ngbAccordion 
     >
       <ng-content></ng-content>
     </div>
+    <ngb-alert type="success">ABCD</ngb-alert>
   `,
   styles: [`:host{
     display:contents;
   }`],
 })
-export class Block extends Base implements OnInit, AfterViewInit {
+export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
   @Input() gridColumns: string = "col-md-4";
   @Input() gridGap: string = "3";
-  @Input() override backgroundColor: string | undefined;
+  @Input() override backgroundColor: string = "";
   @Input() override border: string = "";
   @Input() override borderColor: string = "";
   @Input() override padding: string = "";
@@ -56,36 +57,38 @@ export class Block extends Base implements OnInit, AfterViewInit {
   @Input() responsive: boolean = true;
   @Input() override transition: string = ""; // Set the default transition to none
   @Input() override transitionDuration: string = "0.5s"; // Set the default duration to 0.5s
-  @Input() skipFlexClasses: boolean = false;
+  @Input() disableAnimation:boolean = true;
+  @Input() closeOthers:boolean = false;
+  @Input() destroyOnHide: boolean = true;
 
   blockClasses: string = "";
   blockStyle: object = {};
 
-  @Output() blockRefChange: EventEmitter<Block> = new EventEmitter<Block>();
+  @Output() refChange: EventEmitter<FoldableBlocks> = new EventEmitter<FoldableBlocks>();
 
   //@ContentChildren('*') childBlocks: QueryList<ElementRef> | undefined;
-  childBlocks!: any;
+ childBlocks!: any;
 
   @ViewChild("blockRef") blockRef: ElementRef | undefined;
 
   constructor(
-    elementRef: ElementRef,
-    animationService: AnimationService,
-    app: ApplicationService
+     elementRef: ElementRef,
+     animationService: AnimationService,
+     app: ApplicationService
   ) {
-    super(elementRef, animationService, app);
-
+    super(elementRef,animationService,app);
+   
   }
 
   override ngOnInit() {
     this.blockClasses = this.getBlockClasses();
     this.blockStyle = this.getBlockStyles();
-    this.childBlocks = this.elementRef.nativeElement.childNodes[0].childNodes;
+     this.childBlocks = this.elementRef.nativeElement.childNodes[0].childNodes;
   }
 
   override ngAfterViewInit() {
     // Emit the reference to the parent component
-    this.blockRefChange.emit(this);
+    this.refChange.emit(this);
 
     if (this.manageChildren) {
       this.setChildrenStyles();
@@ -106,7 +109,7 @@ export class Block extends Base implements OnInit, AfterViewInit {
 
   applyFlexToChildren() {
     if (this.childBlocks) {
-      this.childBlocks.forEach((child: any) => {
+      this.childBlocks.forEach((child:any) => {
         const childElement = child;
         childElement.style.flex = "1";
       });
@@ -133,7 +136,7 @@ export class Block extends Base implements OnInit, AfterViewInit {
       const flexValues = this.childrenFlexValues
         .split(",")
         .map((value) => value.trim());
-      this.childBlocks.forEach((child: any, index: number) => {
+      this.childBlocks.forEach((child:any, index:number) => {
         const childElement = child;
         childElement.style.flex = flexValues[index] || "1";
       });
@@ -143,7 +146,7 @@ export class Block extends Base implements OnInit, AfterViewInit {
   setChildrenWidths() {
     if (this.childBlocks && this.childrenSizes) {
       const sizes = this.childrenSizes.split(",").map((size) => size.trim());
-      this.childBlocks.forEach((child: any, index: number) => {
+      this.childBlocks.forEach((child:any, index:number) => {
         const childElement = child.nativeElement;
         childElement.style.width = sizes[index] ? sizes[index] + "%" : "auto";
       });
@@ -151,23 +154,21 @@ export class Block extends Base implements OnInit, AfterViewInit {
   }
 
   getBlockClasses(): string {
-    let classes = `${this.skipFlexClasses ? "" : "d-flex"} gx-${this.gridGap} gy-${this.gridGap} ${this
+    let classes = `d-flex gx-${this.gridGap} gy-${this.gridGap} ${this
       .gridColumns} ${this.customClass}`;
-    if (!this.backgroundColor)
-      classes += `bg-light`;
-    if (!this.skipFlexClasses) {
-      if (this.layoutDirection === "row-reverse") {
-        classes += " flex-row-reverse";
-      } else if (this.layoutDirection === "column") {
-        classes += " flex-column";
-      } else if (this.layoutDirection === "column-reverse") {
-        classes += " flex-column-reverse";
-      }
+
+    if (this.layoutDirection === "row-reverse") {
+      classes += " flex-row-reverse";
+    } else if (this.layoutDirection === "column") {
+      classes += " flex-column";
+    } else if (this.layoutDirection === "column-reverse") {
+      classes += " flex-column-reverse";
     }
+
     return classes;
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener("window:resize", [ "$event" ])
   onResize(event: Event) {
     // Handle window resize
     if (this.responsive) {
@@ -188,10 +189,18 @@ export class Block extends Base implements OnInit, AfterViewInit {
   }
 
   getBlockStyles(): { [key: string]: string } {
-    let styles: any = this.getComponentStyles();
-    if (this.float) styles.float = this.float;
-    if (this.justifyContent) styles["justify-content"] = this.justifyContent;
-    if (this.alignItems) styles["align-items"] = this.alignItems;
+    let styles: any = {
+      "background-color": this.backgroundColor,
+      border: this.border,
+      "border-color": this.borderColor,
+      float: this.float,
+      "justify-content": this.justifyContent,
+      "align-items": this.alignItems,
+      height: this.height,
+      width: this.width,
+    };
+    if (this.padding) styles.padding = this.padding;
+    if (this.margin) styles.margin = this.margin;
     return styles;
   }
 }

@@ -1,7 +1,7 @@
 import { Logger } from "../logger/logger";
 import { processChildren } from "./utils";
 
-export async function transform(metadata: any, node: any, compiler: any) {
+export async function transformToSource(metadata: any, node: any, compiler: any) {
   const METHOD = "transform";
   function processAttributes(attributes: any, node: any, metadata: any) {
     const METHOD = "processAttributes";
@@ -72,7 +72,7 @@ export async function transform(metadata: any, node: any, compiler: any) {
       );
     }
 
-    return Object.entries(node[tagName].$)
+    let attrNNode = Object.entries(node[tagName].$)
       .filter(([key]) =>
         attributes.some((attr: { name: string }) => attr.name === key)
       ) // Only include attributes present in the metadata
@@ -87,39 +87,65 @@ export async function transform(metadata: any, node: any, compiler: any) {
         dom["key"] = key;
         dom["value"] = attribute.transform ? attribute.transform(value) : value;
         dom["isBinding"] = false;
+        dom["mappedInputAttribute"] = attribute.mappedInputAttribute;
         if (valueString.startsWith("app.")) {
           dom["isBinding"] = true;
           dom["appBinding"] = true;
         } else if (valueString.startsWith("appCtrl.") || valueString.startsWith("routeCtrl.")) {
           dom["controllerBinding"] = true;
           dom["isBinding"] = true;
+        } else if (attribute.objectbinding) {
+          dom["isBinding"] = true;
+        } else if (compiler.isBindingString(value)) {
+          dom["isBinding"] = true;
+          dom["value"] = compiler.removeBindingCharacters(attribute.value);
         }
 
         return dom;
       });
+
+    let defaultValues = attributes
+      .filter((obj: any) => {
+        return obj.defaultValue && !node[tagName].$.hasOwnProperty(obj.name);
+      })
+      .map((attribute: any) => {
+        let dom: any = {};
+
+        dom["key"] = attribute.name;
+        dom["value"] = attribute.transform ? attribute.transform(attribute.defaultValue) : attribute.defaultValue;
+        dom["isBinding"] = false;
+        dom["mappedInputAttribute"] = attribute.mappedInputAttribute;
+        if (attribute.defaultValue.startsWith("app.")) {
+          dom["isBinding"] = true;
+          dom["appBinding"] = true;
+        } else if (attribute.defaultValue.startsWith("appCtrl.") || attribute.defaultValue.startsWith("routeCtrl.")) {
+          dom["controllerBinding"] = true;
+          dom["isBinding"] = true;
+        } else if (attribute.objectbinding) {
+          dom["isBinding"] = true;
+        }
+        return dom;
+      });
+
+    return [...attrNNode, ...defaultValues];
   }
   //Logger.debug(METHOD + " :: Metadata", metadata);
   const nodeName = Object.keys(node)[0];
 
-  const attributes = processAttributes(metadata.attributes, node, metadata);
+  const attributes = processAttributes(
+    metadata.attributes,
+    node,
+    metadata
+  );
+
   //Logger.debug("Attributes", attributes);
 
   const children = await processChildren(node[nodeName], compiler, node);
-
-  //console.log("Children ", children);
-  console.log("Attributes ", attributes);
-  const id = compiler.getAttributeFromNode(node, "id");
-  const items = compiler.getAttributeFromNode(node, "items");
-  compiler.addLoop({
-    id: id,
+  // console.log("Children ", children);
+  const templateS = {
     attributes: attributes,
-    template: `${children.toString().replace(/(>,+<)/g, "><").replace(/,</g, "<")}`,
-    component: "Loop" + id,
-    iteratable: items,
-    route: compiler.getCurrentRoute()
-  });
+    children: children
+  }
 
-  return `<app-loop-${id}/>`;
+  return templateS;
 }
-
-

@@ -1,4 +1,31 @@
 @import "../../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
+ng-declarative-app,ng-declarative-route{
+    display:contents !important;
+  }
+  
+.ng-declarative-input-bottom-bordered{
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid;
+  border-color: inherit;
+}
+
+.form-group.required label:before {
+  content: "*";
+  color: red;
+}
+
+.ng-declarative-input{
+  border: 1px solid  var(--bs-border-color);
+  border-radius: 0;
+}
+
+html,body{
+    height: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  }
 .callout {
   padding: 1.25rem;
   margin-top: 1.25rem;

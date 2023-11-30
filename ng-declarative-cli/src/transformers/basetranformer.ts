@@ -6,11 +6,16 @@ export async function transformBase(metadata: any, node: any, compiler: any) {
   //Logger.debug(METHOD + " :: Metadata", metadata);
   const nodeName = Object.keys(node)[0];
 
-  const attributes = processAttributes(metadata.attributes, node, metadata);
+  const attributes = processAttributes(
+    metadata.attributes,
+    node,
+    metadata,
+    compiler
+  );
   //Logger.debug("Attributes", attributes);
 
   const children = await processChildren(node[nodeName], compiler, node);
-  console.log("Children ", children);
+  // console.log("Children ", children);
   const templateS = `<${metadata.declarativeComponentTag} ${attributes}>${children}</${metadata.declarativeComponentTag}>`;
   Logger.debug(METHOD + " :: templateS", templateS);
 

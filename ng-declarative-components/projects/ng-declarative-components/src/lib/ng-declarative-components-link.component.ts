@@ -49,7 +49,6 @@ export class Link extends Base implements OnInit {
 
   constructor(elementRef: ElementRef, animationService: AnimationService,app:ApplicationService) {
     super(elementRef, animationService,app);
-    console.log("=>Link == > DEBUG",this.app)
   }
   override ngOnInit() {}
 

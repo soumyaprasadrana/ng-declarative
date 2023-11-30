@@ -3,12 +3,24 @@ import {
   transformAlignItems,
   transformDirection,
   transformJustifyContent,
+  transformWidth,
   validateBoolean,
 } from "./utils";
 
 export const metadata = {
-  tag: "block",
+  tag: "foldable-block",
   attributes: getBaseAttributes([
+
+    {
+      name: "width",
+      required: false,
+      mappedInputAttribute: "width",
+      type: "string",
+      allowedValues:
+        "auto | slim | narrow | compact | mid | medium | wide | spacious | broad | extensive | full",
+      defaultValue: "full",
+      transform: transformWidth,
+    },
     {
       name: "direction",
       required: false,
@@ -54,6 +66,12 @@ export const metadata = {
       transform: transformJustifyContent,
     },
     {
+      name: "ngbAccordionItem ",
+      required: false,
+      type: "directive",
+      linkattributevalue: "id"
+    },
+    {
       name: "skip-flex",
       required: false,
       objectbinding: true,
@@ -61,10 +79,9 @@ export const metadata = {
       type: "boolean",
       allowedValues: "true | false",
       validate: validateBoolean,
+      defaultValue: "true",
     },
-
-
   ]),
-  allowedChildren: ["*"],
+  allowedChildren: ["foldable-block-content", "foldable-block-header"],
   declarativeComponentTag: "ng-declarative-block",
 };

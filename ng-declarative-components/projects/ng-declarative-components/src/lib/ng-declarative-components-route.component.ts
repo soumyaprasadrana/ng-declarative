@@ -22,7 +22,7 @@ import { Base } from "./ng-declarative-components-base.component";
   template: `
       <ng-content></ng-content>
   `,
-  styleUrls: [ "./styles.scss" ],
+  styleUrls: ["./styles.scss"],
   encapsulation: ViewEncapsulation.None,
 })
 export class RouteComponent implements OnInit, AfterViewInit {
@@ -41,11 +41,9 @@ export class RouteComponent implements OnInit, AfterViewInit {
     elementRef: ElementRef,
     animationService: AnimationService,
     private app: ApplicationService
-  ) {
-    console.log("==>DEBUG ==> ROUTE ==>", this.app);
-  }
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     // Emit the reference to the parent component

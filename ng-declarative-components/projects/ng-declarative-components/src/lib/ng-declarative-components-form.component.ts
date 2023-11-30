@@ -16,29 +16,32 @@ import {
 import { AnimationService } from "./ng-declarative-animation.service";
 import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
+import { InputComponent } from "./ng-declarative-components-input.component";
+import { ButtonComponent } from "./ng-declarative-components-button.component";
 
 @Component({
-  selector: "ng-declarative-block",
+  selector: "ng-declarative-form",
   template: `
-    <div
+    <form
       [ngClass]="blockClasses"
       [ngStyle]="blockStyle"
       [class]="customClass"
       [style.height]="height"
       [style.width]="width"
+      (onsubmit)="onSubmitHandle()"
       #blockRef
     >
       <ng-content></ng-content>
-    </div>
+</form>
   `,
   styles: [`:host{
     display:contents;
   }`],
 })
-export class Block extends Base implements OnInit, AfterViewInit {
+export class Form extends Base implements OnInit, AfterViewInit {
   @Input() gridColumns: string = "col-md-4";
   @Input() gridGap: string = "3";
-  @Input() override backgroundColor: string | undefined;
+  @Input() override backgroundColor: string = "";
   @Input() override border: string = "";
   @Input() override borderColor: string = "";
   @Input() override padding: string = "";
@@ -57,14 +60,21 @@ export class Block extends Base implements OnInit, AfterViewInit {
   @Input() override transition: string = ""; // Set the default transition to none
   @Input() override transitionDuration: string = "0.5s"; // Set the default duration to 0.5s
   @Input() skipFlexClasses: boolean = false;
+  @Input() dataset: string | undefined;
+  @Input() formAction: any | undefined;
+
 
   blockClasses: string = "";
   blockStyle: object = {};
 
-  @Output() blockRefChange: EventEmitter<Block> = new EventEmitter<Block>();
+  @Output() formRefChange: EventEmitter<Form> = new EventEmitter<Form>();
 
   //@ContentChildren('*') childBlocks: QueryList<ElementRef> | undefined;
   childBlocks!: any;
+
+  @ContentChildren(InputComponent, { descendants: true }) inputFields: QueryList<ElementRef> | undefined;
+
+  @ContentChildren(ButtonComponent, { descendants: true }) actionButtons: QueryList<ElementRef> | undefined;
 
   @ViewChild("blockRef") blockRef: ElementRef | undefined;
 
@@ -77,15 +87,59 @@ export class Block extends Base implements OnInit, AfterViewInit {
 
   }
 
+  onSubmitHandle() {
+    console.log("onSubmitHandle invoked");
+  }
+
   override ngOnInit() {
     this.blockClasses = this.getBlockClasses();
     this.blockStyle = this.getBlockStyles();
     this.childBlocks = this.elementRef.nativeElement.childNodes[0].childNodes;
   }
 
+  formValues() {
+    let values: any = {};
+    for (let item of this.inputFields ? this.inputFields.toArray() : []) {
+      const instance: any = item;
+      values[instance.getInputAttributeName()] = instance.getCurrentValue();
+    }
+    return values;
+  }
+
+  updateInputFieldsForSubmitted(submitted: boolean) {
+    for (var item of this.inputFields ? this.inputFields.toArray() : []) {
+      let instance: any = item;
+      instance.updateSubmitted(submitted);
+    }
+  }
+
+  checkIfFormIsValid() {
+    for (var item of this.inputFields ? this.inputFields.toArray() : []) {
+      let instance: any = item;
+      if (!instance.isValid())
+        return false;
+    }
+    return true;
+  }
   override ngAfterViewInit() {
     // Emit the reference to the parent component
-    this.blockRefChange.emit(this);
+    this.formRefChange.emit(this);
+
+    console.log("===>DEBUG ==> FORM", this.inputFields);
+
+    console.log("===>DEBUG ==> FORM", this.actionButtons);
+
+    for (let item of this.actionButtons ? this.actionButtons.toArray() : []) {
+      console.log("===========> DEBUG FORM ACTION ::", item);
+      let instance: any = item;
+      console.log(item);
+      const fun = () => {
+        this.updateInputFieldsForSubmitted(true);
+        if (this.checkIfFormIsValid())
+          this.formAction(this.formValues());
+      }
+      instance.setOnClickEvent(fun);
+    }
 
     if (this.manageChildren) {
       this.setChildrenStyles();
@@ -153,8 +207,7 @@ export class Block extends Base implements OnInit, AfterViewInit {
   getBlockClasses(): string {
     let classes = `${this.skipFlexClasses ? "" : "d-flex"} gx-${this.gridGap} gy-${this.gridGap} ${this
       .gridColumns} ${this.customClass}`;
-    if (!this.backgroundColor)
-      classes += `bg-light`;
+
     if (!this.skipFlexClasses) {
       if (this.layoutDirection === "row-reverse") {
         classes += " flex-row-reverse";
@@ -188,10 +241,18 @@ export class Block extends Base implements OnInit, AfterViewInit {
   }
 
   getBlockStyles(): { [key: string]: string } {
-    let styles: any = this.getComponentStyles();
-    if (this.float) styles.float = this.float;
-    if (this.justifyContent) styles["justify-content"] = this.justifyContent;
-    if (this.alignItems) styles["align-items"] = this.alignItems;
+    let styles: any = {
+      "background-color": this.backgroundColor,
+      border: this.border,
+      "border-color": this.borderColor,
+      float: this.float,
+      "justify-content": this.justifyContent,
+      "align-items": this.alignItems,
+      height: this.height,
+      width: this.width,
+    };
+    if (this.padding) styles.padding = this.padding;
+    if (this.margin) styles.margin = this.margin;
     return styles;
   }
 }

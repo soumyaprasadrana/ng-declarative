@@ -24,6 +24,9 @@ export class Compiler {
   private appControllerFileName: any = null;
   private currentRoute: string = "";
   private loops: any = [];
+  private resourcesTobeProcessed: any = [];
+  private appDatasets: any = [];
+  public isinsideForm: boolean = false;
 
   private ngDeclarativeComponents = [
     "Application",
@@ -33,14 +36,17 @@ export class Compiler {
     "Link",
   ];
   private ngDeclarativeModule = "NgDeclarativeModule";
-  private ngDeclarativeServices = [ "ApplicationService" ];
+  private ngDeclarativeServices = ["ApplicationService"];
 
+  public addResourceTobeProcessed(resource: any) {
+    this.resourcesTobeProcessed.push(resource);
+  }
   public setCurrentRoute(routeid: any) {
     this.currentRoute = routeid;
   }
 
-  public getCurrentRoute(routeid: any) {
-    this.currentRoute = routeid;
+  public getCurrentRoute() {
+    return this.currentRoute;
   }
 
   private readComponentMetadata(componentName: string): any | null {
@@ -100,7 +106,21 @@ export class Compiler {
     const METHOD = "processNode";
     Logger.debug(METHOD + " :: entry");
     Logger.debug(METHOD + " :: node ::", node);
+
     const nodeName = Object.keys(node)[0];
+
+    if (nodeName == "form") {
+      console.log("============== DEBUG FORM START ========");
+      this.isinsideForm = true;
+    }
+
+    if ((Object.keys(node)[0] == "input" || Object.keys(node)[0] == "form-action") && !this.isinsideForm) {
+      if (Object.keys(node)[0] == "input")
+        throw new Error("An input field can only be defined inside a form.");
+      if (Object.keys(node)[0] == "form-action")
+        throw new Error("An form action button can only be defined inside a form.");
+    }
+
     const nodeNameCamelCase = this.toCamelCase(Object.keys(node)[0]);
     const metadata = this.readComponentMetadata(nodeNameCamelCase).metadata;
     const transform = this.readComponentTransformer(nodeNameCamelCase)
@@ -109,10 +129,24 @@ export class Compiler {
       Logger.error(`Skipping unknown component: ${nodeName}`);
       return "";
     }
-    Logger.debug("Typeof Transform", typeof transform);
-    const resultOfValidateChildrens = this.validateChildrens(node, metadata);
 
+    Logger.debug("Typeof Transform", typeof transform);
+
+    Logger.debug("checking if the node is present under a valid parent node ...")
+    const resultofValidateParent = this.validateParent(node, parentNode, metadata);
+    if (!resultofValidateParent.result)
+      throw new Error(
+        `Invalid parent component of ${nodeName}. This component can only declared under ${metadata.allowedInParent.join(",")} 
+         `
+      );
+
+
+    const resultOfValidateChildrens = this.validateChildrens(node, metadata);
     Logger.log("Validated Childrens result", resultOfValidateChildrens);
+
+    if (nodeName == "route") {
+      this.setCurrentRoute(this.getAttributeFromNode(node, "id"));
+    }
 
     //Check if the root node store the metadata to compiler
     if (metadata.tag == "ng-declarative-app") {
@@ -143,16 +177,30 @@ export class Compiler {
     if (!resultOfValidateChildrens.result)
       throw new Error(
         `Invalid child component in ${nodeName},${resultOfValidateChildrens.key ==
-        "nochildren"
+          "nochildren"
           ? ""
           : `invalid component ${resultOfValidateChildrens.key}`} .
           ${resultOfValidateChildrens.key == "nochildren"
-            ? "This component does not support any child component."
-            : ` Please refer to below allowed children components for this node \n ${metadata.allowedChildren.join(
-                ","
-              )}`} 
+          ? "This component does not support any child component."
+          : ` Please refer to below allowed children components for this node \n ${metadata.allowedChildren.join(
+            ","
+          )}`} 
          `
       );
+
+    if (metadata.customprocess) {
+      if (metadata.processor) {
+        return await metadata.processor(
+          node,
+          parentNode,
+          metadata,
+          transform,
+          this
+        );
+      } else {
+        throw new Error("Internal Error");
+      }
+    }
     const templateS = await transform(metadata, node, this);
     /*  Logger.debug("Metadata", metadata);
     const attributes = this.processAttributes(metadata.attributes, node);
@@ -167,12 +215,22 @@ export class Compiler {
     //Handle Route
     if (nodeName == "route") {
       this.processRoute(templateS, node);
-      this.setCurrentRoute(this.getAttributeFromNode(node, "id"));
     }
     if (nodeName == "signal") {
       this.processSignal(node, parentNode);
     }
 
+    if (nodeName == "dataset" && Object.keys(parentNode)[0] == "ng-declarative-app") {
+      this.appDatasets.push({
+        name: this.getAttributeFromNode(node, "name"),
+        template: templateS,
+        id: this.getAttributeFromNode(node, "id")
+      })
+    }
+
+    if (this.isinsideForm && nodeName == "form") {
+      this.isinsideForm = false;
+    }
     return templateS;
   }
   private processSignal(node: any, parentNode: any) {
@@ -193,6 +251,26 @@ export class Compiler {
         this.routeSignals[id].push(signal);
       }
     }
+  }
+
+  private validateParent(node: any, parentNode: any, metadata: any) {
+    const nodeName = Object.keys(node)[0];
+    const parentnodeName = Object.keys(parentNode)[0];
+    if (metadata.allowedInParent && Array.isArray(metadata.allowedInParent)) {
+      let validParent = false;
+      for (var item of metadata.allowedInParent) {
+        if (parentnodeName == item) {
+          validParent = true;
+        }
+      }
+      if (!validParent)
+        return { result: validParent, key: "novalidparent", component: parentnodeName };
+      else
+        return { result: validParent, key: "validparent" };
+    } else {
+      return { result: true, key: "*" };
+    }
+
   }
 
   private validateChildrens(
@@ -227,11 +305,38 @@ export class Compiler {
     if (uri == null) {
       throw new Error("Error while processing route; invalid URI ");
     }
+    let routeController;
+    let routeControllerFileName;
+    if (this.getAttributeFromNode(node, "controller") != null) {
+
+      try {
+        let filePath = path.join(
+          "src",
+          this.getAttributeFromNode(node, "controller") + ".ts"
+        );
+        if (fs.existsSync(filePath)) {
+          routeController = path.join(
+            "src",
+            this.getAttributeFromNode(node, "controller") + ".ts"
+          );
+          routeControllerFileName =
+            this.getAttributeFromNode(node, "controller") + ".ts";
+        } else {
+          throw new Error(`File does not exist: ${filePath}`);
+        }
+      } catch (er) {
+        throw er;
+      }
+    }
     this.addRoute({
       route: uri.startsWith("/") ? uri.substring(1) : uri,
       component: "Route" + id,
       template: updatedTemplateString,
+      id: id,
+      controller: routeController ? routeController : null,
+      controllerFileName: routeControllerFileName ? routeControllerFileName : null
     });
+    // console.log("====>>>DEBUG>>>>>", JSON.stringify(this.routes));
   }
   private generateRandomString(): string {
     const characters =
@@ -266,10 +371,10 @@ export class Compiler {
     Logger.debug(node);
     Logger.debug(node[tagName].$);
     return Object.entries(node[tagName].$)
-      .filter(([ key ]) =>
+      .filter(([key]) =>
         attributes.some((attr: { name: string }) => attr.name === key)
       ) // Only include attributes present in the metadata
-      .map(([ key, value ]) => {
+      .map(([key, value]) => {
         const attribute = attributes.find(
           (attr: { name: string }) => attr.name === key
         );
@@ -294,7 +399,7 @@ export class Compiler {
             // If there are multiple identical children, process each one
             return Promise.all(
               children[childName].map(async (child: any) => {
-                console.log(`Child ${childName}:`, child);
+                //  console.log(`Child ${childName}:`, child);
                 // Wait for the asynchronous operation to complete and return the result
                 //return this.processNode({ [childName]: child });
               })
@@ -302,7 +407,7 @@ export class Compiler {
           } else {
             // If there is only one child, process it directly
             const child = { [childName]: children[childName][0] };
-            console.log(`Child ${childName}:`, child);
+            //console.log(`Child ${childName}:`, child);
             // Wait for the asynchronous operation to complete and return the result
             // return this.processNode(child);
           }
@@ -314,14 +419,22 @@ export class Compiler {
     return results.flat();
   }
 
+  private createResoucesComponents(workspacePath: any) {
+    for (var resource of this.resourcesTobeProcessed) {
+      const src = resource.src;
+      const file = resource.filename;
+      fs.writeFileSync(path.join(workspacePath, file), src);
+    }
+  }
+
   private createLoopComponents() {
     for (var loop of this.loops) {
       const fileContent = `
       import { Component } from '@angular/core';
       import {
         ${this.ngDeclarativeServices.join(",")}
-      } from "ng-declarative-commponents";
-
+      } from "ng-declarative-components";
+      import { ApplicationServiceProvider } from "./app.provider.service";
     @Component({
         selector: 'app-loop-${loop.id}',
         template: \`
@@ -338,37 +451,145 @@ export class Compiler {
         \`]
     })
     export class ${loop.component} {
-        public appCtrl:any;
-        constructor(public app: ApplicationService){
-            this.appCtrl = this.app.getAppController();
-        }
+        public appCtrl: any;
+        public app: any;
+        public routeCtrl: any;
+        constructor(public appPropvider: ApplicationServiceProvider) {
+             this.app = appPropvider.getApp();
+             this.appCtrl = this.app.getAppController();
+             this.routeCtrl = this.app.getCurrentRoute().getController();
+          }
     }
       `;
       fs.writeFileSync(loop.file_path, fileContent);
     }
   }
 
-  private createRouteComponents() {
+  private createRouteComponents(workspacePath: any) {
     for (var route of this.routes) {
       const fileContent = `
-      import { Component } from '@angular/core';
-      import {
-  ${this.ngDeclarativeServices.join(",")}
-} from "ng-declarative-commponents";
+      import { Component, OnInit } from '@angular/core';
+
+import { ApplicationServiceProvider } from "./app.provider.service";
+
+${route.controller ? `import { ${route.controllerFileName.replace(".ts", "")} } from "./${route.controllerFileName.replace(".ts", "")}"` : ''}
 
 @Component({
   selector: 'app-route-${route.component}',
   template: \`${route.template}\`,
+  styles:[\`
+    :host{
+      display: contents !important;
+    }
+  \`]
 })
-export class ${route.component} {
-  public appCtrl:any;
-  constructor(public app: ApplicationService){
+export class ${route.component} implements OnInit {
+ public appCtrl: any;
+  public app: any;
+  ${route.controller ? 'public routeCtrl: any;' : ''}
+  constructor(
+    public appPropvider: ApplicationServiceProvider
+    ) {
+    this.app = appPropvider.getApp();
     this.appCtrl = this.app.getAppController();
+    ${route.controller ? `this.routeCtrl = new ${route.controllerFileName.replace(".ts", "")}(this.app);` : ''}
+    this.app.setCurrentRoute(this);
+    
   }
+   ngOnInit() {
+    this.app.setCurrentRoute(this);
+  }
+  getController() : any {
+  ${route.controller ? `
+    return this.routeCtrl;
+  
+  `: 'return null;'}
+  }
+  
 }
 
       `;
+      const outletFileContent = `
+      import { Component } from "@angular/core";
+import { ApplicationServiceProvider } from "./app.provider.service";
+
+@Component({
+  selector: "app-route-${route.component}-outlet",
+  template: \`<router-outlet ></router-outlet>\`,
+})
+export class ${route.component}Outlet {
+  public appCtrl: any;
+  public app: any;
+  constructor(public appPropvider: ApplicationServiceProvider) {
+    this.app = appPropvider.getApp();
+    this.appCtrl = this.app.getAppController();
+  }
+}      
+      `;
+      const routeModuleContent = `
+      import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import {
+  ${this.ngDeclarativeModule}
+} from "ng-declarative-components";
+import { ${route.component} } from "./${route.component}.component";
+import { RouterModule } from "@angular/router";
+import { ${route.component}Outlet } from "./${route.component}-outlet.component";
+import { ${route.component}RoutingModule } from "./${route.component}-routing.module";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+
+${this.buildLoopsImportStatement(route)}
+
+${this.buildResourceImportStatement(route)}
+
+@NgModule({
+  declarations: [ ${route.component}Outlet, ${route.component},  ${this.buildLoopsDeclarationString(
+        route
+      )} ${this.buildResourceDeclarationString(route)} ],
+  imports: [
+    CommonModule,
+    ${this.ngDeclarativeModule},
+    NgbModule,
+    RouterModule,
+    ${route.component}RoutingModule,
+   
+  ],
+  bootstrap: [ ${route.component}Outlet ],
+  providers: [],
+})
+export class ${route.component}Module {}
+
+      `;
+
+      const routingModuleContent = `
+      import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { ${route.component} } from "./${route.component}.component";
+
+const routes: Routes = [
+  {
+    path: "",
+    component: ${route.component},
+    data: { title: "${route.title}" },
+  },
+];
+@NgModule({
+  imports: [ RouterModule.forChild(routes) ],
+  exports: [ RouterModule ],
+})
+export class ${route.component}RoutingModule {}
+
+      `;
       fs.writeFileSync(route.file_path, fileContent);
+      fs.writeFileSync(route.router_route_module_file_path, routeModuleContent);
+      fs.writeFileSync(route.router_outlet_file_path, outletFileContent);
+      fs.writeFileSync(
+        route.router_routing_module_file_path,
+        routingModuleContent
+      );
+      if (route.controller) {
+        this.copyFile(route.controller, workspacePath, route.controllerFileName);
+      }
     }
   }
   private buildRoutesImportStatement(): string {
@@ -379,19 +600,41 @@ export class ${route.component} {
     return content;
   }
 
-  private buildLoopsImportStatement(): string {
+  private buildResourceImportStatement(route: any) {
     let content = ``;
-    for (var loop of this.loops) {
-      content += `import { ${loop.component} } from "./${loop.component}.component";`;
+    for (var resource of this.resourcesTobeProcessed) {
+      if (route.id == resource.route)
+        content += `import { ${resource.name} } from "./${resource.name}.component";`;
     }
     return content;
   }
 
-  private buildLoopsDeclarationString() {
+  private buildLoopsImportStatement(route: any): string {
+    let content = ``;
+    for (var loop of this.loops) {
+      if (route.id == loop.route)
+        content += `import { ${loop.component} } from "./${loop.component}.component";`;
+    }
+    return content;
+  }
+
+  private buildResourceDeclarationString(route: any) {
+    let res = "";
+    for (var resource of this.resourcesTobeProcessed) {
+
+      if (route.id == resource.route) res += `${resource.name},`;
+    }
+
+    return res;
+  }
+
+  private buildLoopsDeclarationString(route: any) {
     let res = "";
     for (var loop of this.loops) {
-      res += `${loop.component},`;
+
+      if (route.id == loop.route) res += `${loop.component},`;
     }
+    // console.log("========>>>>>> buildLoopsDeclarationString >>>>>>>>>>", res);
     return res;
   }
 
@@ -412,7 +655,11 @@ export class ${route.component} {
     for (var route of this.routes) {
       content += `{
         path:"${route.route}",
-        component: ${route.component},
+         loadChildren: () =>
+      import(\`./${route.router_route_module_file_name.replace(
+        ".ts",
+        ""
+      )}\`).then((m) => m.${route.component}Module),
       },`;
     }
     content += `
@@ -426,12 +673,33 @@ export class ${route.component} {
     return `[${list.map((item) => JSON.stringify(item)).join(", ")}]`;
   }
 
+  private processAppDataSets() {
+    let content = "";
+    for (var dataset of this.appDatasets) {
+      content = content + `
+      ${dataset.template}
+      `
+    }
+    return content;
+  }
+
+  private processAppDatasetsViewChildStatements() {
+    let content = "";
+    for (var dataset of this.appDatasets) {
+      content = content + `
+      @ViewChild("${dataset.id}") ${dataset.name} : ElementRef | undefined;
+      `
+    }
+    return content;
+  }
+
   private createAngularAppStructure(workspace: string) {
     const workspaceWithDist = path.join("dist", workspace);
     const workspacePath = path.join(workspaceWithDist, "src");
     const indexPath = path.join(workspacePath, "index.html");
     const mainPath = path.join(workspacePath, "main.ts");
     const stylePath = path.join(workspacePath, "styles.scss");
+    const polyfillsPath = path.join(workspacePath, "polyfills.ts");
     const gitignorePath = path.join(workspaceWithDist, ".gitignore");
     const packagejsonPath = path.join(workspaceWithDist, "package.json");
     const angularjsonPath = path.join(workspaceWithDist, "angular.json");
@@ -440,8 +708,12 @@ export class ${route.component} {
       workspaceWithDist,
       "tsconfig.app.json"
     );
+    const appServiceProviderPath = path.join(
+      workspacePath,
+      "app.provider.service.ts"
+    );
     for (var signal of this.appSignals) {
-      console.log("==> DEBUG ==> SIGNALS", signal);
+      Logger.debug("SIGNAL", signal);
     }
 
     for (var index in this.routes) {
@@ -449,6 +721,29 @@ export class ${route.component} {
         workspacePath,
         this.routes[index].component + ".component.ts"
       );
+
+      this.routes[index].router_outlet_file_path = path.join(
+        workspacePath,
+        this.routes[index].component + "-outlet" + ".component.ts"
+      );
+
+      this.routes[index].router_outlet_file_name =
+        this.routes[index].component + "-outlet" + ".component.ts";
+
+      this.routes[index].router_routing_module_file_path = path.join(
+        workspacePath,
+        this.routes[index].component + "-routing" + ".module.ts"
+      );
+      this.routes[index].router_routing_module_file_name =
+        this.routes[index].component + "-routing" + ".module.ts";
+
+      this.routes[index].router_route_module_file_path = path.join(
+        workspacePath,
+        this.routes[index].component + ".module.ts"
+      );
+
+      this.routes[index].router_route_module_file_name =
+        this.routes[index].component + ".module.ts";
     }
 
     for (var index in this.loops) {
@@ -462,8 +757,12 @@ export class ${route.component} {
     if (!fs.existsSync(workspacePath)) {
       fs.mkdirSync(workspacePath, { recursive: true });
     }
+
+    //Create Resource Components
+    this.createResoucesComponents(workspacePath);
+
     //create dynamic routes comonents
-    this.createRouteComponents();
+    this.createRouteComponents(workspacePath);
 
     //Create Loops Component
     this.createLoopComponents();
@@ -478,7 +777,8 @@ export class ${route.component} {
     }
 
     // Create index.html
-    const indexContent = `<!DOCTYPE html>
+    const indexContent = `
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -495,33 +795,33 @@ export class ${route.component} {
     const routeImportStatements = this.buildRoutesImportStatement();
     const routesDeclaration = this.buildRoutesList();
 
-    const loopImportStatements = this.buildLoopsImportStatement();
+    // const loopImportStatements = this.buildLoopsImportStatement();
 
     // Create main.ts
-    const mainContent = `import { Component,NgModule } from '@angular/core';
+    const mainContent = `import { Component,ElementRef,NgModule,ViewChild } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import {
   ${this.ngDeclarativeModule}
-} from "ng-declarative-commponents";
+} from "ng-declarative-components";
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { CommonModule } from '@angular/common';
 
 import {
   ${this.ngDeclarativeServices.join(",")}
-} from "ng-declarative-commponents";
+} from "ng-declarative-components";
 
-${routeImportStatements}
+import { ApplicationServiceProvider } from "./app.provider.service";
 
-${loopImportStatements}
+
 
 ${this.appController
-      ? `import { ${this.appControllerFileName.replace(
+        ? `import { ${this.appControllerFileName.replace(
           ".ts",
           ""
         )} } from "./${this.appControllerFileName.replace(".ts", "")}";`
-      : ""}
+        : ""}
 
 
 ${routesDeclaration}
@@ -531,33 +831,52 @@ ${routesDeclaration}
   selector: 'app-root',
   template: \`
   <ng-declarative-app name="${this.appName}" title="${this
-      .appTitle}" [inputSignals]="inputSignals">
+        .appTitle}" [inputSignals]="inputSignals">
+        ${this.processAppDataSets()}
     <router-outlet></router-outlet>
   </ng-declarative-app>
   \`,
+  styles:[\`
+  :host{
+    height: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  }
+  \`] ,
+
 })
 export class App {
   inputSignals : any = ${this.stringifyList(this.appSignals)};
-  constructor(private app: ApplicationService){
+  ${this.processAppDatasetsViewChildStatements()}
+
+  appCtrl:any;
+
+  constructor(
+      private app: ApplicationService,
+      private appProvider: ApplicationServiceProvider
+    ){
     ${this.appController
-      ? `this.app.setAppController(new ${this.appControllerFileName.replace(
+        ? `
+        this.appCtrl = new ${this.appControllerFileName.replace(
           ".ts",
           ""
-        )}(this.app));`
-      : ""}
+        )}(this.app);
+        this.app.setAppController(this.appCtrl);`
+        : ""}
+      this.appProvider.setApp(this.app);
   }
 }
 
 @NgModule({
   declarations: [
-   App,${this.buildRoutesDeclarationString()}${this.buildLoopsDeclarationString()}
+   App
   ],
   imports: [
     CommonModule,
     RouterModule,
     BrowserModule,
-    NgDeclarativeModule,
-     RouterModule.forRoot(mainRoutes, { enableTracing: true })
+    NgDeclarativeModule.forRoot(),
+     RouterModule.forRoot(mainRoutes, { enableTracing: false })
   ],
   exports: [],
   providers: [
@@ -648,8 +967,12 @@ Thumbs.db
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@angular/localize": "^17.0.0",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.2",
     "moment": "^2.18.1",
-    "rxjs": "~7.4.0",
+    "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
   },
@@ -674,19 +997,13 @@ Thumbs.db
     const angularjsoncontent = `{
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": {
-    "analytics": false
-  },
   "newProjectRoot": "projects",
   "projects": {
-    "declarative-app": {
+    "${workspace}": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
-        },
-        "@schematics/angular:application": {
-          "strict": true
         }
       },
       "root": "",
@@ -696,17 +1013,22 @@ Thumbs.db
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/declarative-app",
+            "outputPath": "dist/${workspace}",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js",
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets"],
-            "styles": ["src/styles.scss"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules/"]
-            },
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -721,7 +1043,7 @@ Thumbs.db
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumError": "1mb"
                 }
               ],
               "outputHashing": "all"
@@ -741,10 +1063,10 @@ Thumbs.db
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "declarative-app:build:production"
+              "buildTarget": "${workspace}:build:production"
             },
             "development": {
-              "browserTarget": "declarative-app:build:development"
+              "buildTarget": "${workspace}:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -752,22 +1074,26 @@ Thumbs.db
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "declarative-app:build"
+            "buildTarget": "${workspace}:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules/"]
-            },
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         }
@@ -777,6 +1103,7 @@ Thumbs.db
 }
 
 `;
+    const polyfillcontents = `import "@angular/localize/init";`;
     const tsconfigapppjsoncontent = `/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "extends": "./tsconfig.json",
@@ -785,7 +1112,8 @@ Thumbs.db
     "types": []
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/polyfills.ts"
   ],
   "include": [
     "src/**/*.d.ts"
@@ -825,7 +1153,7 @@ Thumbs.db
       "@angular/*": [
         "./node_modules/@angular/*"
       ],
-      "ng-declarative-commponents": [
+      "ng-declarative-components": [
         "../../../ng-declarative-components/projects/ng-declarative-components/src/public-api"
       ]
     }
@@ -840,7 +1168,7 @@ Thumbs.db
       "@angular/*": [
         "./node_modules/@angular/*"
       ],
-      "ng-declarative-commponents": [
+      "ng-declarative-components": [
         "../../../ng-declarative-components/projects/ng-declarative-components/src/public-api"
       ]
     }
@@ -848,11 +1176,29 @@ Thumbs.db
 }
 
 `;
+
+    const appServiceProviderContent = `import { Injectable } from "@angular/core";
+
+@Injectable({
+  providedIn: "root",
+})
+export class ApplicationServiceProvider {
+  private app: any;
+  constructor() {}
+  setApp(app: any) {
+    this.app = app;
+  }
+  getApp() {
+    return this.app;
+  }
+}
+`;
     fs.writeFileSync(packagejsonPath, packaJSONContent);
     fs.writeFileSync(angularjsonPath, angularjsoncontent);
     fs.writeFileSync(tsconfigappjsonPath, tsconfigapppjsoncontent);
     fs.writeFileSync(tsconfigjsonPath, tsconfigjsoncontent);
-
+    fs.writeFileSync(appServiceProviderPath, appServiceProviderContent);
+    fs.writeFileSync(polyfillsPath, polyfillcontents);
     Logger.log("Angular app structure created successfully.");
   }
 

@@ -1,14 +1,52 @@
 import {
+  addChildToDOMElement,
   getBaseAttributes,
   transformAlignItems,
   transformDirection,
   transformJustifyContent,
+  transformWidth,
   validateBoolean,
 } from "./utils";
 
 export const metadata = {
-  tag: "block",
+  tag: "foldable-block-content",
+  customprocess: true,
+  processor: async (
+    node: any,
+    parentNode: any,
+    metadata: any,
+    transform: any,
+    compiler: any
+  ) => {
+    const template = await transform(metadata, node, compiler);
+    const id = compiler.getAttributeFromNode(node, "id");
+    const header = compiler.getAttributeFromNode(node, "header-value");
+    const childAddedDOM =
+      `
+    <div ngbAccordionCollapse>
+			<div ngbAccordionBody>
+				<ng-template>
+        ${template}
+        </ng-template>
+      </div>
+    </div>
+    
+    `
+
+    return childAddedDOM;
+
+  },
   attributes: getBaseAttributes([
+    {
+      name: "width",
+      required: false,
+      mappedInputAttribute: "width",
+      type: "string",
+      allowedValues:
+        "auto | slim | narrow | compact | mid | medium | wide | spacious | broad | extensive | full",
+      defaultValue: "full",
+      transform: transformWidth,
+    },
     {
       name: "direction",
       required: false,
@@ -54,6 +92,17 @@ export const metadata = {
       transform: transformJustifyContent,
     },
     {
+      name: "ngbAccordionHeader",
+      required: false,
+      type: "directive",
+    },
+    {
+      name: "header-value",
+      required: false,
+      mappedInputAttribute: "headerValue",
+      type: "string",
+    },
+    {
       name: "skip-flex",
       required: false,
       objectbinding: true,
@@ -61,9 +110,8 @@ export const metadata = {
       type: "boolean",
       allowedValues: "true | false",
       validate: validateBoolean,
-    },
-
-
+      defaultValue: "true",
+    }
   ]),
   allowedChildren: ["*"],
   declarativeComponentTag: "ng-declarative-block",

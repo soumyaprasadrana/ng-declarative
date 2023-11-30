@@ -35,9 +35,7 @@ export class LoopComponent implements OnInit, AfterViewInit {
     elementRef: ElementRef,
     animationService: AnimationService,
     private app: ApplicationService
-  ) {
-    console.log("==>DEBUG ==> LOOP ==>", this.app);
-  }
+  ) {}
 
   ngOnInit() {}
 
