@@ -14,7 +14,12 @@ import { ApplicationService } from "./ng-declarative-components.service";
   template: ``,
 })
 export class Base implements OnInit, AfterViewInit {
+  @Input() background: string | undefined;
   @Input() backgroundColor: string | undefined;
+  @Input() backgroundImage: string | undefined;
+  @Input() backgroundSize: string = "cover";
+  @Input() backgroundPosition: string = "center";
+  @Input() backgroundRepeate: string = "no-repeat";
   @Input() border: string = "";
   @Input() borderStart: string | undefined;
   @Input() borderEnd: string | undefined;
@@ -30,9 +35,20 @@ export class Base implements OnInit, AfterViewInit {
   @Input() transitionDuration: string = "0.5s"; // Set the default duration to 0.5s
   @Input() onClickEvent: any | undefined;
   @Input() onClickEventArgs: any | undefined;
+  @Input() paddingStart: any;
+  @Input() paddingEnd: any;
+  @Input() paddingTop: any;
+  @Input() paddingBottom: any;
+  @Input() marginStart: any;
+  @Input() marginTop: any;
+  @Input() marginBottom: any;
+  @Input() marginEnd: any;
 
   componentClasses: string = "";
   componentStyle: object = {};
+
+  componentLoading: boolean = false;
+
 
   constructor(
     public elementRef: ElementRef,
@@ -45,7 +61,18 @@ export class Base implements OnInit, AfterViewInit {
     this.componentStyle = this.getComponentStyles();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+
+    if (this.transition && this.elementRef) {
+      this.animationService.animate(
+        this.transition,
+        this.elementRef
+          .nativeElement,
+        this.transitionDuration
+      );
+    }
+
+  }
 
   getcComponentClasses(): string {
     let classes = `${this.customClass}`;
@@ -171,7 +198,12 @@ export class Base implements OnInit, AfterViewInit {
 
   getComponentStyles(): { [key: string]: string } {
     let styles: any = {};
-    if (this.backgroundColor) styles["background-color"] = this.backgroundColor;
+    if (this.backgroundColor && !this.backgroundImage && !this.background) styles["background-color"] = this.backgroundColor;
+    if (this.background) styles["background"] = this.background;
+    if (this.backgroundImage && !this.background) styles["background-image"] = this.backgroundImage;
+    if (this.backgroundPosition) styles["background-position"] = this.backgroundPosition;
+    if (this.backgroundSize) styles["background-size"] = this.backgroundSize;
+    if (this.backgroundRepeate) styles["background-repeat"] = this.backgroundRepeate;
     if (this.border) styles.border = this.border;
     if (this.borderStart) styles["border-left"] = this.borderStart;
     if (this.borderEnd) styles["border-right"] = this.borderEnd;
@@ -179,7 +211,15 @@ export class Base implements OnInit, AfterViewInit {
     if (this.borderBottom) styles["border-bottom"] = this.borderBottom;
     if (this.borderColor) styles["border-color"] = this.borderColor;
     if (this.padding) styles.padding = this.padding;
+    if (this.paddingStart) styles["padding-left"] = this.paddingStart;
+    if (this.paddingEnd) styles["padding-right"] = this.paddingEnd;
+    if (this.paddingTop) styles["padding-top"] = this.paddingTop;
+    if (this.paddingBottom) styles["padding-bottom"] = this.paddingBottom;
     if (this.margin) styles.margin = this.margin;
+    if (this.marginStart) styles["margin-left"] = this.marginStart;
+    if (this.marginTop) styles["margin-top"] = this.marginTop;
+    if (this.marginBottom) styles["margin-bottom"] = this.marginBottom;
+    if (this.marginEnd) styles["margin-right"] = this.marginEnd;
     if (this.height) styles.height = this.height;
     if (this.width) styles.width = this.width;
     return styles;

@@ -43,9 +43,30 @@ export function processAttributes(
         return conditionMet ? obj.name : null;
       }
       else if (obj.requiredIfAttributeNotPresent) {
-        return node[tagName].$.hasOwnProperty(obj.requiredIfAttributeNotPresent) ? null : obj.name;
+        if (Array.isArray(obj.requiredIfAttributeNotPresent)) {
+          let result = true;
+          for (let item of obj.requiredIfAttributeNotPresent) {
+            if (node[tagName].$.hasOwnProperty(item)) {
+              result = false;
+            }
+          }
+          if (result) return obj.name;
+          else return null;
+        }
+        else
+          return node[tagName].$.hasOwnProperty(obj.requiredIfAttributeNotPresent) ? null : obj.name;
       }
       else if (obj.requiredIfAttributePresent) {
+        if (Array.isArray(obj.requiredIfAttributePresent)) {
+          let result = false;
+          for (let item of obj.requiredIfAttributePresent) {
+            if (node[tagName].$.hasOwnProperty(item)) {
+              result = true;
+            }
+          }
+          if (result) return obj.name;
+          else return null;
+        }
         return node[tagName].$.hasOwnProperty(obj.requiredIfAttributePresent) ? obj.name : null;
       }
       else {

@@ -1,15 +1,18 @@
 // ng-declarative-btn.component.ts
 
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Base } from './ng-declarative-components-base.component';
 
 @Component({
   selector: 'ng-declarative-button',
   template: `
     <button
       [ngClass]="getButtonClasses()"
+      [ngStyle]="this.getComponentStyles()"
       [disabled]="isLoading || isSuccess || isError"
       (click)="handleButtonClick()"
       [type]="type"
+      #buttonRef
     >
       {{label}}
       <div class="loader" *ngIf="isLoading"></div>
@@ -23,6 +26,9 @@ import { Component, Input } from '@angular/core';
     </button>
   `,
   styles: `
+  :host{
+    display: contents;
+  }
 
     /* ng-declarative-btn.component.css */
 
@@ -87,7 +93,7 @@ import { Component, Input } from '@angular/core';
       
     `,
 })
-export class ButtonComponent {
+export class ButtonComponent extends Base {
   @Input() showIcon: boolean = true;
   @Input() isLoading: boolean = false;
   @Input() isSuccess: boolean = false;
@@ -96,6 +102,9 @@ export class ButtonComponent {
   @Input() onclickEvent: any;
   @Input() type: string = "button";
   @Input() label: string | undefined;
+  @Input() route: string | undefined;
+
+  @ViewChild("buttonRef") buttonRef: ElementRef | undefined;
 
   setSuccess(success: boolean) {
     this.isSuccess = success;
@@ -120,11 +129,14 @@ export class ButtonComponent {
       if (this.onclickEvent) {
         this.onclickEvent();
       }
+      if (this.route) {
+        this.app.navigateTo(this.route);
+      }
     }
   }
 
   getButtonClasses(): string[] {
-    const classes = ['ng-declarative-btn'];
+    const classes = ['ng-declarative-btn', this.getcComponentClasses()];
 
     if (this.isLoading || this.isSuccess || this.isError) {
       return classes;
@@ -187,6 +199,16 @@ export class ButtonComponent {
     }
 
     return classes;
+  }
+
+  override ngAfterViewInit(): void {
+    if (this.transition && this.buttonRef) {
+      this.animationService.animate(
+        this.transition,
+        this.buttonRef.nativeElement,
+        this.transitionDuration
+      );
+    }
   }
 
 }

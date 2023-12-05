@@ -289,6 +289,41 @@ export class AnimationService {
       styleSheet.rules.length
     );
   }
+  private async animateTyping(element: HTMLElement, duration: string = '2s') {
+
+    // Extract text content from the element
+    const text = element.textContent || '';
+
+    // Clear existing content
+    element.innerHTML = '';
+
+
+    // Convert duration to milliseconds
+    const durationMs = this.convertToMilliseconds(duration);
+
+    // Calculate delay based on duration and text length
+    const delay = durationMs / text.length;
+
+    // Iterate over each character and add it to inner HTML with calculated delay
+    for (let i = 0; i < text.length; i++) {
+      element.innerHTML += text.charAt(i);
+
+      // Wait for the calculated delay
+      await this.delay(delay);
+    }
+  }
+
+  private delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private convertToMilliseconds(duration: string): number {
+    const value = parseFloat(duration);
+    return duration.includes('ms') ? value : value * 1000;
+  }
+
+
+
   private animateRollIn(element: HTMLElement, duration: string = "0.5s") {
     this.applyStyles(element, {
       animation: `rollIn ${duration} ease-out`,
@@ -363,6 +398,9 @@ export class AnimationService {
         break;
       case "roll-in":
         this.animateRollIn(element, duration);
+        break;
+      case "typing":
+        this.animateTyping(element, duration);
         break;
       // Add more cases for other animations as needed
       default:

@@ -1,0 +1,12 @@
+{
+  "name": "declarative-sample-app",
+  "version": "1.0.0",
+  "scripts":{
+    "build" : "ng-declarative build",
+    "start" : "cd dist/declarative-sample-app && yarn start"
+  },
+  "description": "Declarative Sample App",
+  "main": "index.js",
+  "author": "Soumya Prasad Rana",
+  "license": "MIT"
+}

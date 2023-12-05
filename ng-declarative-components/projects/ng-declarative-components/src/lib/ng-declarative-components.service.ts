@@ -1,4 +1,5 @@
 import { Injectable, signal } from "@angular/core";
+import { HttpClientService } from "./ng-declarative-components.httpclient.service";
 
 @Injectable({
   providedIn: "root",
@@ -9,8 +10,18 @@ export class ApplicationService {
   datasets: any = {};
   appController: any;
   currentRoute: any;
-  constructor() {
+  router: any;
+  constructor(public client: HttpClientService) {
     console.log("Application Service Initiated.");
+  }
+  setRouter(router: any) {
+    this.router = router;
+  }
+  getRouter() {
+    return this.router;
+  }
+  navigateTo(routes: any) {
+    this.router.navigate([routes]);
   }
   addDataset(key: any, dataset: any) {
     this.datasets[key] = dataset;
@@ -25,8 +36,7 @@ export class ApplicationService {
     console.error(err);
   }
   getCurrentRoute() {
-    console.log(this.currentRoute);
-    return this.currentRoute;
+    return this.currentRoute ? this.currentRoute : null;
 
   }
   setCurrentRoute(currentRoute: any) {

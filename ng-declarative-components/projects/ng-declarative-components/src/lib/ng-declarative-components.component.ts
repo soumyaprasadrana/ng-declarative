@@ -7,13 +7,14 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ApplicationService } from "./ng-declarative-components.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "ng-declarative-app",
   template: `
     <ng-content></ng-content>
   `,
-  styleUrls: [ "./styles.scss" ],
+  styleUrls: ["./styles.scss"],
   encapsulation: ViewEncapsulation.None,
 })
 export class Application implements OnInit {
@@ -23,14 +24,16 @@ export class Application implements OnInit {
 
   signals: any = {};
 
-  constructor(private app: ApplicationService) {
+  constructor(private app: ApplicationService,
+    private router: Router) {
     console.log("App Constructor");
+    this.app.setRouter(this.router);
   }
   ngOnInit(): void {
     if (this.inputSignals) {
       for (var signalobj of this.inputSignals) {
         if (signalobj.type == "number")
-          this.signals[signalobj.name] = signal<number>(signalobj.value);
+          this.signals[signalobj.name] = signal<number>(Number(signalobj.value));
         if (signalobj.type == "string")
           this.signals[signalobj.name] = signal<string>(signalobj.value);
         if (signalobj.type == "boolean")

@@ -1,13 +1,7 @@
-import {
-    getBaseAttributes,
-    transformAlignItems,
-    transformDirection,
-    transformJustifyContent,
-    validateBoolean,
-} from "./utils";
+import { getBaseAttributes } from "./utils";
 
 export const metadata = {
-    tag: "form-action",
+    tag: "button",
     attributes: getBaseAttributes([
         {
             name: "isSuccess",
@@ -54,7 +48,13 @@ export const metadata = {
             type: "string",
         },
         {
-            name: "on-submit",
+            name: "route",
+            required: false,
+            mappedInputAttribute: "route",
+            type: "string",
+        },
+        {
+            name: "on-click-event",
             required: false,
             mappedInputAttribute: "onClickEvent",
             type: "object",
@@ -71,7 +71,7 @@ export const metadata = {
                 return result;
             }
         }
-    ], "form-action"),
+    ], "button"),
     allowedChildren: null,
     declarativeComponentTag: "ng-declarative-button",
 };

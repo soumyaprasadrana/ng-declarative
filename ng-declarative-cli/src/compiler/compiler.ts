@@ -19,6 +19,7 @@ export class Compiler {
   private appSignals: any = [];
   private routeSignals: any = {};
   private appName: string = "Declarative App";
+  private baseHref: string = "/";
   private appTitle: string = "Ng Declarative App Title";
   private appController: any = null;
   private appControllerFileName: any = null;
@@ -26,6 +27,7 @@ export class Compiler {
   private loops: any = [];
   private resourcesTobeProcessed: any = [];
   private appDatasets: any = [];
+  private appNavbars: any = [];
   public isinsideForm: boolean = false;
 
   private ngDeclarativeComponents = [
@@ -151,6 +153,7 @@ export class Compiler {
     //Check if the root node store the metadata to compiler
     if (metadata.tag == "ng-declarative-app") {
       this.appName = this.getAttributeFromNode(node, "name");
+      if (this.getAttributeFromNode(node, "base-href")) this.baseHref = this.getAttributeFromNode(node, "base-href");
       this.appTitle = this.getAttributeFromNode(node, "title");
       if (this.getAttributeFromNode(node, "controller") != null) {
         try {
@@ -227,6 +230,13 @@ export class Compiler {
         id: this.getAttributeFromNode(node, "id")
       })
     }
+    //Process Application level navbar
+    if (nodeName == "navbar" && Object.keys(parentNode)[0] == "ng-declarative-app") {
+      this.appNavbars.push({
+        template: templateS.toString().replace(/(>,+<)/g, "><").replace(/,</g, "<"),
+        id: this.getAttributeFromNode(node, "id")
+      })
+    }
 
     if (this.isinsideForm && nodeName == "form") {
       this.isinsideForm = false;
@@ -298,6 +308,7 @@ export class Compiler {
   private processRoute(template: string, node: any) {
     const uri = this.getAttributeFromNode(node, "uri");
     const id = this.getAttributeFromNode(node, "id");
+    const title = this.getAttributeFromNode(node, "title");
     const updatedTemplateString = template
       .replace(/(>,+<)/g, "><")
       .replace(/,</g, "<");
@@ -334,7 +345,8 @@ export class Compiler {
       template: updatedTemplateString,
       id: id,
       controller: routeController ? routeController : null,
-      controllerFileName: routeControllerFileName ? routeControllerFileName : null
+      controllerFileName: routeControllerFileName ? routeControllerFileName : null,
+      title: title
     });
     // console.log("====>>>DEBUG>>>>>", JSON.stringify(this.routes));
   }
@@ -587,9 +599,9 @@ export class ${route.component}RoutingModule {}
         route.router_routing_module_file_path,
         routingModuleContent
       );
-      if (route.controller) {
-        this.copyFile(route.controller, workspacePath, route.controllerFileName);
-      }
+      /*  if (route.controller) {
+          this.copyFile(route.controller, workspacePath, route.controllerFileName);
+        } */
     }
   }
   private buildRoutesImportStatement(): string {
@@ -683,6 +695,19 @@ export class ${route.component}RoutingModule {}
     return content;
   }
 
+  private processAppNavbars() {
+    let content = "";
+    for (var navbar of this.appNavbars) {
+      const updatedTemplateString = navbar.template
+        .replace(/(>,+<)/g, "><")
+        .replace(/,</g, "<");
+      content = content + `
+      ${updatedTemplateString}
+      `
+    }
+    return content;
+  }
+
   private processAppDatasetsViewChildStatements() {
     let content = "";
     for (var dataset of this.appDatasets) {
@@ -768,13 +793,13 @@ export class ${route.component}RoutingModule {}
     this.createLoopComponents();
 
     //Check for app controller if exits copy to the angular app dir
-    if (this.appController != null) {
-      this.copyFile(
-        this.appController,
-        workspacePath,
-        this.appControllerFileName
-      );
-    }
+    /* if (this.appController != null) {
+       this.copyFile(
+         this.appController,
+         workspacePath,
+         this.appControllerFileName
+       );
+     }*/
 
     // Create index.html
     const indexContent = `
@@ -782,8 +807,8 @@ export class ${route.component}RoutingModule {}
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>NG Declarative app</title>
-    <base href="/" />
+    <title>${this.appName}</title>
+    <base href="${this.baseHref}" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
@@ -801,13 +826,14 @@ export class ${route.component}RoutingModule {}
     const mainContent = `import { Component,ElementRef,NgModule,ViewChild } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, NavigationStart, NavigationCancel, NavigationError } from '@angular/router';
 import {
   ${this.ngDeclarativeModule}
 } from "ng-declarative-components";
-
+import { Title } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { CommonModule } from '@angular/common';
-
+import { filter } from 'rxjs/operators';
 import {
   ${this.ngDeclarativeServices.join(",")}
 } from "ng-declarative-components";
@@ -833,6 +859,7 @@ ${routesDeclaration}
   <ng-declarative-app name="${this.appName}" title="${this
         .appTitle}" [inputSignals]="inputSignals">
         ${this.processAppDataSets()}
+        ${this.processAppNavbars()}
     <router-outlet></router-outlet>
   </ng-declarative-app>
   \`,
@@ -853,7 +880,10 @@ export class App {
 
   constructor(
       private app: ApplicationService,
-      private appProvider: ApplicationServiceProvider
+      private appProvider: ApplicationServiceProvider,
+      private titleService: Title,
+      private router: Router,
+      private activatedRoute: ActivatedRoute,
     ){
     ${this.appController
         ? `
@@ -864,7 +894,31 @@ export class App {
         this.app.setAppController(this.appCtrl);`
         : ""}
       this.appProvider.setApp(this.app);
+
+      this.router.events.pipe(  
+      filter(event => event instanceof NavigationEnd),  
+    ).subscribe((event) => {
+      console.log("<{App}> Activated route :: ", event);
+      this.app.setCurrentRoute(event);  
+      const rt = this.getChild(this.activatedRoute);  
+      rt.data.subscribe((data:any) => {  
+        console.log('<{App}> Recieved from router service title:' ,data);  
+
+        if(data==null)
+          data={title:'${this.appName}'};
+        else if(!data.title)
+          data.title='${this.appName}';
+        this.titleService.setTitle(data.title)});  
+    });  
   }
+  getChild (activatedRoute: ActivatedRoute):any {  
+    if (activatedRoute.firstChild) {  
+      return this.getChild(activatedRoute.firstChild);  
+    } else {  
+      return activatedRoute;  
+    }  
+  
+  }  
 }
 
 @NgModule({
@@ -896,6 +950,11 @@ platformBrowserDynamic().bootstrapModule(AppModule)
     const styleContent = "";
     fs.writeFileSync(stylePath, styleContent);
 
+    //Copying Style Path
+    this.copyFile(path.join(
+      "src",
+      "styles.scss"
+    ), workspacePath, "styles.scss");
     // Create .gitignore
     const gitignoreContent = `# See http://help.github.com/ignore-files/ for more about ignoring files.
 
@@ -1029,11 +1088,17 @@ Thumbs.db
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+               {
+                "bundleName": "bootstrap",
+                "inject": true,
+                "input": "node_modules/bootstrap/dist/js/bootstrap.js"
+              }
+            ]
           },
           "configurations": {
             "production": {
-              "namedChunks": true,
+              "namedChunks": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -1200,16 +1265,98 @@ export class ApplicationServiceProvider {
     fs.writeFileSync(appServiceProviderPath, appServiceProviderContent);
     fs.writeFileSync(polyfillsPath, polyfillcontents);
     Logger.log("Angular app structure created successfully.");
+
+    //Copy asset folder
+    if (fs.existsSync(path.join("src", "assets")))
+      this.copyDirectory(path.join("src", "assets"), path.join(workspacePath, "assets"));
+
+    //Copy Other ts classes
+    this.copyFilesWithExtension(path.join("src"), workspacePath, "ts");
   }
+
+  private copyFilesWithExtension(source: string, target: string, fileExtension: string): void {
+    if (!fs.existsSync(target)) {
+      fs.mkdirSync(target);
+    }
+
+    const files = fs.readdirSync(source);
+
+    files.forEach(file => {
+      const curSource = path.join(source, file);
+      const curTarget = path.join(target, file);
+
+      if (fs.lstatSync(curSource).isDirectory()) {
+        this.copyFilesWithExtension(curSource, curTarget, fileExtension);
+      } else {
+        const ext = path.extname(file);
+        if (ext === `.${fileExtension}`) {
+          fs.copyFileSync(curSource, curTarget);
+          console.log("Copied file " + curSource);
+        }
+      }
+    });
+  }
+
+
+  private copyFileSync(source: string, target: string) {
+    let targetFile = target;
+
+    // If target is a directory, a new file with the same name will be created
+    if (fs.existsSync(target)) {
+      if (fs.lstatSync(target).isDirectory()) {
+        targetFile = path.join(target, path.basename(source));
+      }
+    }
+
+    fs.writeFileSync(targetFile, fs.readFileSync(source));
+  }
+
+  private copyFolderRecursiveSync(source: string, target: string) {
+    if (!fs.existsSync(target)) {
+      fs.mkdirSync(target);
+    }
+
+    const files = fs.readdirSync(source);
+
+    files.forEach(file => {
+      const curSource = path.join(source, file);
+      const curTarget = path.join(target, file);
+
+      if (fs.lstatSync(curSource).isDirectory()) {
+        this.copyFolderRecursiveSync(curSource, curTarget);
+      } else {
+        this.copyFileSync(curSource, curTarget);
+      }
+    });
+  }
+
+  private copyDirectory(source: string, target: string): void {
+    try {
+      this.copyFolderRecursiveSync(source, target);
+      console.log('Directory ' + source + ' copied to ' + target + ' successfully!');
+    } catch (err) {
+      console.error('Error copying directory:', err);
+    }
+  }
+
 
   private copyFile(sourcePath: any, destinationDir: any, newName: any) {
     const sourceFile = path.basename(sourcePath);
     const destinationPath = path.join(destinationDir, newName || sourceFile);
+    try {
+      if (fs.existsSync(sourcePath)) {
+        // Copy the file
+        fs.copyFileSync(sourcePath, destinationPath);
+        console.log(`File copied from ${sourcePath} to ${destinationPath}`);
+      }
 
-    // Copy the file
-    fs.copyFileSync(sourcePath, destinationPath);
+    } catch (err) {
+      // Error occurred while copying
+      console.error("Failed to copy " + sourceFile + ".")
+      console.error(err);
+    }
 
-    console.log(`File copied from ${sourcePath} to ${destinationPath}`);
+
   }
 
   private createAngularApp(templateString: string) {

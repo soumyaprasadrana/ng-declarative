@@ -264,77 +264,102 @@ export class FoldableBlocks${id} extends Base implements OnInit, AfterViewInit {
   attributes: getBaseAttributes([
     {
       name: "direction",
+      description: "Sets the layout direction of the foldable blocks.",
       required: false,
       mappedInputAttribute: "layoutDirection",
       type: "string",
       allowedValues: "row | column",
       transform: transformDirection,
-      defaultValue: "column"
+      defaultValue: "column",
+      example: `<foldable-blocks direction="row" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "manage-children",
+      description: "Determines whether the foldable blocks should manage their children.",
       required: false,
       objectbinding: true,
       mappedInputAttribute: "manageChildren",
       type: "boolean",
+      example: `<foldable-blocks manage-children="true" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "children-sizes",
+      description: "Sets the sizes of the foldable blocks' children.",
       required: false,
       mappedInputAttribute: "childrenSizes",
       type: "string",
+      example: `<foldable-blocks children-sizes="50% 50%" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "children-flex-sizes",
+      description: "Sets the flex values of the foldable blocks' children.",
       required: false,
       mappedInputAttribute: "childrenFlexValues",
       type: "string",
+      example: `<foldable-blocks children-flex-sizes="1 2" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "align-items",
+      description: "Aligns the items of the foldable blocks.",
       required: false,
       mappedInputAttribute: "alignItems",
       type: "string",
       allowedValues: "start | end | center | stretch | baseline",
       transform: transformAlignItems,
+      example: `<foldable-blocks align-items="center" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "justify-contents",
+      description: "Justifies the content of the foldable blocks.",
       required: false,
       mappedInputAttribute: "justifyContent",
       type: "string",
-      allowedValues:
-        "start | end | center | right | left | space-between | space-around | space-evenly",
+      allowedValues: "start | end | center | right | left | space-between | space-around | space-evenly",
       transform: transformJustifyContent,
+      example: `<foldable-blocks justify-contents="space-between" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "animation",
+      description: "Disables or enables animation for the foldable blocks.",
       required: false,
       objectbinding: true,
       mappedInputAttribute: "disableAnimation",
       type: "boolean",
       allowedValues: "true | false",
       validate: validateBoolean,
+      example: `<foldable-blocks animation="true" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "close-others",
+      description: "Determines whether other foldable blocks should be closed when one is opened.",
       required: false,
       objectbinding: true,
       mappedInputAttribute: "closeOthers",
       type: "boolean",
       allowedValues: "true | false",
       validate: validateBoolean,
+      example: `<foldable-blocks close-others="true" id="exampleFoldableBlocks"></foldable-blocks>`
     },
+
     {
       name: "destroy-on-hide",
+      description: "Determines whether the foldable blocks should be destroyed when hidden.",
       required: false,
       objectbinding: true,
       mappedInputAttribute: "destroyOnHide",
       type: "boolean",
       allowedValues: "true | false",
       validate: validateBoolean,
+      example: `<foldable-blocks destroy-on-hide="true" id="exampleFoldableBlocks"></foldable-blocks>`
     },
-  ]),
+  ], "foldable-blocks"),
   allowedChildren: ["foldable-block"],
   declarativeComponentTag: "ng-declarative-foldable-blocks",
 };

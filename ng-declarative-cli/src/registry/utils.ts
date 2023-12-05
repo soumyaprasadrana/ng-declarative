@@ -15,9 +15,11 @@ export function transformDeclarativeKeywordsWithPxValues(value: any) {
       case "extra-large":
         return "32px";
       case "thick":
-        return "12px";
+        return "64px";
       case "thicker":
-        return "20px";
+        return "128px";
+      case "auto":
+        return "auto";
       default:
         return value; // Default to the original value if not recognized
     }
@@ -165,6 +167,10 @@ export function transformWidth(value: string): string {
     switch (value) {
       case "auto":
         return "auto";
+      case "min-content":
+        return "min-content";
+      case "max-content":
+        return "max-content"
       case "slim":
         return "10%";
       case "narrow":
@@ -223,14 +229,56 @@ export function transformTransitionDuration(value: string): string {
   }
 }
 
-export function getBaseAttributes(addtionalAttributesList: any) {
+export function getBaseAttributes(addtionalAttributesList: any, componentName: any) {
+  // Complete File
   const baseAtrrList = [
+    {
+      name: "background",
+      description: "Sets background  to a component",
+      required: false,
+      mappedInputAttribute: "background",
+      type: "string",
+      example: '<' + componentName + ' background="none" id="xhdy78"></' + componentName + '>',
+    },
     {
       name: "background-color",
       description: "Sets background color to a component",
       required: false,
       mappedInputAttribute: "backgroundColor",
       type: "string",
+      example: '<' + componentName + ' background-color="#000" id="xhdy78"></' + componentName + '>',
+    },
+    {
+      name: "background-image",
+      description: "Sets background image to a component",
+      required: false,
+      mappedInputAttribute: "backgroundImage",
+      type: "string",
+      example: '<' + componentName + ' background-image="url(\'path/to/image.extension\')" id="xhdy78"></' + componentName + '>',
+    },
+    {
+      name: "background-position",
+      description: "Sets background position to a component",
+      required: false,
+      mappedInputAttribute: "backgroundPosition",
+      type: "string",
+      example: '<' + componentName + ' background-position="center" id="xhdy78"></' + componentName + '>',
+    },
+    {
+      name: "background-size",
+      description: "Sets background size to a component",
+      required: false,
+      mappedInputAttribute: "backgroundSize",
+      type: "string",
+      example: '<' + componentName + ' background-size="cover" id="xhdy78"></' + componentName + '>',
+    },
+    {
+      name: "background-repeat",
+      description: "Sets background repeat to a component",
+      required: false,
+      mappedInputAttribute: "backgroundRepeat",
+      type: "string",
+      example: '<' + componentName + ' background-repeat="no-repeat" id="xhdy78"></' + componentName + '>',
     },
     {
       name: "border",
@@ -241,6 +289,7 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       allowedValues:
         "none | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+      example: '<' + componentName + ' border="medium" id="sdj32"></' + componentName + '>',
     },
     {
       name: "border-start",
@@ -251,6 +300,7 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       allowedValues:
         "none | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+      example: '<' + componentName + ' border-start="small" id="bgt54"></' + componentName + '>',
     },
     {
       name: "border-end",
@@ -261,6 +311,7 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       allowedValues:
         "none | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+      example: '<' + componentName + ' border-end="thick" id="rty76"></' + componentName + '>',
     },
     {
       name: "border-top",
@@ -271,22 +322,25 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       allowedValues:
         "none | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+      example: '<' + componentName + ' border-top="large" id="zxc32"></' + componentName + '>',
     },
     {
       name: "border-bottom",
-      description: "Sets border bottm to a component",
+      description: "Sets border bottom to a component",
       required: false,
       mappedInputAttribute: "borderBottom",
       type: "string",
       allowedValues:
         "none | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValuesForBorder,
+      example: '<' + componentName + ' border-bottom="medium" id="nhy87"></' + componentName + '>',
     },
     {
       name: "border-color",
       required: false,
       mappedInputAttribute: "borderColor",
       type: "string",
+      example: '<' + componentName + ' border-color="#333" id="plm98"></' + componentName + '>',
     },
     {
       name: "padding",
@@ -294,64 +348,49 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       mappedInputAttribute: "padding",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
+        "none | auto | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' padding="medium" id="jkl23"></' + componentName + '>',
     },
     {
       name: "padding-start",
       required: false,
-      mappedInputAttribute: "padding",
+      mappedInputAttribute: "paddingStart",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          " 0px 0px 0px " + transformDeclarativeKeywordsWithPxValues(value)
-        );
-      },
+        "none | auto | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' padding-start="thick" id="qwe76"></' + componentName + '>',
     },
     {
       name: "padding-top",
       required: false,
-      mappedInputAttribute: "padding",
+      mappedInputAttribute: "paddingTop",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          transformDeclarativeKeywordsWithPxValues(value) + " 0px 0px 0px "
-        );
-      },
+        "none | auto | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' padding-top="large" id="mnb45"></' + componentName + '>',
     },
     {
       name: "padding-end",
       required: false,
-      mappedInputAttribute: "padding",
+      mappedInputAttribute: "paddingEnd",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          " 0px " +
-          transformDeclarativeKeywordsWithPxValues(value) +
-          " 0px 0px "
-        );
-      },
+        "none | auto | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' padding-end="medium" id="mki98"></' + componentName + '>',
     },
     {
       name: "padding-bottom",
       required: false,
-      mappedInputAttribute: "padding",
+      mappedInputAttribute: "paddingBottom",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          " 0px opx " +
-          transformDeclarativeKeywordsWithPxValues(value) +
-          " 0px "
-        );
-      },
+        "none | auto | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' padding-bottom="compact" id="yhn87"></' + componentName + '>',
     },
     {
       name: "margin",
@@ -359,57 +398,56 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       mappedInputAttribute: "margin",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
+        "none | auto | minimal | small | medium | large | extra-large | thick | thicker",
       transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' margin="medium" id="vfr54"></' + componentName + '>',
+    },
+    {
+      name: "margin-start",
+      required: false,
+      mappedInputAttribute: "marginStart",
+      type: "string",
+      allowedValues:
+        "none | auto  | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' margin-start="slim" id="azx32"></' + componentName + '>',
     },
     {
       name: "margin-top",
       required: false,
-      mappedInputAttribute: "margin",
+      mappedInputAttribute: "marginTop",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          transformDeclarativeKeywordsWithPxValues(value) + " 0px 0px 0px "
-        );
-      },
+        "none | auto  | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' margin-top="slim" id="azx32"></' + componentName + '>',
     },
     {
       name: "margin-end",
       required: false,
-      mappedInputAttribute: "margin",
+      mappedInputAttribute: "marginEnd",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          " 0px " +
-          transformDeclarativeKeywordsWithPxValues(value) +
-          " 0px 0px "
-        );
-      },
+        "none | auto  | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' margin-end="thicker" id="qwe98"></' + componentName + '>',
     },
     {
       name: "margin-bottom",
       required: false,
-      mappedInputAttribute: "margin",
+      mappedInputAttribute: "marginBottom",
       type: "string",
       allowedValues:
-        "none | minimal | small | medium | large | extra-large | thick | thicker",
-      transform: function transform(value: any) {
-        return (
-          " 0px opx " +
-          transformDeclarativeKeywordsWithPxValues(value) +
-          " 0px "
-        );
-      },
+        "none | auto  | minimal | small | medium | large | extra-large | thick | thicker",
+      transform: transformDeclarativeKeywordsWithPxValues,
+      example: '<' + componentName + ' margin-bottom="medium" id="poi76"></' + componentName + '>',
     },
     {
       name: "css-class",
       required: false,
       mappedInputAttribute: "customClass",
       type: "string",
+      example: '<' + componentName + ' css-class="my-custom-class" id="dfg43"></' + componentName + '>',
     },
     {
       name: "height",
@@ -419,6 +457,8 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       allowedValues:
         "auto | short | small | compact | mid | medium | tall | high | super-high | ultra-high | full",
       transform: transformHeight,
+      description: "Sets the height of a component",
+      example: '<' + componentName + ' height="medium" id="sj889"></' + componentName + '>',
     },
     {
       name: "width",
@@ -428,19 +468,26 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       allowedValues:
         "auto | slim | narrow | compact | mid | medium | wide | spacious | broad | extensive | full",
       transform: transformWidth,
+      description: "Sets the width of a component",
+      example: '<' + componentName + ' width="compact" id="whd87"></' + componentName + '>',
     },
     {
       name: "transition",
       required: false,
       mappedInputAttribute: "transition",
       type: "string",
+      description: "Sets the transition effect for a component",
+      example: '<' + componentName + ' transition="fade" id="rfh45"></' + componentName + '>',
     },
     {
       name: "transition-duration",
       required: false,
       mappedInputAttribute: "transitionDuration",
       type: "string",
+      allowedValues: "quick | short | medium | long",
       transform: transformTransitionDuration,
+      description: "Sets the duration of the transition effect for a component",
+      example: '<' + componentName + ' transition-duration="define-500ms" id="tyu76"></' + componentName + '>',
     },
     {
       name: "on-click",
@@ -458,7 +505,9 @@ export function getBaseAttributes(addtionalAttributesList: any) {
         const methodPattern = /^([\w\.]+\([^\)]*\))*$/;
         const result = methodPattern.test(value) ? "(click)" : "[" + key + "]";
         return result;
-      }
+      },
+      description: "Sets the click event handler for a component",
+      example: '<' + componentName + ' on-click="handleClick" id="jkv54"></' + componentName + '>',
     },
     {
       name: "on-click-args",
@@ -472,7 +521,8 @@ export function getBaseAttributes(addtionalAttributesList: any) {
           return value;
         }
       },
-
+      description: "Sets the arguments for the click event handler of a component",
+      example: '<' + componentName + ' on-click-args="[event]" id="mnv32"></' + componentName + '>',
     },
     {
       name: "hidden",
@@ -480,8 +530,11 @@ export function getBaseAttributes(addtionalAttributesList: any) {
       required: false,
       mappedInputAttribute: "hidden",
       type: "object",
+      description: "Sets the visibility of a component",
+      example: '<' + componentName + ' hidden="true" id="plk98"></' + componentName + '>',
     },
   ];
+
 
   return [...baseAtrrList, ...addtionalAttributesList];
 }

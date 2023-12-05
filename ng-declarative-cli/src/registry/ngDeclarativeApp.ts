@@ -2,9 +2,9 @@ export const metadata = {
   tag: "ng-declarative-app",
   attributes: [
     {
-      name: "title",
+      name: "base-href",
       required: false,
-      mappedInputAttribute: "title",
+      mappedInputAttribute: "baseHref",
       type: "string",
     },
     {
@@ -20,6 +20,6 @@ export const metadata = {
       type: "string",
     },
   ],
-  allowedChildren: ["route", "signal", "dataset"],
+  allowedChildren: ["route", "signal", "dataset", "navbar"],
   declarativeComponentTag: "ng-declarative-app",
 };

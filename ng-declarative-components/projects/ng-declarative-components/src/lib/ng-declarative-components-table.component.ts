@@ -7,15 +7,23 @@ import { AnimationService } from './ng-declarative-animation.service';
     selector: 'ng-declarative-table',
     template: `
         <div class="table-responsive"  [ngClass]="getcComponentClasses()" [ngStyle]="getComponentStyles()">
-        <table class="table {{ tableOptions?.cssClass }}"  [style.width]="tableOptions?.width">
+        <table class="table {{ tableOptions?.cssClass }}" >
         <thead>
         <tr>
             <ng-container *ngFor="let column of tableOptions?.columns">
             <th [class]="getHeaderClass(column)" (click)="column.sortable && sort(column.field)">
+                @if(!componentLoading){
                 <div style="text-align:center;">
                 {{ column.name }}
                 <span *ngIf=" column.sortable && column.field === sortedColumn" [class]="sortIconClass()" style="float: inline-end;"></span>
                 </div>
+                }@else{
+                    <div class="loading">
+                        <div class="bar" style="width:50% !important">
+                                &nbsp;
+                            </div>
+                    </div>
+                }
             
             </th>
             </ng-container>
@@ -23,8 +31,9 @@ import { AnimationService } from './ng-declarative-animation.service';
         <tr>
             <ng-container *ngFor="let column of tableOptions?.columns">
             <td >
-            
+                
                 <div *ngIf="column.filterable">
+                @if(!componentLoading){
                 <input
                     type="text"
                     class="form-control ng-declarative-input p-2 mt-2 me-2"
@@ -33,6 +42,13 @@ import { AnimationService } from './ng-declarative-animation.service';
                     (click)="$event.stopPropagation()"
                     (input)="applyFilters()"
                 />
+                }@else{
+                    <div class="loading">
+                        <div class="bar">
+                                &nbsp;
+                            </div>
+                    </div>
+                }
                 </div>
             </td>
             </ng-container>
@@ -40,6 +56,21 @@ import { AnimationService } from './ng-declarative-animation.service';
 
         </thead>
         <tbody>
+            @if(componentLoading){
+                @for(item of  generateRange(1, this.pageSize); track item;){
+                     <tr>
+                         @for(item of  generateRange(1, this.tableOptions?.columns.length); track item;){
+                        <td class="loading">
+                            <div class="bar">
+                                &nbsp;
+                            </div>
+                        </td>
+                         }
+                    </tr>
+                }
+            }
+       @else{
+      
         <tr *ngFor="let item of pagedData; let rowIndex = index" (click)="rowClick(item, rowIndex)" [class.clicked]="rowIndex === clickedRowIndex">
             <ng-container *ngFor="let column of tableOptions?.columns">
             <td [class]="getCellClass(column)">
@@ -63,12 +94,19 @@ import { AnimationService } from './ng-declarative-animation.service';
             </td>
             </ng-container>
         </tr>
+       }
         </tbody>
     </table>
         <div *ngIf="tableOptions?.pagination" class="d-flex justify-content-end mt-3">
     <nav>
         <ul class="pagination">
-
+        @if(componentLoading){
+            <div class="loading">
+                        <div class="bar" style="width: 100vh;">
+                                &nbsp;
+                            </div>
+                    </div>
+        }@else{
         <li class="page-item" (click)="goToPage(1)" [class.disabled]="currentPage === 1">
             <a class="page-link" aria-label="First">
             <span aria-hidden="true">&laquo;&laquo;</span>
@@ -96,16 +134,24 @@ import { AnimationService } from './ng-declarative-animation.service';
             <span aria-hidden="true">&raquo;&raquo;</span>
             </a>
         </li>
-
+        }
         </ul>
     </nav>
     </div>
 
     `,
     styles: [
-        `.clicked {
+        `
+        :host{
+            display: contents;
+        }
+        .clicked {
                 border-left: 5px solid var(--bs-primary);
-    }`
+    }
+    
+   
+    
+    `
     ],
 })
 export class TableComponent extends Base implements OnChanges, OnInit {
@@ -129,6 +175,7 @@ export class TableComponent extends Base implements OnChanges, OnInit {
         animationService: AnimationService,
         app: ApplicationService) {
         super(elementRef, animationService, app);
+        this.componentLoading = true;
     }
 
     override ngOnInit() {
@@ -140,6 +187,10 @@ export class TableComponent extends Base implements OnChanges, OnInit {
                 this.pageSize = this.tableOptions?.pageSize || this.pageSize;
                 this.applyFilters();
                 this.updatePagedData();
+                setTimeout(() => this.componentLoading = false, 1000)
+
+
+
 
             } else {
                 this.app.datasets[this.datasetName].dataset.subscribe((value: any) => {
@@ -148,13 +199,20 @@ export class TableComponent extends Base implements OnChanges, OnInit {
                     this.pageSize = this.tableOptions?.pageSize || this.pageSize;
                     this.applyFilters();
                     this.updatePagedData();
+                    setTimeout(() => this.componentLoading = false, 1000)
+
                 });
             }
 
 
         } catch (err) {
             this.app.handleFrameworkError(err);
+            this.componentLoading = false;
         }
+    }
+
+    generateRange(start: number, end: number): number[] {
+        return Array.from({ length: end - start + 1 }, (_, index) => start + index);
     }
 
     ngOnChanges() {

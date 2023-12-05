@@ -40,7 +40,18 @@ export async function transformToSource(metadata: any, node: any, compiler: any)
           return conditionMet ? obj.name : null;
         }
         else if (obj.requiredIfAttributeNotPresent) {
-          return node[tagName].$.hasOwnProperty(obj.requiredIfAttributeNotPresent) ? null : obj.name;
+          if (Array.isArray(obj.requiredIfAttributeNotPresent)) {
+            let result = true;
+            for (let item of obj.requiredIfAttributeNotPresent) {
+              if (node[tagName].$.hasOwnProperty(item)) {
+                result = false;
+              }
+            }
+            if (result) return obj.name;
+            else return null;
+          }
+          else
+            return node[tagName].$.hasOwnProperty(obj.requiredIfAttributeNotPresent) ? null : obj.name;
         }
         else {
           return obj.name;

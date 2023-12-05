@@ -7,7 +7,7 @@ import {
 } from "./utils";
 
 export const metadata = {
-  tag: "block",
+  tag: "navbar-center",
   attributes: getBaseAttributes([
     {
       name: "direction",
@@ -81,8 +81,23 @@ export const metadata = {
       validate: validateBoolean,
       example: `<block skip-flex="true">...</block>`
     },
-
-  ], "block"),
+    {
+      name: "slotcenter",
+      description: "Associates the block with an center-slot directive.",
+      required: false,
+      type: "directive",
+      example: `<navbar-start ></navbar-start>`
+    },
+    {
+      name: "css-class",
+      required: false,
+      mappedInputAttribute: "customClass",
+      defaultValue: "display-contents",
+      type: "string",
+      example: '<navbar-ceneter  css-class="my-custom-class" id="dfg43"></navbar-start>',
+    },
+  ], "navbar-center"),
   allowedChildren: ["*"],
+  allowedInParent: ["navbar"],
   declarativeComponentTag: "ng-declarative-block",
 };

@@ -151,17 +151,16 @@ export class Block extends Base implements OnInit, AfterViewInit {
   }
 
   getBlockClasses(): string {
-    let classes = `${this.skipFlexClasses ? "" : "d-flex"} gx-${this.gridGap} gy-${this.gridGap} ${this
-      .gridColumns} ${this.customClass}`;
-    if (!this.backgroundColor)
-      classes += `bg-light`;
+    let classes = `${this.skipFlexClasses ? " " : " d-flex "}  ${this.customClass}`;
+    if (!this.backgroundColor && !this.backgroundImage && !this.background)
+      classes += ` bg-light `;
     if (!this.skipFlexClasses) {
       if (this.layoutDirection === "row-reverse") {
-        classes += " flex-row-reverse";
+        classes += " flex-row-reverse ";
       } else if (this.layoutDirection === "column") {
-        classes += " flex-column";
+        classes += " flex-column ";
       } else if (this.layoutDirection === "column-reverse") {
-        classes += " flex-column-reverse";
+        classes += " flex-column-reverse ";
       }
     }
     return classes;

@@ -5,8 +5,134 @@ import * as path from "path";
 import { IDProcessor } from "../compiler/idprocessor";
 
 export function createApp(name: string): void {
-  execSync(`ng new ${name} --style=css --routing=false`);
-  console.log(`Created ng-declarative app "${name}"`);
+
+  console.log("Creating an awsome app " + name + " ....");
+  const sourceXMLContent = `
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ng-declarative-app controller="AppController" name="${name}" id="FeNV5u8">
+  <navbar sticky="true" color-scheme="dark" brand-text-css-class="text-warning" brand-icon="bi bi-airplane-engines text-warning" brand-text="%%appCtrl.appName%%" id="bUYgwdF">
+    <navbar-center id="iynGj1C">
+      <form css-class="search-form" transition="tada" transition-duration="long" action="appCtrl.doSearch" direction="row" width="full" id="VhZuQA1">
+        <input transition="slide-in" transition-duration="long" prepend-icon-class="bi bi-search" required="true" theme="text" attribute-name="search" model="appCtrl.username" placeholder="Search..." id="YAO0fEm"/>
+        <form-action css-class="text-muted" transition="slide-in" theme="warning" transition-duration="long" label="Search" id="PML0lSd"/>
+      </form>
+    </navbar-center>
+    <navbar-end id="vdweRWwhi">
+      <navitem route="/home" label="Home" id="fiwde6fyb"/>
+    </navbar-end>
+  </navbar>
+  <route uri="/home" title="Declarative Sample App" id="home">
+    <block width="full" height="full" justify-contents="center" align-items="center" direction="column" id="wizYbyA">
+      <block  direction="row" id="ySy4I1u">
+        <block justify-contents="center" align-items="center" direction="column" id="xagOI">
+            <image transition="tada" transition-duration="long" css-class="text-warning main-icon" type="icon" icon="bi bi-airplane-engines" id="ijMfMaD"/>
+            <label  css-class="badge bg-warning text-dark" theme="display-large,bold" text="hover the icon!" id="DPw4cdN9Y"/>
+        </block>
+        <block width="min-content" direction="column" id="xalZgOI">
+          <label  transition="typing" transition-duration="short" theme="display-large,bold" text="%%appCtrl.pageHeading%%" id="DPw4N9Y"/>
+          <label  transition="typing" transition-duration="long" theme="heading-small,bold" text="%%appCtrl.pageSubHeading%%" id="DcdsPw4N9Y"/>
+          <paragraph transition="typing" transition-duration="  " text="%%appCtrl.pageParagraph%%" id="k6MoblQ"/>
+        </block>
+      </block>
+    </block>
+  </route>
+</ng-declarative-app>
+  
+  `;
+
+  const appCtrlContent = ` 
+  export class AppController {
+
+    appName = "${name}";
+    pageHeading = "Hello, "
+    pageSubHeading = "I am a sample app built using ng-declarative framework!";
+    pageParagraph = \`Embrace simplicity with NG Declarative Framework – a powerful tool for Angular app development.Say goodbye to complex setups; design your UI with ease using XML components.Remember, why do programmers prefer dark mode ? Because light attracts bugs! Happy coding!\`
+    constructor(private app: any) {
+
+    }
+}
+`;
+
+  const stylesscssContent = `
+  .search-form{
+    .form-group{
+        margin-right: 0px !important;
+    }
+    .input-group-text{
+        border-color: var(--bs-warning);
+        border-radius: 0;
+    }
+    .form-control{
+
+        border: 1px solid var(--bs-warning);
+        border-right: 10px solid var(--bs-warning);
+    }
+
+}
+.app-nav{
+    background-color: #000;
+}
+.main-icon{
+    font-size: 200px;
+    transform: rotate(45deg);
+    display: inline-block;
+}
+
+ .main-icon:hover {
+            animation: shakeAndFly 2s ease-in-out forwards;
+        }
+
+        @keyframes shakeAndFly {
+            0%, 100% {
+                transform: translateX(0) rotate(0);
+            }
+            10%, 30%, 50%, 70% {
+                transform: translateX(-5px) rotate(-5deg);
+            }
+            20%, 40%, 60% {
+                transform: translateX(5px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(-100vh);
+            }
+        }
+
+`;
+  const pkgjsoncontent = `
+{
+  "name": "${name}",
+  "version": "1.0.0",
+  "scripts":{
+    "build" : "ng-declarative build"
+  },
+  "description": "Declarative Sample App",
+  "author": "",
+  "license": "MIT"
+}
+
+`;
+  const workspaceHome = path.join(name);
+  const workspaceSrcPath = path.join(workspaceHome, "src");
+  // Create directories if they don't exist
+  if (!fs.existsSync(workspaceHome)) {
+    fs.mkdirSync(workspaceHome, { recursive: true });
+  }
+
+  if (!fs.existsSync(workspaceSrcPath)) {
+    fs.mkdirSync(workspaceSrcPath, { recursive: true });
+  }
+
+  const sourceXMLPath = path.join(workspaceSrcPath, "source.xml");
+  const AppControllerPath = path.join(workspaceSrcPath, "AppController.ts");
+  const StylesPath = path.join(workspaceSrcPath, "Styles.scss");
+  const pkgjsonPath = path.join(workspaceHome, "package.json");
+
+  fs.writeFileSync(sourceXMLPath, sourceXMLContent);
+  fs.writeFileSync(AppControllerPath, appCtrlContent);
+  fs.writeFileSync(StylesPath, stylesscssContent);
+  fs.writeFileSync(pkgjsonPath, pkgjsoncontent);
+
+  console.log("Wow! Your app created successfully! ");
 }
 
 export function getHelp(componentClass: any, attributeName: any) {
@@ -23,16 +149,33 @@ export function getHelp(componentClass: any, attributeName: any) {
     }
     else {
       const {
+        description,
+        example,
         name,
         required,
         type,
-        allowedValues
+        allowedValues,
+        objectbinding
       } = attribute;
+      const ANSI_COLOR_RESET = "\x1b[0m";
+      const ANSI_COLOR_BLUE_BRIGHT = "\x1b[94m";
+      const ANSI_COLOR_GREEN_BRIGHT = "\x1b[92m";
+      const ANSI_COLOR_RED_BRIGHT = "\x1b[91m";
+      const ANSI_FONT_BOLD = "\x1b[1m";
 
-      console.log(`Attribute: ${name}`);
-      console.log(`Required: ${required}`);
-      console.log(`Type: ${type}`);
-      console.log(`Allowed Values: ${allowedValues}`);
+      // ...
+
+      const requiredColor = required ? ANSI_COLOR_GREEN_BRIGHT : ANSI_COLOR_RED_BRIGHT;
+
+      console.log(`${ANSI_FONT_BOLD}Description:${ANSI_COLOR_RESET} ${ANSI_COLOR_GREEN_BRIGHT}${description}${ANSI_COLOR_RESET}`);
+      console.log(`${ANSI_FONT_BOLD}Example:${ANSI_COLOR_RESET} ${ANSI_COLOR_BLUE_BRIGHT}${example}${ANSI_COLOR_RESET}`);
+      console.log(`${ANSI_FONT_BOLD}Attribute:${ANSI_COLOR_RESET} ${ANSI_COLOR_BLUE_BRIGHT}${name}${ANSI_COLOR_RESET}`);
+      console.log(`${ANSI_FONT_BOLD}Required:${ANSI_COLOR_RESET} ${requiredColor}${required}${ANSI_COLOR_RESET}`);
+      console.log(`${ANSI_FONT_BOLD}Type:${ANSI_COLOR_RESET} ${ANSI_COLOR_BLUE_BRIGHT}${type}${ANSI_COLOR_RESET}`);
+      if (allowedValues)
+        console.log(`${ANSI_FONT_BOLD}Allowed Values:${ANSI_COLOR_RESET} ${ANSI_COLOR_BLUE_BRIGHT}${allowedValues}${ANSI_COLOR_RESET}`);
+      if (objectbinding)
+        console.log(`${ANSI_FONT_BOLD}Allowed Values:${ANSI_COLOR_RESET} ${ANSI_COLOR_BLUE_BRIGHT}${objectbinding}${ANSI_COLOR_RESET}`);
     }
   }
 }
@@ -52,7 +195,7 @@ export async function buildApp(watch: any) {
 
       console.log("Built ng-declarative app");
     } catch (error) {
-      console.error("Error reading or parsing source.xml:", error);
+      console.error(error);
     }
   };
 

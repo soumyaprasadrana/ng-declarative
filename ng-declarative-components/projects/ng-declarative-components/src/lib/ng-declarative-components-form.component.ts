@@ -51,7 +51,6 @@ export class Form extends Base implements OnInit, AfterViewInit {
   @Input() alignItems: string = "";
   @Input() override customClass: string = "";
   @Input() override height: string = "max-content";
-  @Input() override width: string = "auto";
   @Input() layoutDirection: string = "row"; // 'row' for rows, 'column' for columns
   @Input() manageChildren: boolean = false;
   @Input() childrenSizes: string = "";

@@ -7,7 +7,7 @@ import {
 } from "./utils";
 
 export const metadata = {
-  tag: "block",
+  tag: "navbar-start",
   attributes: getBaseAttributes([
     {
       name: "direction",
@@ -18,6 +18,14 @@ export const metadata = {
       allowedValues: "row | column",
       transform: transformDirection,
       example: `<block direction="row">...</block>`
+    },
+    {
+      name: "css-class",
+      required: false,
+      mappedInputAttribute: "customClass",
+      defaultValue: "display-contents",
+      type: "string",
+      example: '<navbar-start  css-class="my-custom-class" id="dfg43"></navbar-start>',
     },
 
     {
@@ -77,12 +85,20 @@ export const metadata = {
       objectbinding: true,
       mappedInputAttribute: "skipFlexClasses",
       type: "boolean",
+      defaultValue: "true",
       allowedValues: "true | false",
       validate: validateBoolean,
       example: `<block skip-flex="true">...</block>`
     },
-
-  ], "block"),
+    {
+      name: "slotstart",
+      description: "Associates the block with an start-slot directive.",
+      required: false,
+      type: "directive",
+      example: `<navbar-start ></navbar-start>`
+    },
+  ], "navbar-start"),
   allowedChildren: ["*"],
+  allowedInParent: ["navbar"],
   declarativeComponentTag: "ng-declarative-block",
 };

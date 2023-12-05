@@ -26,6 +26,11 @@ import { FormsModule } from "@angular/forms";
 import { Form } from "./ng-declarative-components-form.component";
 import { ButtonComponent } from "./ng-declarative-components-button.component";
 import { TableComponent } from "./ng-declarative-components-table.component";
+import { ImageComponent } from "./ng-declarative-components-image.component";
+import { SlideshowComponent } from "./ng-declarative-components-slideshow.component";
+import { NavbarComponent } from "./ng-declarative-components-navbar.component";
+import { NavbarItemComponent } from "./ng-declarative-components-navitem.component";
+import { HttpClientService } from "./ng-declarative-components.httpclient.service";
 @NgModule({
   imports: [CommonModule, RouterLink, NgbModule, HttpClientModule, FormsModule],
   declarations: [
@@ -43,7 +48,11 @@ import { TableComponent } from "./ng-declarative-components-table.component";
     InputComponent,
     Form,
     ButtonComponent,
-    TableComponent
+    TableComponent,
+    ImageComponent,
+    SlideshowComponent,
+    NavbarComponent,
+    NavbarItemComponent
   ],
   exports: [
     Application,
@@ -60,14 +69,18 @@ import { TableComponent } from "./ng-declarative-components-table.component";
     InputComponent,
     Form,
     ButtonComponent,
-    TableComponent
+    TableComponent,
+    ImageComponent,
+    SlideshowComponent,
+    NavbarComponent,
+    NavbarItemComponent
   ],
 })
 export class NgDeclarativeModule {
   static forRoot(): ModuleWithProviders<NgDeclarativeModule> {
     return {
       ngModule: NgDeclarativeModule,
-      providers: [ApplicationService, AnimationService],
+      providers: [ApplicationService, AnimationService, HttpClientService],
     };
   }
 }

@@ -8,53 +8,145 @@ import { NgModel } from "@angular/forms";
   selector: "ng-declarative-input",
   template: `
   
-    <div  [ngClass]="groupClasses" [ngStyle]="groupStyles">
+    <div #inputRef  [ngClass]="groupClasses" [ngStyle]="groupStyles">
       @if(this.label){
         <label class="form-label" [for]="inputID" [class]="labelCssClass">{{label}}</label>
       }
-      @if(prependText){
-        <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text">{{prependText}}</div>
-        </div>
+      @if(prependText || prependIcon){
+        
         @if(this.required){
-          <input #inputField #input="ngModel" required (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
-          <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
+          @if(this.signal){
+            <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+          @if(prependText){
+            {{prependText}}
+          } @else if(prependIcon){
+            <i class="{{prependIcon}}"></i>
+          }
+          
+          </div>
+        </div>
+            <input #inputField #input="ngModel" required (ngModelChange)="this.signal.set($event)" [ngModel]="this.signal()" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            </div>
+             @if(help){
+                <small [id]="helpID" class="form-text text-muted">{{help}}</small>
+              }
+            <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
               <div *ngIf="input.errors && input.errors['required']">{{this.currentKey}} is required.</div>
           </div>
           <div *ngIf="this.invalid && this.submitted" class="p-2  text-danger">
             <div *ngIf="this.errors.email">Invalid email address!</div>
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
           </div>
-        }@else{
-          <input #inputField #input="ngModel" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
-           <div *ngIf="this.invalid && this.submitted" class="p-2  text-danger">
+        
+          }@else{
+            <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text"> @if(prependText){
+            {{prependText}}
+          } @else if(prependIcon){
+            <i class="{{prependIcon}}"></i>
+          }</div>
+        </div>
+            <input #inputField #input="ngModel" required (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            </div>
+            @if(help){
+                <small [id]="helpID" class="form-text text-muted">{{help}}</small>
+              }
+            <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
+              <div *ngIf="input.errors && input.errors['required']">{{this.currentKey}} is required.</div>
+          </div>
+          <div *ngIf="this.invalid && this.submitted" class="p-2  text-danger">
             <div *ngIf="this.errors.email">Invalid email address!</div>
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
           </div>
-        }
-        @if(help){
-        <small [id]="helpID" class="form-text text-muted">{{help}}</small>
-        }
+          
+          }
+          
+        }@else{
+          @if(this.signal){
+            <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text"> @if(prependText){
+            {{prependText}}
+          } @else if(prependIcon){
+            <i class="{{prependIcon}}"></i>
+          }</div>
         </div>
+            <input #inputField #input="ngModel" (ngModelChange)="this.signal.set($event)" [ngModel]="this.signal()" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            </div>
+            @if(help){
+                <small [id]="helpID" class="form-text text-muted">{{help}}</small>
+              }
+            <div *ngIf="this.invalid && this.submitted" class="p-2  text-danger">
+            <div *ngIf="this.errors.email">Invalid email address!</div>
+            <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
+          </div>
+          
+          }@else{
+            <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text"> @if(prependText){
+            {{prependText}}
+          } @else if(prependIcon){
+            <i class="{{prependIcon}}"></i>
+          }</div>
+        </div>
+            <input #inputField #input="ngModel" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            </div>
+             @if(help){
+                <small [id]="helpID" class="form-text text-muted">{{help}}</small>
+              }
+            <div *ngIf="this.invalid && this.submitted" class="p-2  text-danger">
+            <div *ngIf="this.errors.email">Invalid email address!</div>
+            <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
+          </div>
+        
+          }
+           
+        }
+        
+        
       }
       @else {
 
         @if(this.required){
-         <input #inputField #input="ngModel" required [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
-         <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
+          @if(this.signal){
+            <input #inputField #input="ngModel" required [type]="inputType" (ngModelChange)="this.signal.set($event)" [ngModel]="this.signal()" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
             <div *ngIf="input.errors && input.errors['required']">{{this.currentKey}} is required.</div>
           </div>
            <div *ngIf="this.invalid && this.submitted" class="p-2 text-danger">
             <div *ngIf="this.errors.email">Invalid email address!</div>
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
           </div>
-        }@else{
-          <input #inputField #input="ngModel" [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
-          <div *ngIf="this.invalid && this.submitted" class="p-2 text-danger">
+          }@else{
+            <input #inputField #input="ngModel" required [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
+            <div *ngIf="input.errors && input.errors['required']">{{this.currentKey}} is required.</div>
+          </div>
+           <div *ngIf="this.invalid && this.submitted" class="p-2 text-danger">
             <div *ngIf="this.errors.email">Invalid email address!</div>
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
           </div>
+          }
+         
+        }@else{
+          @if(this.signal){
+            <input #inputField #input="ngModel" [type]="inputType" (ngModelChange)="this.signal.set($event)" [ngModel]="this.signal()" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+             <div *ngIf="this.invalid && this.submitted" class="p-2 text-danger">
+            <div *ngIf="this.errors.email">Invalid email address!</div>
+            <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
+          </div>
+          }@else{
+            <input #inputField #input="ngModel" [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+             <div *ngIf="this.invalid && this.submitted" class="p-2 text-danger">
+            <div *ngIf="this.errors.email">Invalid email address!</div>
+            <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
+          </div>
+          }
+         
         }
         @if(help){
         <small [id]="helpID" class="form-text text-muted">{{help}}</small>
@@ -85,6 +177,7 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   @Input() labelCssClass: string = "label";
   @Input() inputClass: string = "form-control";
   @Input() prependText: string | undefined;
+  @Input() prependIcon: string | undefined;
   @Input() dataset: any | undefined;
   @Input() datasetKey: any | undefined;
   @Input() datasetattribute: any | undefined;
@@ -94,8 +187,11 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   @Input() required: boolean = false;
   @Input() predefinedValidations: any | undefined;
   @Input() disableInputBorder: boolean = false;
+  @Input() signal: any;
 
   @ViewChild("inputField") inputField: ElementRef | undefined;
+
+  @ViewChild("inputRef") inputRef: ElementRef | any;
 
   @ViewChild("input") inputFieldNgModelInterface: NgModel | undefined;
 
@@ -237,6 +333,7 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
         this.app.datasets[this.dataset].newItem[this.datasetattribute] = this.inputField?.nativeElement.value;
     }
     this.runValidations();
+
   }
   getInputClasses(): string {
     // Apply Bootstrap classes along with custom class
@@ -312,8 +409,15 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   }
 
   override ngAfterViewInit(): void {
-    // console.log(this.datasetKey, this.app.datasets[this.dataset].dataset$[this.datasetKey][this.datasetattribute], this.app.datasets[this.dataset].dataset$[this.datasetKey][this.datasetattribute], this.app.datasets.hasOwnProperty(this.datasetKey))
-    console.log("======DEBUG: INPUT FIELD = ", this.inputField);
+
+    if (this.transition && this.elementRef) {
+      this.animationService.animate(
+        this.transition,
+        this.inputRef.nativeElement,
+        this.transitionDuration
+      );
+    }
+
   }
 
   getInputStyles(): { [key: string]: string } {
