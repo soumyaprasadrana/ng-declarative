@@ -13,6 +13,10 @@ export * from "./lib/ng-declarative-components-slideshow.component";
 export * from "./lib/ng-declarative-components-alert.component";
 export * from "./lib/ng-declarative-components-table.component";
 export * from "./lib/ng-declarative-components-block.component";
+export * from "./lib/ng-declarative-components-container.component";
+export * from "./lib/ng-declarative-components-row.component copy";
+export * from "./lib/ng-declarative-components-col.component";
+
 export * from "./lib/ng-declarative-components-navbar.component";
 export * from "./lib/ng-declarative-components-navitem.component";
 export * from "./lib/ng-declarative-components-input.component";

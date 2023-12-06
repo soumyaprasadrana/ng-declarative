@@ -31,6 +31,9 @@ import { SlideshowComponent } from "./ng-declarative-components-slideshow.compon
 import { NavbarComponent } from "./ng-declarative-components-navbar.component";
 import { NavbarItemComponent } from "./ng-declarative-components-navitem.component";
 import { HttpClientService } from "./ng-declarative-components.httpclient.service";
+import { Container } from "./ng-declarative-components-container.component";
+import { Row } from "./ng-declarative-components-row.component copy";
+import { Col } from "./ng-declarative-components-col.component";
 @NgModule({
   imports: [CommonModule, RouterLink, NgbModule, HttpClientModule, FormsModule],
   declarations: [
@@ -52,7 +55,10 @@ import { HttpClientService } from "./ng-declarative-components.httpclient.servic
     ImageComponent,
     SlideshowComponent,
     NavbarComponent,
-    NavbarItemComponent
+    NavbarItemComponent,
+    Container,
+    Row,
+    Col
   ],
   exports: [
     Application,
@@ -73,7 +79,10 @@ import { HttpClientService } from "./ng-declarative-components.httpclient.servic
     ImageComponent,
     SlideshowComponent,
     NavbarComponent,
-    NavbarItemComponent
+    NavbarItemComponent,
+    Container,
+    Row,
+    Col
   ],
 })
 export class NgDeclarativeModule {

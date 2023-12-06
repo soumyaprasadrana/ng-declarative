@@ -24,9 +24,11 @@ export class IDProcessor {
 
       if (this.idsModified) {
         // Convert the modified object back to XML
-        const builder = new xml2js.Builder();
+        const builder = new xml2js.Builder({
+          headless: true,
+        });
         const updatedXml = builder.buildObject(result);
-
+        console.log("DEBUG=>ID Process", result);
         // Save the updated XML back to the file
         fs.writeFileSync(this.filePath, updatedXml, "utf-8");
         Logger.log("Updated XML saved to file.");

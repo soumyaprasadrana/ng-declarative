@@ -78,6 +78,6 @@ export const metadata = {
     },
 
   ], "label"),
-  allowedChildren: null,
+  allowedChildren: ["image"],
   declarativeComponentTag: "ng-declarative-label",
 };

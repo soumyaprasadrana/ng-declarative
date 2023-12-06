@@ -6,9 +6,15 @@ import { AnimationService } from "./ng-declarative-animation.service";
 @Component({
   selector: "ng-declarative-paragraph",
   template: `
+  @if(text){
     <p [ngClass]="getParagraphClasses()" [ngStyle]="getParagraphStyles()">
       {{ text }}
   </p>
+  }@else if(template){
+    <p [innerHTML]="template" [ngClass]="getParagraphClasses()" [ngStyle]="getParagraphStyles()">
+  </p>
+  }
+    
   `,
   styles: [`:host{
     display:contents;
@@ -23,6 +29,7 @@ export class Paragraph extends Base implements OnInit {
   @Input() override width: string = "auto";
   @Input() override customClass: string = "";
   @Input() theme: string = "";
+  @Input() template: string | undefined;
 
 
   constructor(elementRef: ElementRef,

@@ -112,7 +112,7 @@ export class Compiler {
     const nodeName = Object.keys(node)[0];
 
     if (nodeName == "form") {
-      console.log("============== DEBUG FORM START ========");
+      //console.log("============== DEBUG FORM START ========");
       this.isinsideForm = true;
     }
 
@@ -144,7 +144,7 @@ export class Compiler {
 
 
     const resultOfValidateChildrens = this.validateChildrens(node, metadata);
-    Logger.log("Validated Childrens result", resultOfValidateChildrens);
+    Logger.debug("Validated Childrens result", resultOfValidateChildrens);
 
     if (nodeName == "route") {
       this.setCurrentRoute(this.getAttributeFromNode(node, "id"));
@@ -288,7 +288,7 @@ export class Compiler {
     metadata: any
   ): { result: boolean; key: string } {
     const nodeName = Object.keys(node)[0];
-    Logger.log("Validating for node " + nodeName);
+    Logger.debug("Validating for node " + nodeName);
     if (metadata.allowedChildren && metadata.allowedChildren[0] == "*")
       return { result: true, key: "*" };
 
@@ -1086,7 +1086,8 @@ Thumbs.db
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/scss/bootstrap.scss"
             ],
             "scripts": [
                {
@@ -1390,6 +1391,6 @@ export class ApplicationServiceProvider {
     const result = require("child_process").execSync(command, {
       encoding: "utf-8",
     });
-    Logger.log(result);
+    //Logger.log(result);
   }
 }

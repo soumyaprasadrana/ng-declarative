@@ -40,4 +40,11 @@
                 transform: translateY(-100vh);
             }
         }
-    
+.code-section {
+  font-family: monospace;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  margin-bottom: 10px;
+  white-space: break-spaces;
+}

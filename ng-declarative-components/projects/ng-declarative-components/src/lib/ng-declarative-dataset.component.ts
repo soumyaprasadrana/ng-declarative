@@ -13,6 +13,7 @@ export class DataLoaderComponent {
     @Input() src: string | object[] = '';
     @Input() dataKey: string = '';
     @Input() schema: object | string = '';
+    @Input() preLoad: boolean = true;
     @Output() dataLoaded = new EventEmitter<any[]>();
 
     private datasetSubject = new BehaviorSubject<any[]>([]);
@@ -44,7 +45,17 @@ export class DataLoaderComponent {
         return this.datasetObservable;
     }
 
+
+
     ngOnInit() {
+        if (this.preLoad) {
+            this.load();
+        }
+    }
+    forceReload() {
+        this.load();
+    }
+    load() {
         try {
             this.datasetSubject.subscribe((data) => {
                 this.initializeData(data);
@@ -58,7 +69,6 @@ export class DataLoaderComponent {
                 });
             } else if (this.type === 'url') {
                 this.loadDataFromUrl(this.src as string).subscribe((data: any) => {
-                    console.log("====== DEBUG DATSET FROM URL =====", data);
                     if (this.dataKey)
                         this.datasetSubject.next(data[this.dataKey]);
                     else

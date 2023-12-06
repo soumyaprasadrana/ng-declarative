@@ -7,6 +7,8 @@ import { AnimationService } from "./ng-declarative-animation.service";
   selector: "ng-declarative-label",
   template: `
     <label #labelRef [for]="for" [ngClass]="getLabelClasses()" [ngStyle]="getLabelStyles()">
+    
+    <ng-content></ng-content>
     @if(theme=="callout"){
       <h4>{{ text}}</h4>
       {{calloutDesc}}

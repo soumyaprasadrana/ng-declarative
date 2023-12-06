@@ -1,3 +1,5 @@
+import { validateBoolean } from "./utils";
+
 export const metadata = {
   tag: "dataset",
   attributes: [
@@ -6,6 +8,14 @@ export const metadata = {
       required: true,
       mappedInputAttribute: "name",
       type: "string",
+    },
+    {
+      name: "pre-load",
+      required: false,
+      mappedInputAttribute: "preLoad",
+      type: "boolean",
+      validate: validateBoolean,
+      allowedValues: "true | false"
     },
     {
       name: "type",
