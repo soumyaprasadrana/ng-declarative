@@ -130,6 +130,9 @@ export class Label extends Base implements OnInit {
             case "muted":
               classes = classes + " text-muted ";
               break;
+            case "wrap":
+              classes = classes + " text-wrap w-auto ";
+              break;
             case "capitalize":
               classes = classes + " text-capitalize ";
               break;
@@ -212,6 +215,9 @@ export class Label extends Base implements OnInit {
             break;
           case "muted":
             classes = classes + " text-muted ";
+            break;
+          case "wrap":
+            classes = classes + " text-wrap w-auto ";
             break;
           case "capitalize":
             classes = classes + " text-capitalize ";

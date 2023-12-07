@@ -1,28 +1,29 @@
-<ng-declarative-app controller="AppController" name="declarative-sample-app" id="FeNV5u8">
+
+<ng-declarative-app controller="AppController" name="declarative-sample-app" id="atA0rMN">
   <navbar color-scheme="dark" brand-text-css-class="text-warning" brand-icon="bi bi-airplane-engines text-warning" brand-text="%%appCtrl.appName%%" id="bUYgwdF">
     <navbar-center id="iynGj1C">
       <form css-class="search-form" transition="tada" transition-duration="long" action="appCtrl.doSearch" direction="row" width="full" id="VhZuQA1">
-        <input transition="slide-in" transition-duration="long" prepend-icon-class="bi bi-search" required="true" theme="text" attribute-name="search" model="appCtrl.username" placeholder="Search..." id="YAO0fEm"/>
-        <form-action css-class="text-muted" transition="slide-in" theme="warning" transition-duration="long" label="Search" id="PML0lSd"/>
+        <input transition="slide-in" transition-duration="long" prepend-icon-class="bi bi-search" required="true" theme="text" attribute-name="search" model="appCtrl.username" placeholder="Search..." id="YAO0fEm"></input>
+        <form-action css-class="text-muted" transition="slide-in" theme="warning" transition-duration="long" label="Search" id="PML0lSd"></form-action>
       </form>
     </navbar-center>
     <navbar-end id="vdweRWwhi">
-      <navitem route="/home" label="Home" id="fiwde6fyb"/>
-      <navitem route="/grid" label="Grid" id="fiwde6dfyb"/>
-      <navitem route="/datasets" label="Datasets" id="fiwde6dfwdyb"/>
+      <navitem route="/home" label="Home" id="fiwde6fyb"></navitem>
+      <navitem route="/grid" label="Grid" id="fiwde6dfyb"></navitem>
+      <navitem route="/datasets" label="Datasets" id="fiwde6dfwdyb"></navitem>
     </navbar-end>
   </navbar>
   <route uri="/home" title="Declarative Sample App" id="home">
     <block width="full" height="full" justify-contents="center" align-items="center" direction="column" id="wizYbyA">
       <block direction="row" id="ySy4I1u">
         <block justify-contents="center" align-items="center" direction="column" id="xagOI">
-          <image transition="tada" transition-duration="long" css-class="text-warning main-icon" type="icon" icon="bi bi-airplane-engines" id="ijMfMaD"/>
-          <label css-class="badge bg-warning text-dark" theme="display-large,bold" text="hover the icon!" id="DPw4cdN9Y"/>
+          <image transition="tada" transition-duration="long" css-class="text-warning main-icon" type="icon" icon="bi bi-airplane-engines" id="ijMfMaD"></image>
+          <label css-class="badge bg-warning text-dark" theme="display-large,bold" text="hover the icon!" id="DPw4cdN9Y"></label>
         </block>
         <block width="min-content" direction="column" id="xalZgOI">
-          <label transition="typing" transition-duration="short" theme="display-large,bold" text="%%appCtrl.pageHeading%%" id="DPw4N9Y"/>
-          <label transition="typing" transition-duration="long" theme="heading-small,bold" text="%%appCtrl.pageSubHeading%%" id="DcdsPw4N9Y"/>
-          <paragraph transition="typing" transition-duration="  " text="%%appCtrl.pageParagraph%%" id="k6MoblQ"/>
+          <label transition="typing" transition-duration="short" theme="display-large,bold" text="%%appCtrl.pageHeading%%" id="DPw4N9Y"></label>
+          <label transition="typing" transition-duration="long" theme="heading-small,bold" text="%%appCtrl.pageSubHeading%%" id="DcdsPw4N9Y"></label>
+          <paragraph transition="typing" transition-duration="" text="%%appCtrl.pageParagraph%%" id="k6MoblQ"></paragraph>
         </block>
       </block>
     </block>
@@ -33,201 +34,258 @@
         <block direction="column" width="full" id="puENT5z">
           <block direction="row" id="FtqcnSW">
             <label margin-start="small" theme="bold,heading-large" text="Grid" id="qoOzlo0">
-              <image type="icon" icon="bi bi-grid" id="hwrFcHc"/>
+              <image type="icon" icon="bi bi-grid" id="hwrFcHc"></image>
             </label>
           </block>
-          <paragraph template="%%routeCtrl.gridSystemDescription%%" id="dHWsbKO"/>
+          <paragraph template="%%routeCtrl.gridSystemDescription%%" id="dHWsbKO"></paragraph>
         </block>
         <row id="LGDEvod">
           <column css-class="bg-warning" id="BI4j2mG">
-            <label padding-start="small" theme="bold,heading-smallest" text="1 of 3" id="HxCGHrW"/>
+            <label padding-start="small" theme="bold,heading-smallest" text="1 of 3" id="HxCGHrW"></label>
           </column>
           <column css-class="bg-primary" id="weBI4j2mG">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="2 of 3" id="HxCGewHrW"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="2 of 3" id="HxCGewHrW"></label>
           </column>
           <column css-class="bg-danger" id="wedBI4j2mG">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="3 of 3" id="HxCsdcGewHrW"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="3 of 3" id="HxCsdcGewHrW"></label>
           </column>
         </row>
         <row id="vDlEWHt">
           <column id="x7WvHo0g">
-            <paragraph css-class="code-section" text="%%routeCtrl.bsGridfirst%%" id="V357ewixx"/>
-            <paragraph template="The above example creates three equal-width columns across all devices and viewports using bootstrap's predefined grid classes. Those columns are centered in the page with the parent &lt;code>container&lt;/code> component." id="GQu5eUd"/>
+            <paragraph css-class="code-section" text="%%routeCtrl.bsGridfirst%%" id="V357ewixx"></paragraph>
+            <paragraph template="The above example creates three equal-width columns across all devices and viewports using bootstrap&apos;s predefined grid classes. Those columns are centered in the page with the parent &lt;code&gt;container&lt;/code&gt; component." id="GQu5eUd"></paragraph>
           </column>
         </row>
         <row margin-top="small" id="LGDweEvod">
           <column css-class="bg-warning" id="BIwewded4j2mG">
-            <label padding-start="small" theme="bold,heading-smallest" text="1 of 3" id="HxCGHredwW"/>
+            <label padding-start="small" theme="bold,heading-smallest" text="1 of 3" id="HxCGHredwW"></label>
           </column>
           <column size="6" css-class="bg-primary" id="weBI4jew2mG">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="2 of 3 (wider)" id="HxCGewHedwrW"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="2 of 3 (wider)" id="HxCGewHedwrW"></label>
           </column>
           <column css-class="bg-danger" id="wedBedI4j2mG">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="3 of 3" id="HxCdewsdcGewHrW"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="3 of 3" id="HxCdewsdcGewHrW"></label>
           </column>
         </row>
         <row id="vDlEefWHt">
           <column id="x7WvHow0g">
-            <paragraph css-class="code-section" text="%%routeCtrl.bsGridsecond%%" id="V357ewwixx"/>
-            <paragraph template="Auto-layout for flexbox grid columns also means you can set the width of one column and have the sibling columns automatically resize around it. You may use predefined grid classes (as shown below), grid mixins, or inline widths. Note that the other columns will resize no matter the width of the center column." id="xiE7hu7"/>
+            <paragraph css-class="code-section" text="%%routeCtrl.bsGridsecond%%" id="V357ewwixx"></paragraph>
+            <paragraph template="Auto-layout for flexbox grid columns also means you can set the width of one column and have the sibling columns automatically resize around it. You may use predefined grid classes (as shown below), grid mixins, or inline widths. Note that the other columns will resize no matter the width of the center column." id="xiE7hu7"></paragraph>
           </column>
         </row>
         <row justify-contents="center" margin-top="small" id="dpaWbbn">
           <column viewport-sm="6" viewport-lg="2" css-class="bg-warning" id="CG3ZeUn">
-            <label padding-start="small" theme="bold,heading-smallest" text="1 of 3" id="u8h1Xds"/>
+            <label padding-start="small" theme="bold,heading-smallest" text="1 of 3" id="u8h1Xds"></label>
           </column>
           <column viewport-sm="6" css-class="bg-primary" id="MRxm7Us">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text=" Variable width content" id="YQk3yBF"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="Variable width content" id="YQk3yBF"></label>
           </column>
           <column viewport-sm="6" viewport-lg="2" css-class="bg-danger" id="YpXKiav">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="3 of 3" id="lF8fneN"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="3 of 3" id="lF8fneN"></label>
           </column>
         </row>
         <row id="Qhr5Zgt">
           <column viewport-lg="12" viewport-md="4" id="HZWXF7v">
-            <label height="full" width="full" text="viewport-lg-12 viewport-md-4" theme="bold,heading-smallest" text-color="#fff" padding="small" css-class="bg-dark" id="bAOpsiF"/>
+            <label height="full" width="full" text="viewport-lg-12 viewport-md-4" theme="bold,heading-smallest" text-color="#fff" padding="small" css-class="bg-dark" id="bAOpsiF"></label>
           </column>
           <column viewport-lg="12" viewport-md="4" id="aStAdHE">
-            <label height="full" width="full" text="viewport-lg-12 viewport-md-4" theme="bold,heading-smallest" text-color="#fff" padding="small" css-class="bg-success" id="hvHEmGT"/>
+            <label height="full" width="full" text="viewport-lg-12 viewport-md-4" theme="bold,heading-smallest" text-color="#fff" padding="small" css-class="bg-success" id="hvHEmGT"></label>
           </column>
           <column viewport-lg="12" viewport-md="4" id="cDe0P6j">
-            <label height="full" width="full" text="viewport-lg-12 viewport-md-4" theme="bold,heading-smallest" text-color="#fff" padding="small" css-class="bg-info" id="uuC8liI"/>
+            <label height="full" width="full" text="viewport-lg-12 viewport-md-4" theme="bold,heading-smallest" text-color="#fff" padding="small" css-class="bg-info" id="uuC8liI"></label>
           </column>
         </row>
         <row id="vDlEevtfWHt">
           <column id="x7WvHtow0g">
-            <paragraph css-class="code-section" text="%%routeCtrl.bsGridThird%%" id="V357etwwixx"/>
-            <paragraph template="Above example also show how &lt;code>viewport-{breakpoint}&lt;/code> attribute can be used to make columns responsive." id="xiE7htu7"/>
+            <paragraph css-class="code-section" text="%%routeCtrl.bsGridThird%%" id="V357etwwixx"></paragraph>
+            <paragraph template="Above example also show how &lt;code&gt;viewport-{breakpoint}&lt;/code&gt; attribute can be used to make columns responsive." id="xiE7htu7"></paragraph>
           </column>
         </row>
         <row margin-top="small" justify-contents="start" id="ECIKb3S">
           <column css-class="bg-success" size="4" id="DVmYv7M">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='start' 1 of 2" id="u7mZSEq"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;start&apos; 1 of 2" id="u7mZSEq"></label>
           </column>
           <column css-class="bg-dark" size="4" id="Aa2G1pD">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='start' 2 of 2" id="YHbShRm"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;start&apos; 2 of 2" id="YHbShRm"></label>
           </column>
         </row>
         <row justify-contents="center" id="ErwXTwL">
           <column css-class="bg-primary" size="4" id="VZOLK9K">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='center' 1 of 2" id="pPHjex9"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;center&apos; 1 of 2" id="pPHjex9"></label>
           </column>
           <column css-class="bg-warning" size="4" id="EwaiuIk">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents='center' 2 of 2" id="yRR3bHR"/>
+            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;center&apos; 2 of 2" id="yRR3bHR"></label>
           </column>
         </row>
         <row justify-contents="end" id="Rmtz3U1">
           <column css-class="bg-info" size="4" id="J4VeFLP">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents='end' 1 of 2" id="cZ5UF2C"/>
+            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;end&apos; 1 of 2" id="cZ5UF2C"></label>
           </column>
           <column css-class="bg-success" size="4" id="gaqgTPl">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='end' 2 of 2" id="ObrEakb"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;end&apos; 2 of 2" id="ObrEakb"></label>
           </column>
         </row>
         <row justify-contents="around" id="zfJG6LB">
           <column css-class="bg-danger" size="4" id="pwYy63v">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='around' 1 of 2" id="auyoSdV"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;around&apos; 1 of 2" id="auyoSdV"></label>
           </column>
           <column css-class="bg-secondary" size="4" id="umoBo5F">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='around' 2 of 2" id="YP1zfDQ"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;around&apos; 2 of 2" id="YP1zfDQ"></label>
           </column>
         </row>
         <row justify-contents="between" id="k7ue34V">
           <column css-class="bg-warning" size="4" id="Ula2Fkj">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents='between' 1 of 2" id="uxqKqQj"/>
+            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;between&apos; 1 of 2" id="uxqKqQj"></label>
           </column>
           <column css-class="bg-primary" size="4" id="n0vK8zk">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='between' 2 of 2" id="i8olijO"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;between&apos; 2 of 2" id="i8olijO"></label>
           </column>
         </row>
         <row justify-contents="evenly" id="QTV0PoK">
           <column css-class="bg-success" size="4" id="eKN4opy">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents='evenly' 1 of 2" id="YjwyqfS"/>
+            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;evenly&apos; 1 of 2" id="YjwyqfS"></label>
           </column>
           <column css-class="bg-info" size="4" id="v3CA3Vs">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents='evenly' 2 of 2" id="SM5htez"/>
+            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;evenly&apos; 2 of 2" id="SM5htez"></label>
           </column>
         </row>
         <row width="full" id="vDlEfrWHt">
           <column size="12" id="x7WvHrfo0g">
-            <paragraph css-class="code-section text-warp" text="%%routeCtrl.bsGridrowJustifyContents%%" id="V357erfwixx"/>
-            <paragraph template="&lt;code>justify-contents&lt;/code> can be used to align contents horizontally." id="ism8Kjg"/>
+            <paragraph css-class="code-section text-warp" text="%%routeCtrl.bsGridrowJustifyContents%%" id="V357erfwixx"></paragraph>
+            <paragraph template="&lt;code&gt;justify-contents&lt;/code&gt; can be used to align contents horizontally." id="ism8Kjg"></paragraph>
           </column>
         </row>
         <row width="full" height="define-100px" id="SOIpuXZ">
           <column css-class="bg-black" align-self="start" id="DiCtN7g">
-            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align Start" id="HRz6SDM"/>
+            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align Start" id="HRz6SDM"></label>
           </column>
           <column css-class="bg-black" align-self="center" id="DefiCtN7g">
-            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align Center" id="HRz6bSDM"/>
+            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align Center" id="HRz6bSDM"></label>
           </column>
           <column css-class="bg-black" align-self="end" id="DifCtN7g">
-            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align End" id="HRz6SDewM"/>
+            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align End" id="HRz6SDewM"></label>
           </column>
         </row>
         <row width="full" id="vDlEfrWHjht">
           <column size="12" id="x7WvHhjrfo0g">
-            <paragraph css-class="code-section text-warp" text="%%routeCtrl.bsGridFifth%%" id="V357eriifwixx"/>
-            <paragraph template="&lt;code>align-self&lt;/code> can be used to align a column content vertically inside a row." id="ism8Kpojg"/>
+            <paragraph css-class="code-section text-warp" text="%%routeCtrl.bsGridFifth%%" id="V357eriifwixx"></paragraph>
+            <paragraph template="&lt;code&gt;align-self&lt;/code&gt; can be used to align a column content vertically inside a row." id="ism8Kpojg"></paragraph>
           </column>
         </row>
-        <row height="define-100px" id="GNnja4x"/>
+        <row height="define-100px" id="GNnja4x"></row>
       </container>
     </block>
   </route>
   <route controller="DatasetController" uri="/datasets" title="Datasets" id="QmYewDA">
-    <dataset name="names" type="json" src="[{'firstname':'Soumya','middlename':'Prasad', lastname:'Rana'},{'firstname':'Deepak','middlename':'Kumar', lastname:'Senapati'}]" id="byXBDHg"/>
+    <dataset name="names" type="json" src="[{&apos;firstname&apos;:&apos;Soumya&apos;,&apos;middlename&apos;:&apos;Prasad&apos;, lastname:&apos;Rana&apos;},{&apos;firstname&apos;:&apos;Deepak&apos;,&apos;middlename&apos;:&apos;Kumar&apos;, lastname:&apos;Senapati&apos;}]" id="byXBDHg"></dataset>
+    <dataset name="days" type="json" src="%%routeCtrl.daysJSONList%%" id="si3UEoV"></dataset>
+    <dataset name="jsonfilefromcontroller" type="json" src="%%routeCtrl.sample%%" id="si3UEsoVs"></dataset>
+    <dataset name="jsonfromfile" type="json-file" src="&apos;assets/data.json&apos;" id="si3UdEsoVs"></dataset>
+    <dataset name="nyttopsciencestories" data-key="results" type="url" src="&apos;https://api.nytimes.com/svc/topstories/v2/science.json?api-key=zFN5CcUscU5jFK98fkzgcYXuFdhSV8GV&apos;" id="it9RAzz"></dataset>
     <block height="auto" direction="column" id="n1yF39r">
       <container css-class="mt-5" id="VVAxDqc">
         <block direction="column" id="Q5bXZz7">
           <label theme="bold,heading-large" text="Datasets" id="GehisAf">
-            <image type="icon" icon="bi bi-database" id="hIUwXbU"/>
+            <image type="icon" icon="bi bi-database" id="hIUwXbU"></image>
           </label>
-          <paragraph padding-start="small" template="%%routeCtrl.datasetDef%%" id="PO1XIHF"/>
+          <paragraph padding-start="small" template="%%routeCtrl.datasetDef%%" id="PO1XIHF"></paragraph>
         </block>
-        <block direction="column" padding-start="medium" id="Q5bXZzd7">
-          <label theme="bold,heading-normal" text="Example-1" id="GedhisAf"/>
-          <paragraph text="Below example show how we can load a inline json dataset and use it in loop component." id="UUa61sU"/>
+        <!--Example-1-->
+        <block direction="column" padding-start="medium" id="tiOaHmV">
+          <label theme="bold,heading-normal" text="Example-1" id="LA6VzSp"></label>
+          <paragraph text="Below example shows, how we can load a json dataset from controller and use it in loop component." id="wte2Kfs"></paragraph>
         </block>
-        <row id="QM8j1dv">
-          <column id="YWM75Ka">
-            <row css-class="text-center" justify-contents="center" padding="medium" id="kbI8e4d5">
-              <column id="H37sUMN">
-                <label width="slim" theme="bold,heading-smallest" text="Name" id="RRu8ew3iq"/>
-              </column>
-              <column id="ehfwBAb">
-                <label width="slim" theme="bold,heading-smallest" text="Middle Name" id="ewfcds"/>
-              </column>
-              <column id="Fb6vyFl">
-                <label width="slim" theme="bold,heading-smallest" text="Last Name" id="werffew"/>
-              </column>
-            </row>
-            <row id="Z7v1O93">
-              <column id="T0FJ71i">
-                <loop items="app.datasets.names.dataset$" id="QCB0osk">
-                  <row css-class="text-center" justify-contents="center" padding="medium" id="krbI8e4d5">
-                    <column id="H37serUMN">
-                      <label width="slim" theme="bold,heading-smallest" text="%%item.firstname%%" id="RRu8reew3iq"/>
-                    </column>
-                    <column id="ewhfwBAb">
-                      <label width="slim" theme="bold,heading-smallest" text="%%item.middlename%%" id="ewfrcds"/>
-                    </column>
-                    <column id="Fb6vreyFl">
-                      <label width="slim" theme="bold,heading-smallest" text="%%item.middlename%%" id="werfrefew"/>
-                    </column>
-                  </row>
-                </loop>
-              </column>
-            </row>
-            <row width="full" id="bd9C6sy">
-              <column size="12" id="osg0MOd">
-                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example1source%%" id="qc8wxyB"/>
+        <row padding-start="extra-large" padding-end="extra-large" id="PJh6Gn0">
+          <column id="hLyGVuf">
+            <row width="full" id="oD7PFfm">
+              <column size="12" id="ptRaMud">
+                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example1source%%" id="hMKHiZF"></paragraph>
               </column>
             </row>
           </column>
+          <column id="SNZhUrw">
+            <loop items="app.datasets.days.dataset$" id="lKNxtIt">
+              <label margin="small" padding="small" background-color="%%routeCtrl.getRandomColor(item)%%" text="%%item%%" id="m11LBLQ"></label>
+            </loop>
+          </column>
         </row>
+        <!--Example-1 End -->
+        <!-- Example-2 -->
+        <block direction="column" padding-start="medium" id="Fn9x71D">
+          <label theme="bold,heading-normal" text="Example-2" id="csrxPWE"></label>
+          <paragraph text="The following example illustrates two approaches to load a JSON dataset for a route: one involving the use of a controller and another without it. The loaded dataset is subsequently utilized within a loop component." id="Zzl2Ifv"></paragraph>
+          <label theme="bold,heading-small" text="Load from an asset file:" id="ZRnAzUX"></label>
+          <paragraph template="%%routeCtrl.example2SubHeadingPara%%" id="OquJXvy"></paragraph>
+        </block>
+        <row padding-start="extra-large" padding-end="extra-large" id="TCdscCp">
+          <column id="Gt5t6iH">
+            <row width="full" id="aOSPWqO">
+              <column size="12" id="AiEYiUU">
+                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example2source1%%" id="tGANpPY"></paragraph>
+              </column>
+            </row>
+          </column>
+          <column id="paKg6q0">
+            <loop items="app.datasets.jsonfromfile.dataset$" id="Lbvz2bw">
+              <label margin="small" padding="small" background-color="%%routeCtrl.getRandomColor(item.name)%%" text="%%item.name%%" id="fSnpQku"></label>
+            </loop>
+          </column>
+        </row>
+        <block direction="column" padding-start="medium" id="Fn9x71Dd">
+          <label theme="bold,heading-small" text="Load JSON in the controller and use it:" id="g95OJ48"></label>
+          <paragraph template="%%routeCtrl.example2SubHeading2Para%%" id="qUIiSjF"></paragraph>
+        </block>
+        <row padding-start="extra-large" padding-end="extra-large" id="i226NYu">
+          <column id="k1bz5tx">
+            <row width="full" id="KCe9fuk">
+              <column size="12" id="aKOHpe8">
+                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example2source2%%" id="pvrMV2p"></paragraph>
+              </column>
+            </row>
+          </column>
+          <column id="tJ8dTtQ">
+            <loop items="app.datasets.jsonfilefromcontroller.dataset$" id="dUVEuky">
+              <label margin="small" padding="small" background-color="%%routeCtrl.getRandomColor(item.name)%%" text="%%item.name%%" id="xe2wMk4"></label>
+            </loop>
+          </column>
+        </row>
+        <!--Example-2 End-->
+        <!--Example-3-->
+        <block direction="column" padding-start="medium" id="I08HtMi">
+          <label theme="bold,heading-normal" text="Example-3" id="Wo4dP50"></label>
+          <paragraph text="This example illustrates how developers can effortlessly leverage the dataset component to seamlessly load API data with a single line of code, simplifying the design process and embracing a more declarative approach.
+
+In this particular instance, the New York Times API, accompanied by an API key, is employed to retrieve top science stories for the day within a dataset component. Subsequently, two loop components are employed—one for displaying titles and the other for showcasing images.Notably, the entire process is accomplished without relying on a single line of additional JavaScript code.  To streamline the presentation, a display condition is implemented to exhibit only half of the retrieved stories and the initial image of each story. This approach aims to streamline design complexities and promote a more straightforward, declarative methodology." id="oThiFLU"></paragraph>
+        </block>
+        <row padding-start="extra-large" padding-end="extra-large" id="Sv1gY6y">
+          <column id="hjNFmXL">
+            <row width="full" id="Tjw8fCz">
+              <column size="12" id="t3yN373">
+                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example3source%%" id="trYf38y"></paragraph>
+              </column>
+            </row>
+          </column>
+          <column border="minimal" border-color="var(--bs-warning)" height="define-880px" overflow="scroll" id="kbz8tUT">
+            <block padding="large" direction="column" id="EXJZIE8">
+              <row background-color="#000" justify-contents="center" id="P7BIo8V">
+                <column id="WMmbIkT">
+                  <label text-color="var(--bs-warning)" theme="wrap,bold,heading-large" text="New York Times Top Science Stories" id="abO70Js"></label>
+                </column>
+              </row>
+              <row padding="small" id="abDY3Tp">
+                <loop items="app.datasets.nyttopsciencestories.dataset$" id="zst5YJP">
+                  <label display-condition="$index!=0 and $index%2==0 and item.title!=&apos;&apos;" theme="wrap,bold,heading-smallest" text="Title: %%item.title%%" id="hzpZL8S"></label>
+                  <loop display-condition="$index!=0 and $index%2==0 and item.title!=&apos;&apos;" outer-loop-item="item" outer-loop-index="$index" inner-loop="true" inner-loop-items="item.multimedia" id="AURlGo1">
+                    <image display-condition="$index==0" type="image" src="%%item.url%%" id="Jb0gYS7"></image>
+                  </loop>
+                </loop>
+              </row>
+            </block>
+          </column>
+        </row>
+        <row height="define-100px" id="uDPmtgB"></row>
+        <form action="routeCtrl.method" id="RgIhpzb"></form>
       </container>
     </block>
-    <form action="routeCtrl.method" id="RgIhpzb"/>
   </route>
 </ng-declarative-app>

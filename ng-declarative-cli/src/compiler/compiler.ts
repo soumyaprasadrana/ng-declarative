@@ -80,7 +80,7 @@ export class Compiler {
   async compile(sourceXml: string) {
     Logger.debug(this.registryPath, this.outputFolder);
     // Parse sourceXml and convert declarative tags to Angular code
-    parseString(sourceXml, async (err: any, result) => {
+    parseString(sourceXml, { explicitChildren: true, preserveChildrenOrder: true }, async (err: any, result) => {
       if (err) {
         Logger.error("Error parsing source XML:", err.message);
         return;
@@ -293,13 +293,13 @@ export class Compiler {
       return { result: true, key: "*" };
 
     //Check if all the children's included under this component are valid and allowed components
-    const keys = Object.keys(node[nodeName]);
-    for (var key of keys) {
-      if (Array.isArray(node[nodeName][key])) {
+    const childrenArray = node[nodeName].$$;
+    if (Array.isArray(childrenArray)) {
+      for (var item of childrenArray) {
         if (metadata.allowedChildren == null)
           return { result: false, key: "nochildren" };
-        if (!metadata.allowedChildren.includes(key))
-          return { result: false, key: key };
+        if (!metadata.allowedChildren.includes(item["#name"]))
+          return { result: false, key: item["#name"] };
       }
     }
     return { result: true, key: "allIncluded" };
@@ -441,7 +441,50 @@ export class Compiler {
 
   private createLoopComponents() {
     for (var loop of this.loops) {
-      const fileContent = `
+      if (loop.innerLoop) {
+        const fileContent = `
+      import { Component, Input } from '@angular/core';
+      import {
+        ${this.ngDeclarativeServices.join(",")}
+      } from "ng-declarative-components";
+      import { ApplicationServiceProvider } from "./app.provider.service";
+    @Component({
+        selector: 'app-loop-${loop.id}',
+        template: \`
+         @defer(on immediate) {
+            @for(item of innerLoopItems;track item;let $index = $index){
+              ${loop.template}
+            }
+        }
+        \`,
+        styles: [\`
+          :host{
+            display:contents;
+          }
+        \`]
+    })
+    export class ${loop.component} {
+        public appCtrl: any;
+        public app: any;
+        public routeCtrl: any;
+        @Input() innerLoopItems: any;
+        @Input() outerLoopIndex: any;
+        @Input() outerLoopItem: any;
+        constructor(public appPropvider: ApplicationServiceProvider) {
+             this.app = appPropvider.getApp();
+             this.appCtrl = this.app.getAppController();
+             this.routeCtrl = this.app.getCurrentRoute().getController();
+          }
+    
+
+    toString(value: any): any {
+      return new String(value);
+    }
+  }
+      `;
+        fs.writeFileSync(loop.file_path, fileContent);
+      } else {
+        const fileContent = `
       import { Component } from '@angular/core';
       import {
         ${this.ngDeclarativeServices.join(",")}
@@ -451,7 +494,7 @@ export class Compiler {
         selector: 'app-loop-${loop.id}',
         template: \`
          @defer(on immediate) {
-            @for(item of ${loop.iteratable};track item){
+            @for(item of ${loop.iteratable};track item;let $index = $index){
               ${loop.template}
             }
         }
@@ -471,9 +514,15 @@ export class Compiler {
              this.appCtrl = this.app.getAppController();
              this.routeCtrl = this.app.getCurrentRoute().getController();
           }
+    
+
+    toString(value: any): any {
+      return new String(value);
     }
+  }
       `;
-      fs.writeFileSync(loop.file_path, fileContent);
+        fs.writeFileSync(loop.file_path, fileContent);
+      }
     }
   }
 
@@ -1230,6 +1279,7 @@ Thumbs.db
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
+    "resolveJsonModule": true,
     "paths": {
       "@angular/*": [
         "./node_modules/@angular/*"
@@ -1273,6 +1323,10 @@ export class ApplicationServiceProvider {
 
     //Copy Other ts classes
     this.copyFilesWithExtension(path.join("src"), workspacePath, "ts");
+    //Copy Other ts classes
+    this.copyFilesWithExtension(path.join("src"), workspacePath, "json");
+
+
   }
 
   private copyFilesWithExtension(source: string, target: string, fileExtension: string): void {

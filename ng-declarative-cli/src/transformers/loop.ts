@@ -115,22 +115,39 @@ export async function transform(metadata: any, node: any, compiler: any) {
   const attributes = processAttributes(metadata.attributes, node, metadata);
   //Logger.debug("Attributes", attributes);
 
-  const children = await processChildren(node[nodeName], compiler, node);
+  const children: any = await processChildren(node[nodeName], compiler, node);
 
-  //console.log("Children ", children);
-  console.log("Attributes ", attributes);
+
   const id = compiler.getAttributeFromNode(node, "id");
   const items = compiler.getAttributeFromNode(node, "items");
+  const innerLoop = compiler.getAttributeFromNode(node, "inner-loop");
+  const innerLoopItems = compiler.getAttributeFromNode(node, "inner-loop-items");
+  const outerLoopItem = compiler.getAttributeFromNode(node, "outer-loop-item");
+  const outerLoopIndex = compiler.getAttributeFromNode(node, "outer-loop-index");
   compiler.addLoop({
     id: id,
     attributes: attributes,
     template: `${children.toString().replace(/(>,+<)/g, "><").replace(/,</g, "<")}`,
     component: "Loop" + id,
     iteratable: items,
+    innerLoop: innerLoop,
+    innerLoopItems: innerLoopItems,
+    outerLoopItem: outerLoopItem,
+    outerLoopIndex: outerLoopIndex,
     route: compiler.getCurrentRoute()
   });
 
-  return `<app-loop-${id}/>`;
+  let displayCondition = compiler.getAttributeFromNode(node, "display-condition");
+  if (displayCondition) {
+    // Replace "and" with "&&"
+    const stringWithAnd = displayCondition.replace(/\band\b/g, '&&');
+
+    // Replace "or" with "||"
+    const finalResult = stringWithAnd.replace(/\bor\b/g, '||');
+    displayCondition = finalResult;
+  }
+
+  return `<app-loop-${id} ${innerLoop ? `[innerLoopItems]="${innerLoopItems}"` : ''} ${outerLoopItem ? `[outerLoopItem]="${outerLoopItem}"` : ''} ${outerLoopIndex ? `[outerLoopIndex]="${outerLoopIndex}"` : ''} ${displayCondition ? `*ngIf="${displayCondition}"` : ''}/>`;
 }
 
 

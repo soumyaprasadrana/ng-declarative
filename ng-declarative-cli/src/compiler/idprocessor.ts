@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import * as xml2js from "xml2js";
+import * as xmlParser from "fast-xml-parser";
 import { Logger } from "../logger/logger";
 
 export class IDProcessor {
@@ -13,43 +13,39 @@ export class IDProcessor {
     const xmlString = fs.readFileSync(this.filePath, "utf-8");
 
     // Parse XML to JavaScript object
-    xml2js.parseString(xmlString, (err, result) => {
-      if (err) {
-        Logger.error("Error parsing XML:", err);
-        return;
-      }
 
-      // Process IDs in the resulting object
-      this.processIDsRecursively(result[Object.keys(result)[0]]);
+    const result = new xmlParser.XMLParser({ commentPropName: "#comment", preserveOrder: true, ignoreAttributes: false }).parse(xmlString);
 
-      if (this.idsModified) {
-        // Convert the modified object back to XML
-        const builder = new xml2js.Builder({
-          headless: true,
-        });
-        const updatedXml = builder.buildObject(result);
-        console.log("DEBUG=>ID Process", result);
-        // Save the updated XML back to the file
-        fs.writeFileSync(this.filePath, updatedXml, "utf-8");
-        Logger.log("Updated XML saved to file.");
-      } else {
-        Logger.log("File processed no new id added.")
-      }
-    });
+    // Process IDs in the resulting object
+    this.processIDsRecursively(result[Object.keys(result)[0]]);
+
+    if (this.idsModified) {
+      // Convert the modified object back to XML manually
+
+      const updatedXml = new xmlParser.XMLBuilder({ commentPropName: "#comment", preserveOrder: true, ignoreAttributes: false, suppressEmptyNode: false, format: true }).build(result);
+
+      // Save the updated XML back to the file
+      fs.writeFileSync(this.filePath, updatedXml, "utf-8");
+      Logger.log("Updated XML saved to file.");
+    } else {
+      Logger.log("File processed, no new id added.");
+    }
   }
 
   private processIDsRecursively(node: any) {
+    if (Object.keys(node)[0] == "#comment")
+      return;
     // Check if the current node has an 'id' attribute
-    if (!node.$ || !node.$.id) {
+    if (!node[':@'] || !node[':@']["@_id"]) {
       // If no 'id' attribute, generate a unique random one
       const generatedID = this.generateUniqueID();
-      node.$ = node.$ || {};
-      node.$.id = generatedID;
+      node[':@'] = node[':@'] || {};
+      node[':@']["@_id"] = generatedID;
       Logger.log(`Processed, generated a new id 'id': ${generatedID}`);
       this.idsModified = true;
     } else {
       // Check for duplicate IDs
-      const existingID = node.$.id;
+      const existingID = node[':@']["@_id"];
       if (this.generatedIDs.has(existingID)) {
         throw new Error(`Duplicate ID found: ${existingID}`);
       }
@@ -57,15 +53,15 @@ export class IDProcessor {
       this.generatedIDs.add(existingID);
     }
 
-    // Process children of the current node dynamically
-    Object.entries(node).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        // If the property is an array, process each element
-        value.forEach((child: any) => {
-          this.processIDsRecursively(child);
-        });
+    //console.log("==> DEBUG ==> ProcessNode ++", node);
+    if (Array.isArray(node[Object.keys(node)[0]])) {
+      for (var item of node[Object.keys(node)[0]]) {
+        //console.log("==> DEBUG ==> ProcessNode ++", item);
+        this.processIDsRecursively(item);
       }
-    });
+    }
+
+
   }
 
   private generateUniqueID(): string {

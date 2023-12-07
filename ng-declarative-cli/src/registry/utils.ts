@@ -249,6 +249,32 @@ export function getBaseAttributes(addtionalAttributesList: any, componentName: a
       example: '<' + componentName + ' background-color="#000" id="xhdy78"></' + componentName + '>',
     },
     {
+      name: "overflow",
+      description: "Sets overflow to a component",
+      required: false,
+      mappedInputAttribute: "overflow",
+      type: "string",
+      example: '<' + componentName + ' overflow="hidden" id="xhdy78"></' + componentName + '>',
+    },
+    {
+      name: "display-condition",
+      description: "Sets display condition to a component",
+      required: false,
+      mappedInputAttribute: "*ngIf",
+      type: "condition",
+      transform: (inputString: any) => {
+        // Replace "and" with "&&"
+        const stringWithAnd = inputString.replace(/\band\b/g, '&&');
+
+        // Replace "or" with "||"
+        const finalResult = stringWithAnd.replace(/\bor\b/g, '||');
+
+        return finalResult;
+
+      },
+      example: '<' + componentName + 'display-condition="true" id="xhdy78"></' + componentName + '>',
+    },
+    {
       name: "background-image",
       description: "Sets background image to a component",
       required: false,

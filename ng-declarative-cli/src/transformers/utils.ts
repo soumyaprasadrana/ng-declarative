@@ -145,6 +145,21 @@ export function processAttributes(
             ? `[${attribute.mappedInputAttribute}]`
             : `[${key}]`}="${exports.removeBindingCharacters(value)}"`;
         }
+      } else if (exports.isContainsBindingString(value)) {
+        if (attribute.bindingtransform) {
+          if (attribute.bindingkeytransform) {
+            dom = `${attribute
+              ? `${attribute.bindingkeytransform(attribute.mappedInputAttribute, attribute.bindingtransform(value))}`
+              : `${attribute.bindingkeytransform(key, attribute.bindingtransform(value))}`}="${attribute.bindingtransform(value)}"`;
+          } else
+            dom = `${attribute
+              ? `${attribute.mappedInputAttribute}`
+              : `${key}`}="${attribute.bindingtransform(value)}"`;
+        } else {
+          dom = `${attribute
+            ? `${attribute.mappedInputAttribute}`
+            : `${key}`}="${exports.replaceBindingCharacters(value)}"`;
+        }
       }
       else {
         dom =
@@ -215,42 +230,28 @@ export function removeBindingCharacters(str: any): string {
   return str;
 }
 
+export function replaceBindingCharacters(str: any): string {
+  const stringWithAfterReplace = str.replace(/%%([^%]+)%%/g, '{{$1}}');
+  return stringWithAfterReplace;
+}
+
 export function isBindingString(str: string): boolean {
   return str.startsWith("%%") && str.endsWith("%%");
 }
 
+export function isContainsBindingString(str: string): boolean {
+  const regex = /%%([^%]+)%%/; // Regular expression to match text enclosed with %%
+  return regex.test(str);;
+}
 export async function processChildren(children: any, compiler: any, parentNode: any) {
   const METHOD = "processChildren";
   Logger.debug(METHOD + " :: entry ");
   Logger.debug(METHOD + " :: children ::", children);
 
-  /* // Use Promise.all to wait for all asynchronous operations and collect the results
-  const results = await Promise.all(
-    Object.keys(children).map(async (childName) => {
-      if (Array.isArray(children[childName])) {
-        // Check if there are multiple identical children
-        if (children[childName].length > 1) {
-          // If there are multiple identical children, process each one
-          return await Promise.all(
-            children[childName].map(async (child: any) => {
-              console.log(`Child ${childName}:`, child);
-              // Wait for the asynchronous operation to complete and return the result
-              return await compiler.processNode({ [childName]: child },parentNode);
-            })
-          );
-        } else {
-          // If there is only one child, process it directly
-          const child = { [childName]: children[childName][0] };
-          console.log(`Child ${childName}:`, child);
-          // Wait for the asynchronous operation to complete and return the result
-          return await compiler.processNode(child,parentNode);
-        }
-      }
-    })
-  ); */
+
   async function processChildrenSynchronously(children: any, parentNode: any) {
     const results = [];
-
+    /*
     for (const childName of Object.keys(children)) {
       if (Array.isArray(children[childName])) {
         if (children[childName].length > 1) {
@@ -267,7 +268,16 @@ export async function processChildren(children: any, compiler: any, parentNode: 
         }
       }
     }
+    */
+    const childrenArray = children.$$;
+    //console.log("==> DEBUG ", childrenArray);
+    if (Array.isArray(childrenArray)) {
+      for (let child of childrenArray) {
+        const result = await compiler.processNode({ [child["#name"]]: child }, parentNode);
+        results.push(result);
+      }
 
+    }
     return results;
   }
   const synchronousResults = await processChildrenSynchronously(children, parentNode);

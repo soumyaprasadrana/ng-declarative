@@ -213,7 +213,7 @@ export async function buildApp(watch: any) {
         console.log(`File ${fileName} has been ${event}`);
         await build();
 
-      }, 100); // Adjust the debounce time as needed
+      }, 200); // Adjust the debounce time as needed
     };
 
     // Watch for changes in the src folder

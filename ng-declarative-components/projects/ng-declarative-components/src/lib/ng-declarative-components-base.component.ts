@@ -11,7 +11,8 @@ import { AnimationService } from "./ng-declarative-animation.service";
 import { ApplicationService } from "./ng-declarative-components.service";
 
 @Component({
-  template: ``,
+  template: `
+  `,
 })
 export class Base implements OnInit, AfterViewInit {
   @Input() background: string | undefined;
@@ -43,6 +44,7 @@ export class Base implements OnInit, AfterViewInit {
   @Input() marginTop: any;
   @Input() marginBottom: any;
   @Input() marginEnd: any;
+  @Input() overflow: any;
 
   componentClasses: string = "";
   componentStyle: object = {};
@@ -84,7 +86,7 @@ export class Base implements OnInit, AfterViewInit {
     if (this.onClickEvent) {
       if (typeof this.onClickEvent == "string") {
         if (this.onClickEvent.includes("appCtrl.")) {
-          console.log(this.app.getAppController());
+          // console.log(this.app.getAppController());
           if (!this.onClickEventArgs)
             this.app.getAppController()[this.onClickEvent.split(".")[1]]();
           else {
@@ -110,7 +112,7 @@ export class Base implements OnInit, AfterViewInit {
           }
         }
         else if (this.onClickEvent.includes("routeCtrl.")) {
-          console.log(this.app.getCurrentRoute().getController());
+          // console.log(this.app.getCurrentRoute().getController());
           if (!this.onClickEventArgs)
             this.app.getCurrentRoute().getController()[this.onClickEvent.split(".")[1]]();
           else {
@@ -222,6 +224,7 @@ export class Base implements OnInit, AfterViewInit {
     if (this.marginEnd) styles["margin-right"] = this.marginEnd;
     if (this.height) styles.height = this.height;
     if (this.width) styles.width = this.width;
+    if (this.overflow) styles.overflow = this.overflow;
     return styles;
   }
 }

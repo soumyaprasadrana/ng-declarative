@@ -15,6 +15,7 @@ export class DataLoaderComponent {
     @Input() schema: object | string = '';
     @Input() preLoad: boolean = true;
     @Output() dataLoaded = new EventEmitter<any[]>();
+    @Input() autoupgrade: boolean = true;
 
     private datasetSubject = new BehaviorSubject<any[]>([]);
     private newItem: any = {};
@@ -29,6 +30,15 @@ export class DataLoaderComponent {
     constructor(private http: HttpClient,
         private app: ApplicationService) {
         this.datasetSubject.asObservable().subscribe((value) => {
+            if (!Array.isArray(value)) {
+                if (this.autoupgrade) {
+                    try {
+                        value = this.convertObjectToList(value);
+                    } catch (err) {
+                        console.log("Auto upgrade failed unbale toconvert the object into list");
+                    }
+                }
+            }
             this.dataset$ = value;
             this.datasetObservable.next(value);
             this.origionaldataset = value;
@@ -63,7 +73,7 @@ export class DataLoaderComponent {
 
             if (this.type === 'json') {
                 this.datasetSubject.next(this.src as object[]);
-            } else if (this.type === 'jsonFile') {
+            } else if (this.type === 'json-file') {
                 this.loadDataFromFile(this.src as string).subscribe((data) => {
                     this.datasetSubject.next(data);
                 });
@@ -82,6 +92,11 @@ export class DataLoaderComponent {
             this.hasError = true;
             this.isDatasetReady = false;
         }
+    }
+
+    // Method to convert object to list
+    convertObjectToList(obj: { [key: string]: { name: string } }): any[] {
+        return Object.keys(obj).map(key => ({ ...obj[key], '#key': key }));
     }
 
     getDataset(): Observable<any[]> {

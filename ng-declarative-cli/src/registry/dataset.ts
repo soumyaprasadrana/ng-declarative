@@ -16,11 +16,22 @@ export const metadata = {
       type: "boolean",
       validate: validateBoolean,
       allowedValues: "true | false"
+    }, {
+      name: "auto-upgrade",
+      required: false,
+      mappedInputAttribute: " autoupgrade",
+      type: "boolean",
+      validate: validateBoolean,
+      allowedValues: "true | false"
     },
     {
       name: "type",
       required: true,
       mappedInputAttribute: "type",
+      allowedvalues: "json | url | json-file",
+      validate: (value: any) => {
+        return value == "json" || value == "url" || value == "json-file";
+      },
       type: "string",
     },
     {
