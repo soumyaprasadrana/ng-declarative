@@ -25,7 +25,7 @@
                         <paragraph css-class="doc-app-intro-p text-muted" text="the intuitive solution for Angular app development. Simplify UI design using XML components, making your development experience seamless and efficient." id="usG71rp"></paragraph>
                         <label theme="wrap,muted,lighter,heading-normal" text="Install with NPM" id="ljToZ80"></label>
                         <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8IQ">
-                          <label padding-start="small" theme="muted" text="npm i -g ng-declarative" id="NDdk9dk"></label>
+                          <label padding-start="small" theme="muted" text="npm i -g ng-declarative-cli" id="NDdk9dk"></label>
                           <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyInstallCmd" id="hOLgYcQ"></button>
                         </block>
                         <alert type="%%appCtrl.copyMessageType%%" text="%%appCtrl.copyMessage%%" display-condition="appCtrl.showCopyMessage" id="dXOhCj5"></alert>
@@ -48,7 +48,75 @@
             <card width="full" margin="large" css-class="doc-app-card" id="Gayxdg06W">
               <card-body width="full" id="JVeSxdMDn">
                 <block background="transperant" width="full" direction="column" id="fc7owv42">
-                  <label theme="wrap,bold,muted,display-large" text="Getting Started" id="izsweXZkrO"></label>
+                  <label css-class="doc-app-text" theme="wrap,bold,display-small" text="Getting Started" id="izsweXZkrO"></label>
+                  <block direction="column" margin-start="medium" background="transperant" id="Oc1OONM">
+                    <label theme="wrap,bold,muted,heading-large" text="Installation" id="k3ghxRX"></label>
+                    <paragraph text="To get started with ng-declarative, you need to install the CLI tool globally using npm. Open your terminal and run the following command:" id="qYUNIvS"></paragraph>
+                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8fweIQ">
+                      <label padding-start="small" theme="muted" text="npm i -g ng-declarative-cli" id="ewffwe"></label>
+                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['npm i -g ng-declarative-cli']" id="hOvLgYcQ"></button>
+                    </block>
+                    <paragraph padding-top="large" text="Once the CLI is installed, you can verify the installation by checking the version:" id="G1A6yp9"></paragraph>
+                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6idaC8fweIQ">
+                      <label padding-start="small" theme="muted" text="ng-declarative --version" id="ewfdcfwe"></label>
+                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative --version']" id="hOvLdscgYcQ"></button>
+                    </block>
+                    <paragraph text="This should display the version number of ng-declarative." id="Oqgvm2t"></paragraph>
+                    <label theme="wrap,bold,muted,heading-large" text="Creating a New App using CLI" id="k3ghrxRX"></label>
+                    <paragraph text="Now that you have ng-declarative installed, you can create a new application using the following command:" id="iqWMix6"></paragraph>
+                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedaC8fweIQ">
+                      <label padding-start="small" theme="muted" text="ng-declarative create {APP_NAME}" id="ewfdcewfwe"></label>
+                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative create {APP_NAME}']"  id="hOvLewdscgYcQ"></button>
+                    </block>
+                    <paragraph text="Replace {APP_NAME} with the desired name for your application." id="u0QDFb1"></paragraph>
+                    <label theme="wrap,bold,muted,heading-large" text="Folder Structure" id="k3gdhrxRX"></label>
+                    <paragraph text="After creating your application, you will find a basic folder structure:" id="FIljQHu"></paragraph>
+                    <block margin-start="large" direction="column" id="DtKTQbm">
+                      <block direction="row" id="I3bzQ92">
+                        <label theme="bold" text="src/:&amp;nbsp;" id="UJxZDEk"></label>
+                        <paragraph text="This folder contains the core files of your application." id="iCLcREU"></paragraph>
+                      </block>
+                      <block direction="column" margin-start="thick" id="YSUpFXe">
+                        <block direction="row" id="rUPDOW9">
+                          <label text="source.xml:&amp;nbsp;" theme="bold" id="Q7A94EW"></label>
+                          <paragraph text="The main file where you define your application&apos;s UI." id="O4u4Lsdsf"></paragraph>
+                        </block>
+                        <block direction="row" id="rsdUPDOwWdw9">
+                          <paragraph text="TypeScript classes (e.g.," id="bQ4njQz"></paragraph>
+                          <label text="AppController.ts:&amp;nbsp;)" theme="bold" id="csQ7A9dwe4EW"></label>
+                          <paragraph text=": Application-level controllers." id="O4udsdcwe4Lsf"></paragraph>
+                        </block>
+                        <block direction="row" id="rUPDOqqW9">
+                          <label text="styles.scss:&amp;nbsp;" theme="bold" id="Qdwqd7A94EW"></label>
+                          <paragraph text="Styles for your application." id="O4u4Lssf"></paragraph>
+                        </block>
+                      </block>
+                      <block direction="row" id="I3bzdQ92">
+                        <label theme="bold" text="dist/:&amp;nbsp;" id="UJxZqDEk"></label>
+                        <paragraph text="This folder contains the core files of your application." id="iCLcREUq"></paragraph>
+                      </block>
+                    </block>
+                    <label theme="wrap,bold,muted,heading-large" text="Build Your Application" id="k3ghxRwX"></label>
+                    <paragraph text="To build your application, navigate to your application folder and run:" id="Qyz4b3K"></paragraph>
+                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedaweC8fweIQ">
+                      <label padding-start="small" theme="muted" text="ng-declarative build" id="ewfdcewweewfwe"></label>
+                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative build']"  id="hOvLewdwescgYcQ"></button>
+                    </block>
+                    <paragraph text="To watch for file changes and automatically rebuild, use the --watch parameter:" id="Qynkz4b3K"></paragraph>
+                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedslknaweC8fweIQ">
+                      <label padding-start="small" theme="muted" text="ng-declarative build --watch" id="ewfdcskcdewweewfwe"></label>
+                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative build --watch']" id="hOvscocgYcQ"></button>
+                    </block>
+                    <paragraph text="This will compile your source files and generate the necessary distribution files." id="pbDxPjB"></paragraph>
+                    <label theme="wrap,bold,muted,heading-large" text="Start Your Application" id="k3ghxRvdwX"></label>
+                    <paragraph text="Once your application is built, you can start it by running:" id="DHRxHH2"></paragraph>
+                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="cP5lq2X">
+                      <label padding-start="small" theme="muted" text="ng-declarative start" id="qKpx98u"></label>
+                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative start']" id="nuyxiHb"></button>
+                    </block>
+                    <paragraph text="This command will launch your ng-declarative application, and you can view it in your browser." id="S6V9udx"></paragraph>
+                    <paragraph margin-top="large" text="That&apos;s it! You&apos;ve successfully created, built, and started your ng-declarative application. Explore additional features and configurations as you continue developing your ng-declarative application." id="TWdrHqJ"></paragraph>
+                  </block>
                 </block>
               </card-body>
             </card>

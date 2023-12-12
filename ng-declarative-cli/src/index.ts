@@ -31,11 +31,9 @@ program
   });
 
 program
-  .command("serve")
-  .description("Serve the ng-declarative app")
-  .action(() => {
-    serveApp();
-  });
+  .command("start")
+  .description("Start the ng-declarative app")
+  .action(serveApp);
 program
   .command("generatedocappdata")
   .description("Crates the documentation app using ng-declarative framework")

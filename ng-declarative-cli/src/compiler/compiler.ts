@@ -76,7 +76,18 @@ export class Compiler {
     Logger.error(`Component ${componentName} not found in the registry.`);
     return null;
   }
+  async getAppName(sourceXml: string) {
+    return new Promise((resolve, reject) => {
 
+      parseString(sourceXml, { explicitChildren: true, preserveChildrenOrder: true }, async (err: any, result) => {
+        if (err) {
+          Logger.error("Error parsing source XML:", err.message);
+          return;
+        }
+        resolve(result[Object.keys(result)[0]].$.name);
+      });
+    })
+  }
   async compile(sourceXml: string) {
     return new Promise((resolve, reject) => {
       Logger.debug(this.registryPath, this.outputFolder);
@@ -92,6 +103,7 @@ export class Compiler {
           await this.processNode(result, { name: "root" });
         } catch (error) {
           reject(error);
+          return;
         }
         Logger.debug("result", result[Object.keys(result)[0]].$.name);
 
@@ -218,6 +230,7 @@ export class Compiler {
       } catch (error) {
         // console.log("DEBUG INSIDE PROCESS NODE CTACH TRANSFORM ERROR");
         reject(error);
+        return;
       }
       /*  Logger.debug("Metadata", metadata);
       const attributes = this.processAttributes(metadata.attributes, node);
@@ -1223,7 +1236,12 @@ Thumbs.db
             "styles": [
               "src/styles.scss",
               "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.scss"
+               {
+                "bundleName": "bootstrap-icons",
+                "inject": true,
+                "input": "node_modules/bootstrap-icons/font/bootstrap-icons.scss"
+              }
+              
             ],
             "scripts": [
                {

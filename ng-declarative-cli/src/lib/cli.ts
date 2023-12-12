@@ -230,7 +230,10 @@ export function groupBy(list: any, key: any) {
 
 export async function buildApp(watch: any) {
   const sourceXmlPath = path.join(process.cwd(), "src", "source.xml");
-
+  if (!fs.existsSync(sourceXmlPath)) {
+    console.log('\x1b[31m\x1b[1m%s\x1b[0m', "unknown workspace");
+    return;
+  }
   const build = async () => {
     try {
       // Read and parse source.xml
@@ -286,7 +289,22 @@ export async function buildApp(watch: any) {
   }
 }
 
-export function serveApp(): void {
-  execSync("ng serve");
-  console.log("Serving ng-declarative app");
+export async function serveApp() {
+  const sourceXmlPath = path.join(process.cwd(), "src", "source.xml");
+  if (!fs.existsSync(sourceXmlPath)) {
+    console.log('\x1b[31m\x1b[1m%s\x1b[0m', "unknown workspace");
+    return;
+  }
+  const sourceXML = await fs.promises.readFile(sourceXmlPath, "utf-8"); 4
+  const compiler = new Compiler();
+  const appName: any = await compiler.getAppName(sourceXML);
+  const appPath = path.join(process.cwd(), "dist", appName);
+
+  try {
+    execSync(`npm run start`, { cwd: appPath, stdio: 'inherit' });
+    console.log("Serving ng-declarative app");
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
 }

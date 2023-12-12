@@ -40,4 +40,10 @@ export class AppController {
       }, 1000);
     })
   }
+
+  copyCmd(cmd: any) {
+    this.app.copyToClipboard(cmd, () => {
+    }, () => {
+    })
+  }
 }
