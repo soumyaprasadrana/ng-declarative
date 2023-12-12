@@ -142,6 +142,7 @@ dist
 
 /test-app
 /declarative-sample-app/dist
+/ng-declarative-doc-app/dist
 
 #CLI 
 ng-declarative-cli/node_modules

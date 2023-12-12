@@ -8,6 +8,8 @@ import {
 
 export const metadata = {
   tag: "block",
+  type: "LAYOUT",
+  description: "A block is a configurable flex box.",
   attributes: getBaseAttributes([
     {
       name: "direction",
@@ -80,6 +82,67 @@ export const metadata = {
       allowedValues: "true | false",
       validate: validateBoolean,
       example: `<block skip-flex="true">...</block>`
+    },
+    {
+      name: "responsive",
+      description: "Determines whether a block is responsive to device viewport.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "responsive",
+      type: "boolean",
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<block responsive="true">...</block>`
+    },
+    {
+      name: "viewport-sm",
+      description: "Set the direction of flex box for small breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportSM",
+      type: "string",
+      allowedValues: "row | column",
+      transform: transformDirection,
+      example: `<block viewport-sm="column">...</block>`
+    },
+    {
+      name: "viewport-md",
+      description: "Set the direction of flex box for medium breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportMD",
+      type: "string",
+      allowedValues: "row | column",
+      transform: transformDirection,
+      example: `<block viewport-md="column">...</block>`
+    },
+    {
+      name: "viewport-lg",
+      description: "Set the direction of flex box for lg breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportLG",
+      type: "string",
+      allowedValues: "row | column",
+      transform: transformDirection,
+      example: `<block viewport-lg="column">...</block>`
+    },
+    {
+      name: "viewport-xl",
+      description: "Set the direction of flex box for xl breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportXL",
+      type: "string",
+      allowedValues: "row | column",
+      transform: transformDirection,
+      example: `<block viewport-xl="column">...</block>`
+    },
+    {
+      name: "viewport-xxl",
+      description: "Set the direction of flex box for xxl breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportXXL",
+      type: "string",
+      allowedValues: "row | column",
+      transform: transformDirection,
+      example: `<block viewport-xxl="column">...</block>`
     },
 
   ], "block"),

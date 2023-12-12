@@ -1,5 +1,7 @@
 export const metadata = {
   tag: "signal",
+  type: "DATA",
+  descritpion: "Angular signal to manage state of the application easily.",
   attributes: [
     {
       name: "name",

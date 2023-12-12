@@ -9,6 +9,8 @@ import {
 
 export const metadata = {
   tag: "foldable-block",
+  type: "WIDGET",
+  description: "A collapsible block component.",
   attributes: getBaseAttributes([
     {
       name: "width",

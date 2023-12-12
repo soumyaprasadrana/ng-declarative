@@ -345,6 +345,60 @@ export class AnimationService {
       styleSheet.rules.length
     );
   }
+  private findClosestScrollableAncestor(element: HTMLElement): HTMLElement | null {
+    let parent = element.parentElement;
+
+    while (parent) {
+      const style = getComputedStyle(parent);
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+        return parent;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return null;
+  }
+
+  private animateOnScroll(
+    element: HTMLElement,
+    animationMethod: (element: HTMLElement, duration?: string) => void,
+    duration: string = "0.5s"
+  ): void {
+    const scrollContainer = this.findClosestScrollableAncestor(element);
+
+    if (!scrollContainer) {
+      console.error('Unable to find a scrollable ancestor.');
+      return;
+    }
+
+    const animateIfVisible = () => {
+      if (this.isInViewport(element, scrollContainer)) {
+        animationMethod(element, duration);
+        window.removeEventListener('scroll', animateIfVisible);
+      }
+    };
+
+    window.addEventListener('scroll', animateIfVisible);
+
+    // Initial check in case the element is already in the viewport
+    animateIfVisible();
+  }
+  private isInViewport(el: HTMLElement, scrollContainer: HTMLElement | Window): boolean {
+    const rect = el.getBoundingClientRect();
+    const containerRect =
+      scrollContainer instanceof Window
+        ? { top: 0, left: 0, bottom: window.innerHeight, right: window.innerWidth }
+        : scrollContainer.getBoundingClientRect();
+
+    return (
+      rect.top >= containerRect.top &&
+      rect.left >= containerRect.left &&
+      rect.bottom <= containerRect.bottom &&
+      rect.right <= containerRect.right
+    );
+  }
+
 
   animate(transition: string, element: HTMLElement, duration: string = "0.5s") {
     switch (transition.toLowerCase()) {

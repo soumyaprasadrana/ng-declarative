@@ -14,16 +14,16 @@
     </navbar-end>
   </navbar>
   <route uri="/home" title="Declarative Sample App" id="home">
-    <block width="full" height="full" justify-contents="center" align-items="center" direction="column" id="wizYbyA">
-      <block direction="row" id="ySy4I1u">
+    <block width="full" height="ultra-high" justify-contents="center" align-items="center" direction="column" id="wizYbyA">
+      <block responsive="true" justify-contents="center" align-items="center" direction="row" id="ySy4I1u">
         <block justify-contents="center" align-items="center" direction="column" id="xagOI">
           <image transition="tada" transition-duration="long" css-class="text-warning main-icon" type="icon" icon="bi bi-airplane-engines" id="ijMfMaD"></image>
           <label css-class="badge bg-warning text-dark" theme="display-large,bold" text="hover the icon!" id="DPw4cdN9Y"></label>
         </block>
-        <block width="min-content" direction="column" id="xalZgOI">
-          <label transition="typing" transition-duration="short" theme="display-large,bold" text="%%appCtrl.pageHeading%%" id="DPw4N9Y"></label>
-          <label transition="typing" transition-duration="long" theme="heading-small,bold" text="%%appCtrl.pageSubHeading%%" id="DcdsPw4N9Y"></label>
-          <paragraph transition="typing" transition-duration="" text="%%appCtrl.pageParagraph%%" id="k6MoblQ"></paragraph>
+        <block width="medium" direction="column" id="xalZgOI">
+          <label transition="typing" transition-duration="short" theme="wrap,display-large,bold" text="%%appCtrl.pageHeading%%" id="DPw4N9Y"></label>
+          <label transition="typing" transition-duration="long" theme="wrap,heading-small,bold" text="%%appCtrl.pageSubHeading%%" id="DcdsPw4N9Y"></label>
+          <paragraph css-class="text-wrap" transition="typing" transition-duration="" text="%%appCtrl.pageParagraph%%" id="k6MoblQ"></paragraph>
         </block>
       </block>
     </block>
@@ -103,72 +103,72 @@
         </row>
         <row margin-top="small" justify-contents="start" id="ECIKb3S">
           <column css-class="bg-success" size="4" id="DVmYv7M">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;start&apos; 1 of 2" id="u7mZSEq"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;start&apos; 1 of 2" id="u7mZSEq"></label>
           </column>
           <column css-class="bg-dark" size="4" id="Aa2G1pD">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;start&apos; 2 of 2" id="YHbShRm"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;start&apos; 2 of 2" id="YHbShRm"></label>
           </column>
         </row>
         <row justify-contents="center" id="ErwXTwL">
           <column css-class="bg-primary" size="4" id="VZOLK9K">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;center&apos; 1 of 2" id="pPHjex9"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;center&apos; 1 of 2" id="pPHjex9"></label>
           </column>
           <column css-class="bg-warning" size="4" id="EwaiuIk">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;center&apos; 2 of 2" id="yRR3bHR"></label>
+            <label text-color="#000" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;center&apos; 2 of 2" id="yRR3bHR"></label>
           </column>
         </row>
         <row justify-contents="end" id="Rmtz3U1">
           <column css-class="bg-info" size="4" id="J4VeFLP">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;end&apos; 1 of 2" id="cZ5UF2C"></label>
+            <label text-color="#000" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;end&apos; 1 of 2" id="cZ5UF2C"></label>
           </column>
           <column css-class="bg-success" size="4" id="gaqgTPl">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;end&apos; 2 of 2" id="ObrEakb"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;end&apos; 2 of 2" id="ObrEakb"></label>
           </column>
         </row>
         <row justify-contents="around" id="zfJG6LB">
           <column css-class="bg-danger" size="4" id="pwYy63v">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;around&apos; 1 of 2" id="auyoSdV"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;around&apos; 1 of 2" id="auyoSdV"></label>
           </column>
           <column css-class="bg-secondary" size="4" id="umoBo5F">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;around&apos; 2 of 2" id="YP1zfDQ"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;around&apos; 2 of 2" id="YP1zfDQ"></label>
           </column>
         </row>
         <row justify-contents="between" id="k7ue34V">
           <column css-class="bg-warning" size="4" id="Ula2Fkj">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;between&apos; 1 of 2" id="uxqKqQj"></label>
+            <label text-color="#000" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;between&apos; 1 of 2" id="uxqKqQj"></label>
           </column>
           <column css-class="bg-primary" size="4" id="n0vK8zk">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;between&apos; 2 of 2" id="i8olijO"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;between&apos; 2 of 2" id="i8olijO"></label>
           </column>
         </row>
         <row justify-contents="evenly" id="QTV0PoK">
           <column css-class="bg-success" size="4" id="eKN4opy">
-            <label text-color="#fff" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;evenly&apos; 1 of 2" id="YjwyqfS"></label>
+            <label text-color="#fff" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;evenly&apos; 1 of 2" id="YjwyqfS"></label>
           </column>
           <column css-class="bg-info" size="4" id="v3CA3Vs">
-            <label text-color="#000" padding-start="small" theme="bold,heading-smallest" text="justify-contents=&apos;evenly&apos; 2 of 2" id="SM5htez"></label>
+            <label text-color="#000" padding-start="small" theme="wrap,bold,heading-smallest" text="justify-contents=&apos;evenly&apos; 2 of 2" id="SM5htez"></label>
           </column>
         </row>
         <row width="full" id="vDlEfrWHt">
           <column size="12" id="x7WvHrfo0g">
-            <paragraph css-class="code-section text-warp" text="%%routeCtrl.bsGridrowJustifyContents%%" id="V357erfwixx"></paragraph>
+            <paragraph css-class="code-section " text="%%routeCtrl.bsGridrowJustifyContents%%" id="V357erfwixx"></paragraph>
             <paragraph template="&lt;code&gt;justify-contents&lt;/code&gt; can be used to align contents horizontally." id="ism8Kjg"></paragraph>
           </column>
         </row>
         <row width="full" height="define-100px" id="SOIpuXZ">
           <column css-class="bg-black" align-self="start" id="DiCtN7g">
-            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align Start" id="HRz6SDM"></label>
+            <label padding="small" height="full" theme="wrap,bold,heading-smallest" text-color="#fff" text="Self Align Start" id="HRz6SDM"></label>
           </column>
           <column css-class="bg-black" align-self="center" id="DefiCtN7g">
-            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align Center" id="HRz6bSDM"></label>
+            <label padding="small" height="full" theme="wrap,bold,heading-smallest" text-color="#fff" text="Self Align Center" id="HRz6bSDM"></label>
           </column>
           <column css-class="bg-black" align-self="end" id="DifCtN7g">
-            <label padding="small" height="full" theme="bold,heading-smallest" text-color="#fff" text="Self Align End" id="HRz6SDewM"></label>
+            <label padding="small" height="full" theme="wrap,bold,heading-smallest" text-color="#fff" text="Self Align End" id="HRz6SDewM"></label>
           </column>
         </row>
         <row width="full" id="vDlEfrWHjht">
           <column size="12" id="x7WvHhjrfo0g">
-            <paragraph css-class="code-section text-warp" text="%%routeCtrl.bsGridFifth%%" id="V357eriifwixx"></paragraph>
+            <paragraph css-class="code-section " text="%%routeCtrl.bsGridFifth%%" id="V357eriifwixx"></paragraph>
             <paragraph template="&lt;code&gt;align-self&lt;/code&gt; can be used to align a column content vertically inside a row." id="ism8Kpojg"></paragraph>
           </column>
         </row>
@@ -199,7 +199,7 @@
           <column id="hLyGVuf">
             <row width="full" id="oD7PFfm">
               <column size="12" id="ptRaMud">
-                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example1source%%" id="hMKHiZF"></paragraph>
+                <paragraph css-class="code-section " text="%%routeCtrl.example1source%%" id="hMKHiZF"></paragraph>
               </column>
             </row>
           </column>
@@ -221,7 +221,7 @@
           <column id="Gt5t6iH">
             <row width="full" id="aOSPWqO">
               <column size="12" id="AiEYiUU">
-                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example2source1%%" id="tGANpPY"></paragraph>
+                <paragraph css-class="code-section " text="%%routeCtrl.example2source1%%" id="tGANpPY"></paragraph>
               </column>
             </row>
           </column>
@@ -239,7 +239,7 @@
           <column id="k1bz5tx">
             <row width="full" id="KCe9fuk">
               <column size="12" id="aKOHpe8">
-                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example2source2%%" id="pvrMV2p"></paragraph>
+                <paragraph css-class="code-section " text="%%routeCtrl.example2source2%%" id="pvrMV2p"></paragraph>
               </column>
             </row>
           </column>
@@ -260,8 +260,8 @@ In this particular instance, the New York Times API, accompanied by an API key, 
         <row padding-start="extra-large" padding-end="extra-large" id="Sv1gY6y">
           <column id="hjNFmXL">
             <row width="full" id="Tjw8fCz">
-              <column size="12" id="t3yN373">
-                <paragraph css-class="code-section text-warp" text="%%routeCtrl.example3source%%" id="trYf38y"></paragraph>
+              <column id="t3yN373">
+                <paragraph css-class="code-section " text="%%routeCtrl.example3source%%" id="trYf38y"></paragraph>
               </column>
             </row>
           </column>
@@ -273,7 +273,7 @@ In this particular instance, the New York Times API, accompanied by an API key, 
                 </column>
               </row>
               <row padding="small" id="abDY3Tp">
-                <loop items="app.datasets.nyttopsciencestories.dataset$" id="zst5YJP">
+                <loop dataset="nyttopsciencestories" id="zst5YJP">
                   <label display-condition="$index!=0 and $index%2==0 and item.title!=&apos;&apos;" theme="wrap,bold,heading-smallest" text="Title: %%item.title%%" id="hzpZL8S"></label>
                   <loop display-condition="$index!=0 and $index%2==0 and item.title!=&apos;&apos;" outer-loop-item="item" outer-loop-index="$index" inner-loop="true" inner-loop-items="item.multimedia" id="AURlGo1">
                     <image display-condition="$index==0" type="image" src="%%item.url%%" id="Jb0gYS7"></image>

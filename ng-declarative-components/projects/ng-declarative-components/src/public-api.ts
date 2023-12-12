@@ -16,7 +16,8 @@ export * from "./lib/ng-declarative-components-block.component";
 export * from "./lib/ng-declarative-components-container.component";
 export * from "./lib/ng-declarative-components-row.component copy";
 export * from "./lib/ng-declarative-components-col.component";
-
+export * from "./lib/ng-declarative-components-loader.component";
+export * from "./lib/ng-declarative-components-card.component";
 export * from "./lib/ng-declarative-components-navbar.component";
 export * from "./lib/ng-declarative-components-navitem.component";
 export * from "./lib/ng-declarative-components-input.component";
@@ -28,4 +29,6 @@ export * from "./lib/ng-declarative-components-base.component";
 export * from "./lib/ng-declarative-components-loop.component";
 export * from "./lib/ng-declarative-dataset.component";
 export * from "./lib/ng-declarative-animation.service";
+export * from "./lib/ng-declarative-components-sidebar-navitem.component"
+export * from "./lib/ng-declarative-components-sidebar.component"
 export * from "./lib/ng-declarative.module";

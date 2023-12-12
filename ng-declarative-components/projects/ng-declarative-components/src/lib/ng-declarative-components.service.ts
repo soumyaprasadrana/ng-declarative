@@ -73,4 +73,16 @@ export class ApplicationService {
       this.signals[signalMetaData.name] = signal<any>(signalMetaData.value);
     return this.signals[signalMetaData.name];
   }
+  copyToClipboard(text: string, sucess: any, error: any): void {
+    navigator.clipboard.writeText(text).then(() => {
+      // Success message
+      if (sucess)
+        sucess();
+    }, () => {
+      // Error message
+      if (error)
+        error();
+    });
+  }
+
 }

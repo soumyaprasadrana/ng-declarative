@@ -9,6 +9,8 @@ import {
 
 export const metadata = {
   tag: "alert",
+  type: "UI",
+  description: "Displays alert messages.",
   attributes: getBaseAttributes([
 
     {

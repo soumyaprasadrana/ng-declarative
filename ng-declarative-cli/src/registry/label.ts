@@ -8,6 +8,8 @@ import {
 
 export const metadata = {
   tag: "label",
+  type: "TEXT",
+  description: "Provides a label for user interface elements.",
   attributes: getBaseAttributes([
     {
       name: "attach-with",

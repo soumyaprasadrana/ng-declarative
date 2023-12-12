@@ -2,6 +2,8 @@ import { validateBoolean } from "./utils";
 
 export const metadata = {
   tag: "dataset",
+  type: "DATA",
+  desription: "Set of observable data that can be loaded from various source.",
   attributes: [
     {
       name: "name",

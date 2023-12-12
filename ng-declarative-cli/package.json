@@ -1,16 +1,17 @@
 {
   "name": "ng-declarative-cli",
-  "version": "1.0.0",
+  "version": "1.0.0-pre.5",
   "description": "CLI for ng-declarative framework",
   "main": "./dist/index.js",
   "bin": {
     "ng-declarative": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc --watch",
+    "build": "tsc",
+    "build-watch":"tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Your Name",
+  "author": "Soumya Prasad Rana",
   "license": "MIT",
   "dependencies": {
     "commander": "latest",

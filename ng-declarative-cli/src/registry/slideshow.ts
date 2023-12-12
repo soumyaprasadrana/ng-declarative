@@ -5,6 +5,8 @@ import {
 
 export const metadata = {
   tag: "slideshow",
+  type: "WIDGET",
+  description: " Displays a slideshow of images.",
   attributes: getBaseAttributes([
     {
       name: "dataset",

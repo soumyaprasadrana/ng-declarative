@@ -78,22 +78,29 @@ export class Compiler {
   }
 
   async compile(sourceXml: string) {
-    Logger.debug(this.registryPath, this.outputFolder);
-    // Parse sourceXml and convert declarative tags to Angular code
-    parseString(sourceXml, { explicitChildren: true, preserveChildrenOrder: true }, async (err: any, result) => {
-      if (err) {
-        Logger.error("Error parsing source XML:", err.message);
-        return;
-      }
+    return new Promise((resolve, reject) => {
+      Logger.debug(this.registryPath, this.outputFolder);
+      // Parse sourceXml and convert declarative tags to Angular code
+      parseString(sourceXml, { explicitChildren: true, preserveChildrenOrder: true }, async (err: any, result) => {
+        if (err) {
+          Logger.error("Error parsing source XML:", err.message);
+          return;
+        }
 
-      // Traverse each node and process it
-      await this.processNode(result, { name: "root" });
+        // Traverse each node and process it
+        try {
+          await this.processNode(result, { name: "root" });
+        } catch (error) {
+          reject(error);
+        }
+        Logger.debug("result", result[Object.keys(result)[0]].$.name);
 
-      Logger.debug("result", result[Object.keys(result)[0]].$.name);
+        // Build the Angular application
+        this.createAngularAppStructure(result[Object.keys(result)[0]].$.name);
+        resolve(true);
+      });
+    })
 
-      // Build the Angular application
-      this.createAngularAppStructure(result[Object.keys(result)[0]].$.name);
-    });
   }
 
   public addRoute(route: any) {
@@ -105,143 +112,154 @@ export class Compiler {
   }
 
   private async processNode(node: any, parentNode: any) {
-    const METHOD = "processNode";
-    Logger.debug(METHOD + " :: entry");
-    Logger.debug(METHOD + " :: node ::", node);
+    return new Promise(async (resolve, reject) => {
+      const METHOD = "processNode";
+      Logger.debug(METHOD + " :: entry");
+      Logger.debug(METHOD + " :: node ::", node);
 
-    const nodeName = Object.keys(node)[0];
+      const nodeName = Object.keys(node)[0];
 
-    if (nodeName == "form") {
-      //console.log("============== DEBUG FORM START ========");
-      this.isinsideForm = true;
-    }
+      if (nodeName == "form") {
+        //console.log("============== DEBUG FORM START ========");
+        this.isinsideForm = true;
+      }
 
-    if ((Object.keys(node)[0] == "input" || Object.keys(node)[0] == "form-action") && !this.isinsideForm) {
-      if (Object.keys(node)[0] == "input")
-        throw new Error("An input field can only be defined inside a form.");
-      if (Object.keys(node)[0] == "form-action")
-        throw new Error("An form action button can only be defined inside a form.");
-    }
+      if ((Object.keys(node)[0] == "input" || Object.keys(node)[0] == "form-action") && !this.isinsideForm) {
+        if (Object.keys(node)[0] == "input")
+          throw new Error("An input field can only be defined inside a form.");
+        if (Object.keys(node)[0] == "form-action")
+          throw new Error("An form action button can only be defined inside a form.");
+      }
 
-    const nodeNameCamelCase = this.toCamelCase(Object.keys(node)[0]);
-    const metadata = this.readComponentMetadata(nodeNameCamelCase).metadata;
-    const transform = this.readComponentTransformer(nodeNameCamelCase)
-      .transform;
-    if (!metadata) {
-      Logger.error(`Skipping unknown component: ${nodeName}`);
-      return "";
-    }
+      const nodeNameCamelCase = this.toCamelCase(Object.keys(node)[0]);
+      const metadata = this.readComponentMetadata(nodeNameCamelCase).metadata;
+      const transform = this.readComponentTransformer(nodeNameCamelCase)
+        .transform;
+      if (!metadata) {
+        Logger.error(`Skipping unknown component: ${nodeName}`);
+        return "";
+      }
 
-    Logger.debug("Typeof Transform", typeof transform);
+      Logger.debug("Typeof Transform", typeof transform);
 
-    Logger.debug("checking if the node is present under a valid parent node ...")
-    const resultofValidateParent = this.validateParent(node, parentNode, metadata);
-    if (!resultofValidateParent.result)
-      throw new Error(
-        `Invalid parent component of ${nodeName}. This component can only declared under ${metadata.allowedInParent.join(",")} 
+      Logger.debug("checking if the node is present under a valid parent node ...")
+      const resultofValidateParent = this.validateParent(node, parentNode, metadata);
+      if (!resultofValidateParent.result)
+        throw new Error(
+          `Invalid parent component of ${nodeName}. This component can only declared under ${metadata.allowedInParent.join(",")} 
          `
-      );
+        );
 
 
-    const resultOfValidateChildrens = this.validateChildrens(node, metadata);
-    Logger.debug("Validated Childrens result", resultOfValidateChildrens);
+      const resultOfValidateChildrens = this.validateChildrens(node, metadata);
+      Logger.debug("Validated Childrens result", resultOfValidateChildrens);
 
-    if (nodeName == "route") {
-      this.setCurrentRoute(this.getAttributeFromNode(node, "id"));
-    }
+      if (nodeName == "route") {
+        this.setCurrentRoute(this.getAttributeFromNode(node, "id"));
+      }
 
-    //Check if the root node store the metadata to compiler
-    if (metadata.tag == "ng-declarative-app") {
-      this.appName = this.getAttributeFromNode(node, "name");
-      if (this.getAttributeFromNode(node, "base-href")) this.baseHref = this.getAttributeFromNode(node, "base-href");
-      this.appTitle = this.getAttributeFromNode(node, "title");
-      if (this.getAttributeFromNode(node, "controller") != null) {
-        try {
-          let filePath = path.join(
-            "src",
-            this.getAttributeFromNode(node, "controller") + ".ts"
-          );
-          if (fs.existsSync(filePath)) {
-            this.appController = path.join(
+      //Check if the root node store the metadata to compiler
+      if (metadata.tag == "ng-declarative-app") {
+        this.appName = this.getAttributeFromNode(node, "name");
+        if (this.getAttributeFromNode(node, "base-href")) this.baseHref = this.getAttributeFromNode(node, "base-href");
+        this.appTitle = this.getAttributeFromNode(node, "title");
+        if (this.getAttributeFromNode(node, "controller") != null) {
+          try {
+            let filePath = path.join(
               "src",
               this.getAttributeFromNode(node, "controller") + ".ts"
             );
-            this.appControllerFileName =
-              this.getAttributeFromNode(node, "controller") + ".ts";
-          } else {
-            throw new Error(`File does not exist: ${filePath}`);
+            if (fs.existsSync(filePath)) {
+              this.appController = path.join(
+                "src",
+                this.getAttributeFromNode(node, "controller") + ".ts"
+              );
+              this.appControllerFileName =
+                this.getAttributeFromNode(node, "controller") + ".ts";
+            } else {
+              throw new Error(`File does not exist: ${filePath}`);
+            }
+          } catch (er) {
+            throw er;
           }
-        } catch (er) {
-          throw er;
         }
       }
-    }
 
-    if (!resultOfValidateChildrens.result)
-      throw new Error(
-        `Invalid child component in ${nodeName},${resultOfValidateChildrens.key ==
-          "nochildren"
-          ? ""
-          : `invalid component ${resultOfValidateChildrens.key}`} .
+      if (!resultOfValidateChildrens.result)
+        throw new Error(
+          `Invalid child component in ${nodeName},${resultOfValidateChildrens.key ==
+            "nochildren"
+            ? ""
+            : `invalid component ${resultOfValidateChildrens.key}`} .
           ${resultOfValidateChildrens.key == "nochildren"
-          ? "This component does not support any child component."
-          : ` Please refer to below allowed children components for this node \n ${metadata.allowedChildren.join(
-            ","
-          )}`} 
+            ? "This component does not support any child component."
+            : ` Please refer to below allowed children components for this node \n ${metadata.allowedChildren.join(
+              ","
+            )}`} 
          `
-      );
-
-    if (metadata.customprocess) {
-      if (metadata.processor) {
-        return await metadata.processor(
-          node,
-          parentNode,
-          metadata,
-          transform,
-          this
         );
-      } else {
-        throw new Error("Internal Error");
+
+      if (metadata.customprocess) {
+        if (metadata.processor) {
+          return await metadata.processor(
+            node,
+            parentNode,
+            metadata,
+            transform,
+            this
+          );
+        } else {
+          throw new Error("Internal Error");
+        }
       }
-    }
-    const templateS = await transform(metadata, node, this);
-    /*  Logger.debug("Metadata", metadata);
-    const attributes = this.processAttributes(metadata.attributes, node);
-    Logger.debug("Attributes", attributes);
+      let templateS: any = null;
+      try {
+        templateS = await transform(metadata, node, this);
+      } catch (error) {
+        // console.log("DEBUG INSIDE PROCESS NODE CTACH TRANSFORM ERROR");
+        reject(error);
+      }
+      /*  Logger.debug("Metadata", metadata);
+      const attributes = this.processAttributes(metadata.attributes, node);
+      Logger.debug("Attributes", attributes);
+  
+      const children = await this.processChildren(node[nodeName]);
+      console.log("Children ", children);
+      const templateS = `<${metadata.declarativeComponentTag} ${attributes}>${children}</${metadata.declarativeComponentTag}>`;
+  
+      Logger.debug(METHOD + ":: exit ::" + templateS); */
 
-    const children = await this.processChildren(node[nodeName]);
-    console.log("Children ", children);
-    const templateS = `<${metadata.declarativeComponentTag} ${attributes}>${children}</${metadata.declarativeComponentTag}>`;
+      //Handle Route
+      if (templateS != null) {
+        if (nodeName == "route") {
+          this.processRoute(templateS, node);
+        }
+        if (nodeName == "signal") {
+          this.processSignal(node, parentNode);
+        }
 
-    Logger.debug(METHOD + ":: exit ::" + templateS); */
+        if (nodeName == "dataset" && Object.keys(parentNode)[0] == "ng-declarative-app") {
+          this.appDatasets.push({
+            name: this.getAttributeFromNode(node, "name"),
+            template: templateS,
+            id: this.getAttributeFromNode(node, "id")
+          })
+        }
+        //Process Application level navbar
+        if (nodeName == "navbar" && Object.keys(parentNode)[0] == "ng-declarative-app") {
+          this.appNavbars.push({
+            template: templateS.toString().replace(/(>,+<)/g, "><").replace(/,</g, "<"),
+            id: this.getAttributeFromNode(node, "id")
+          })
+        }
 
-    //Handle Route
-    if (nodeName == "route") {
-      this.processRoute(templateS, node);
-    }
-    if (nodeName == "signal") {
-      this.processSignal(node, parentNode);
-    }
+        if (this.isinsideForm && nodeName == "form") {
+          this.isinsideForm = false;
+        }
+        resolve(templateS);
+      }
+    });
 
-    if (nodeName == "dataset" && Object.keys(parentNode)[0] == "ng-declarative-app") {
-      this.appDatasets.push({
-        name: this.getAttributeFromNode(node, "name"),
-        template: templateS,
-        id: this.getAttributeFromNode(node, "id")
-      })
-    }
-    //Process Application level navbar
-    if (nodeName == "navbar" && Object.keys(parentNode)[0] == "ng-declarative-app") {
-      this.appNavbars.push({
-        template: templateS.toString().replace(/(>,+<)/g, "><").replace(/,</g, "<"),
-        id: this.getAttributeFromNode(node, "id")
-      })
-    }
-
-    if (this.isinsideForm && nodeName == "form") {
-      this.isinsideForm = false;
-    }
-    return templateS;
   }
   private processSignal(node: any, parentNode: any) {
     const name = this.getAttributeFromNode(node, "name");
@@ -441,7 +459,74 @@ export class Compiler {
 
   private createLoopComponents() {
     for (var loop of this.loops) {
-      if (loop.innerLoop) {
+      if (loop.dataset) {
+        const fileContent = `
+      import { Component, Input, OnInit } from '@angular/core';
+      import {
+        ${this.ngDeclarativeServices.join(",")}
+      } from "ng-declarative-components";
+      import { ApplicationServiceProvider } from "./app.provider.service";
+    @Component({
+        selector: 'app-loop-${loop.id}',
+        template: \`
+         @if(!componentLoading){
+         @defer(on immediate) {
+            @for(item of items;track item;let $index = $index){
+              ${loop.template}
+            }
+        }
+      }
+      @else {
+        <ng-declarative-loader ${loop.loopLoadingClass ? `class="${loop.loopLoadingClass}"` : ''} height="40px" />
+      }
+
+        \`,
+        styles: [\`
+          :host{
+            display:contents;
+          }
+        \`]
+    })
+    export class ${loop.component} implements OnInit {
+        public appCtrl: any;
+        public app: any;
+        public routeCtrl: any;
+        @Input() innerLoopItems: any;
+        @Input() outerLoopIndex: any;
+        @Input() outerLoopItem: any;
+        dataset: any = "${loop.dataset}";
+        items: any;
+        componentLoading: boolean;
+        constructor(public appPropvider: ApplicationServiceProvider) {
+             this.app = appPropvider.getApp();
+             this.appCtrl = this.app.getAppController();
+             this.routeCtrl = this.app.getCurrentRoute().getController();
+             this.componentLoading = true;
+          }
+    ngOnInit(): void {
+            try {
+              if (this.app.datasets[this.dataset].isReady()) {
+                this.items = this.app.datasets[this.dataset].dataset$;
+                setTimeout(() => this.componentLoading = false, 1000)
+              } else {
+                this.app.datasets[this.dataset].dataset.subscribe((value: any) => {
+                  this.items = value;
+                  setTimeout(() => this.componentLoading = false, 1000)
+                });
+              }
+
+
+            } catch (err) {
+              this.app.handleFrameworkError(err);
+              this.componentLoading = false;
+            }
+          }
+
+  }
+      `;
+        fs.writeFileSync(loop.file_path, fileContent);
+      }
+      else if (loop.innerLoop) {
         const fileContent = `
       import { Component, Input } from '@angular/core';
       import {
@@ -451,11 +536,12 @@ export class Compiler {
     @Component({
         selector: 'app-loop-${loop.id}',
         template: \`
-         @defer(on immediate) {
+      @defer(on immediate) {
             @for(item of innerLoopItems;track item;let $index = $index){
               ${loop.template}
             }
         }
+         
         \`,
         styles: [\`
           :host{
@@ -476,14 +562,12 @@ export class Compiler {
              this.routeCtrl = this.app.getCurrentRoute().getController();
           }
     
-
-    toString(value: any): any {
-      return new String(value);
-    }
-  }
+        
+}
       `;
         fs.writeFileSync(loop.file_path, fileContent);
-      } else {
+      }
+      else {
         const fileContent = `
       import { Component } from '@angular/core';
       import {
@@ -1079,7 +1163,9 @@ Thumbs.db
     "@angular/localize": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.2",
     "moment": "^2.18.1",
+    "ng-declarative-components": "next",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
@@ -1136,7 +1222,8 @@ Thumbs.db
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/bootstrap/scss/bootstrap.scss"
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.scss"
             ],
             "scripts": [
                {
@@ -1246,6 +1333,7 @@ Thumbs.db
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "importHelpers": true,
     "target": "es2022",
     "module": "es2020",

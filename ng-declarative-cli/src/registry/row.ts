@@ -4,6 +4,8 @@ import {
 
 export const metadata = {
   tag: "row",
+  type: "LAYOUT",
+  description: "A bootstrap row.",
   attributes: getBaseAttributes([
     {
       name: "row-cols",

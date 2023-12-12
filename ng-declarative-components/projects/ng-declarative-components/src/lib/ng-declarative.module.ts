@@ -15,7 +15,7 @@ import { CommonModule } from "@angular/common";
 import { RouterLink } from "@angular/router";
 import { LoopComponent } from "./ng-declarative-components-loop.component";
 import { FoldableBlocks } from "./ng-declarative-components-foldable-blocks.component";
-import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AnimationService } from "./ng-declarative-animation.service";
 import { Paragraph } from "./ng-declarative-components-paragraph.component";
 import { Alert } from "./ng-declarative-components-alert.component";
@@ -34,6 +34,10 @@ import { HttpClientService } from "./ng-declarative-components.httpclient.servic
 import { Container } from "./ng-declarative-components-container.component";
 import { Row } from "./ng-declarative-components-row.component copy";
 import { Col } from "./ng-declarative-components-col.component";
+import { LoaderComponent } from "./ng-declarative-components-loader.component";
+import { Card } from "./ng-declarative-components-card.component";
+import { SidebarComponent } from "./ng-declarative-components-sidebar.component";
+import { SidebarNavbarItemComponent } from "./ng-declarative-components-sidebar-navitem.component";
 @NgModule({
   imports: [CommonModule, RouterLink, NgbModule, HttpClientModule, FormsModule],
   declarations: [
@@ -58,7 +62,11 @@ import { Col } from "./ng-declarative-components-col.component";
     NavbarItemComponent,
     Container,
     Row,
-    Col
+    Col,
+    LoaderComponent,
+    Card,
+    SidebarComponent,
+    SidebarNavbarItemComponent
   ],
   exports: [
     Application,
@@ -82,7 +90,11 @@ import { Col } from "./ng-declarative-components-col.component";
     NavbarItemComponent,
     Container,
     Row,
-    Col
+    Col,
+    LoaderComponent,
+    Card,
+    SidebarComponent,
+    SidebarNavbarItemComponent
   ],
 })
 export class NgDeclarativeModule {

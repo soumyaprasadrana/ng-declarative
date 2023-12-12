@@ -4,6 +4,8 @@ import {
 
 export const metadata = {
   tag: "column",
+  type: "LAYOUT",
+  description: "A bootstrap configurable column.",
   attributes: getBaseAttributes([
     {
       name: "size",

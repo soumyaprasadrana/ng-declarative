@@ -8,6 +8,8 @@ import {
 
 export const metadata = {
     tag: "form-action",
+    type: "FORM",
+    description: " Represents an action within a form.",
     attributes: getBaseAttributes([
         {
             name: "isSuccess",

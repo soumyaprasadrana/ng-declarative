@@ -8,6 +8,9 @@ import {
 
 export const metadata = {
   tag: "navbar-center",
+  type: "WIDGET",
+  parent: "navbar",
+  description: "Center slot in a navbar component.",
   attributes: getBaseAttributes([
     {
       name: "direction",

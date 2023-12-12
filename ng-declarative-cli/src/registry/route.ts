@@ -1,5 +1,7 @@
 export const metadata = {
   tag: "route",
+  type: "ROOT",
+  description: "Manages navigation routes and it's UI presentation within the application.",
   attributes: [
     {
       name: "title",

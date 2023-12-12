@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { buildApp, createApp, getHelp, serveApp } from "./lib/cli";
+import { buildApp, createApp, getHelp, serveApp, generateDocAppData } from "./lib/cli";
 
 const program = new Command();
 
@@ -36,5 +36,16 @@ program
   .action(() => {
     serveApp();
   });
+program
+  .command("generatedocappdata")
+  .description("Crates the documentation app using ng-declarative framework")
+  .action(() => {
+    generateDocAppData();
+  });
+program
+  .version('1.0.0.pre.5')
+  .description('CLI for ng-declarative framework')
+  .option('-v, --version', 'output the version number')
+  .parse(process.argv);
 
 program.parse(process.argv);

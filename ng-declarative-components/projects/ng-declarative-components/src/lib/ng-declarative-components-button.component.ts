@@ -16,10 +16,10 @@ import { Base } from './ng-declarative-components-base.component';
     >
       {{label}}
       <div class="loader" *ngIf="isLoading"></div>
-      <div class="icon" *ngIf="!isLoading && showIcon">
-        <!-- Add your favorite icon here -->
-        <i class="fas fa-star"></i>
-      </div>
+      @if(iconClass){
+        <i [ngClass]="iconClass"></i> 
+      }
+     
       <div class="status" *ngIf="isSuccess || isError">
         {{ isSuccess ? 'Success!' : 'Error!' }}
       </div>
@@ -94,7 +94,7 @@ import { Base } from './ng-declarative-components-base.component';
     `,
 })
 export class ButtonComponent extends Base {
-  @Input() showIcon: boolean = true;
+  @Input() iconClass: string | undefined;
   @Input() isLoading: boolean = false;
   @Input() isSuccess: boolean = false;
   @Input() isError: boolean = false;

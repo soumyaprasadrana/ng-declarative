@@ -8,7 +8,10 @@ import {
 } from "./utils";
 
 export const metadata = {
-  tag: "link",
+  tag: "navitem",
+  type: "WIDGET",
+  parent: "navbar",
+  description: "A navigation item.",
   attributes: getBaseAttributes([
     {
       name: "route",

@@ -1,6 +1,7 @@
 {
   "name": "ng-declarative-components",
-  "version": "0.0.0",
+  "description": "Angular components for ng-declarative framework",
+  "version": "1.0.0-pre.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +9,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
+  "author": "Soumya Prasad Rana",
+  "license": "MIT",
+  "private": false,
   "dependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/common": "^17.0.0",

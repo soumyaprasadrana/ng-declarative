@@ -8,6 +8,8 @@ import {
 
 export const metadata = {
   tag: "link",
+  type: "OTHER",
+  description: "Creates hyperlinks.",
   attributes: getBaseAttributes([
     {
       name: "label",

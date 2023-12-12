@@ -2,31 +2,10 @@ import { getBaseAttributes } from "./utils";
 
 export const metadata = {
     tag: "button",
+    type: "UI",
+    description: "Represents a clickable button.",
     attributes: getBaseAttributes([
-        {
-            name: "isSuccess",
-            required: false,
-            mappedInputAttribute: "isHidden",
-            type: "boolean",
-            objectbinding: true
 
-        },
-        {
-            name: "isLoading",
-            required: false,
-            mappedInputAttribute: "isLoading",
-            type: "boolean",
-            objectbinding: true
-
-        },
-        {
-            name: "isError",
-            required: false,
-            mappedInputAttribute: "isError",
-            type: "boolean",
-            objectbinding: true
-
-        },
         {
             name: "theme",
             required: false,
@@ -43,7 +22,7 @@ export const metadata = {
         },
         {
             name: "label",
-            required: true,
+            requiredIfAttributeNotPresent: ["icon"],
             mappedInputAttribute: "label",
             type: "string",
         },
@@ -51,6 +30,13 @@ export const metadata = {
             name: "route",
             required: false,
             mappedInputAttribute: "route",
+            type: "string",
+        },
+        {
+            name: "icon",
+            required: false,
+            requiredIfAttributeNotPresent: ["label"],
+            mappedInputAttribute: "iconClass",
             type: "string",
         },
         {

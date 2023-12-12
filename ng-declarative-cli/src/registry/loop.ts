@@ -2,19 +2,27 @@ import { validateBoolean } from "./utils";
 
 export const metadata = {
   tag: "loop",
+  type: "OTHER",
+  description: " A utility component for iterating over a collection.",
   attributes: [
     {
-      name: "data-source",
+      name: "dataset",
       required: false,
       skipdomprocessing: true,
       requiredIfAttributeNotPresent: ["items", "inner-loop-items"],
       type: "string",
     },
     {
+      name: "loop-loading-class",
+      required: false,
+      skipdomprocessing: true,
+      type: "string",
+    },
+    {
       name: "items",
       required: false,
       skipdomprocessing: true,
-      requiredIfAttributeNotPresent: ["data-source", "inner-loop-items"],
+      requiredIfAttributeNotPresent: ["dataset", "inner-loop-items"],
       type: "string",
     },
     {

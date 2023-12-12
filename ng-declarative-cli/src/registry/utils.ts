@@ -540,15 +540,9 @@ export function getBaseAttributes(addtionalAttributesList: any, componentName: a
       required: false,
       mappedInputAttribute: "onClickEventArgs",
       type: "object",
-      bindingtransform: (value: any) => {
-        if (exports.isBindingString(value)) {
-          return "[" + exports.removeBindingCharacters(value) + "]";
-        } else {
-          return value;
-        }
-      },
+      objectbinding: true,
       description: "Sets the arguments for the click event handler of a component",
-      example: '<' + componentName + ' on-click-args="[event]" id="mnv32"></' + componentName + '>',
+      example: '<' + componentName + ' on-click-args="[\'event\']" id="mnv32"></' + componentName + '>',
     },
     {
       name: "hidden",
@@ -559,10 +553,65 @@ export function getBaseAttributes(addtionalAttributesList: any, componentName: a
       description: "Sets the visibility of a component",
       example: '<' + componentName + ' hidden="true" id="plk98"></' + componentName + '>',
     },
+    {
+      name: "disabled",
+      objectbinding: true,
+      required: false,
+      mappedInputAttribute: "disabled",
+      type: "object",
+      description: "Sets if a component is disabled",
+      example: '<' + componentName + ' hidden="true" id="plk98"></' + componentName + '>',
+    },
+    {
+      name: "is-collapsed",
+      required: false,
+      mappedInputAttribute: "[(ngbCollapse)]",
+      type: "object",
+      description: "Sets the component to be collapsable",
+      example: '<' + componentName + ' hidden="true" id="plk98"></' + componentName + '>',
+    },
+    {
+      name: "tooltip",
+      required: false,
+      mappedInputAttribute: "ngbTooltip",
+      type: "object",
+      description: "Tooltip for a component",
+      example: '<' + componentName + ' tootip="abc" id="plk98"></' + componentName + '>',
+    },
+    {
+      name: "tooltip-placement",
+      required: false,
+      mappedInputAttribute: "placement",
+      type: "string",
+      allowedValues: "top | end | bottom | start ",
+      validate: (value: any) => {
+        return value == "top" || value == "end" || value == "bottom" || value == "start";
+      },
+      description: "Tooltip placement for a component",
+      example: '<' + componentName + ' tootip="abc" tooltip-placement="end" id="plk98"></' + componentName + '>',
+    },
+    {
+      name: "tooltip-container",
+      required: false,
+      mappedInputAttribute: "container",
+      type: "string",
+      description: "Tooltip placement container for a component",
+      example: '<' + componentName + ' tootip="abc" tooltip-container="body" tooltip-placement="end" id="plk98"></' + componentName + '>',
+    },
+    {
+      name: "collapse-horizontal",
+      required: false,
+      mappedInputAttribute: "[horizontal]",
+      type: "boolean",
+      validate: validateBoolean,
+      description: "Collapse direction",
+      example: '<' + componentName + ' hidden="true" id="plk98"></' + componentName + '>',
+    },
+
   ];
 
 
-  return [...baseAtrrList, ...addtionalAttributesList];
+  return [...addtionalAttributesList, ...baseAtrrList];
 }
 
 export function removeBindingCharacters(str: any): string {

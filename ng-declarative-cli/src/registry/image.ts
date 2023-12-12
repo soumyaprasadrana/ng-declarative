@@ -8,7 +8,9 @@ import {
 } from "./utils";
 
 export const metadata = {
-  tag: "link",
+  tag: "image",
+  type: "OTHER",
+  description: "Configurable image component that can load image as well as icons using css classes.",
   attributes: getBaseAttributes([
     {
       name: "src",

@@ -2,6 +2,8 @@ import { getBaseAttributes } from "./utils";
 
 export const metadata = {
     tag: "table",
+    type: "WIDGET",
+    description: "Represents tabular data.",
     attributes: getBaseAttributes([
         {
             name: "dataset",

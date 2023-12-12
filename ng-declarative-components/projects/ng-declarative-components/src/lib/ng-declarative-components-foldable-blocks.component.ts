@@ -17,8 +17,8 @@ import { Base } from "./ng-declarative-components-base.component";
   selector: "ng-declarative-foldable-blocks",
   template: `
     <div
-      [ngClass]="blockClasses"
-      [ngStyle]="blockStyle"
+      [ngClass]="getBlockClasses()"
+      [ngStyle]="getBlockStyles()"
       [class]="customClass"
       [style.height]="height"
       [style.width]="width" 
@@ -57,8 +57,8 @@ export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
   @Input() responsive: boolean = true;
   @Input() override transition: string = ""; // Set the default transition to none
   @Input() override transitionDuration: string = "0.5s"; // Set the default duration to 0.5s
-  @Input() disableAnimation:boolean = true;
-  @Input() closeOthers:boolean = false;
+  @Input() disableAnimation: boolean = true;
+  @Input() closeOthers: boolean = false;
   @Input() destroyOnHide: boolean = true;
 
   blockClasses: string = "";
@@ -67,23 +67,23 @@ export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
   @Output() refChange: EventEmitter<FoldableBlocks> = new EventEmitter<FoldableBlocks>();
 
   //@ContentChildren('*') childBlocks: QueryList<ElementRef> | undefined;
- childBlocks!: any;
+  childBlocks!: any;
 
   @ViewChild("blockRef") blockRef: ElementRef | undefined;
 
   constructor(
-     elementRef: ElementRef,
-     animationService: AnimationService,
-     app: ApplicationService
+    elementRef: ElementRef,
+    animationService: AnimationService,
+    app: ApplicationService
   ) {
-    super(elementRef,animationService,app);
-   
+    super(elementRef, animationService, app);
+
   }
 
   override ngOnInit() {
     this.blockClasses = this.getBlockClasses();
     this.blockStyle = this.getBlockStyles();
-     this.childBlocks = this.elementRef.nativeElement.childNodes[0].childNodes;
+    this.childBlocks = this.elementRef.nativeElement.childNodes[0].childNodes;
   }
 
   override ngAfterViewInit() {
@@ -109,7 +109,7 @@ export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
 
   applyFlexToChildren() {
     if (this.childBlocks) {
-      this.childBlocks.forEach((child:any) => {
+      this.childBlocks.forEach((child: any) => {
         const childElement = child;
         childElement.style.flex = "1";
       });
@@ -136,7 +136,7 @@ export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
       const flexValues = this.childrenFlexValues
         .split(",")
         .map((value) => value.trim());
-      this.childBlocks.forEach((child:any, index:number) => {
+      this.childBlocks.forEach((child: any, index: number) => {
         const childElement = child;
         childElement.style.flex = flexValues[index] || "1";
       });
@@ -146,7 +146,7 @@ export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
   setChildrenWidths() {
     if (this.childBlocks && this.childrenSizes) {
       const sizes = this.childrenSizes.split(",").map((size) => size.trim());
-      this.childBlocks.forEach((child:any, index:number) => {
+      this.childBlocks.forEach((child: any, index: number) => {
         const childElement = child.nativeElement;
         childElement.style.width = sizes[index] ? sizes[index] + "%" : "auto";
       });
@@ -168,7 +168,7 @@ export class FoldableBlocks extends Base implements OnInit, AfterViewInit {
     return classes;
   }
 
-  @HostListener("window:resize", [ "$event" ])
+  @HostListener("window:resize", ["$event"])
   onResize(event: Event) {
     // Handle window resize
     if (this.responsive) {

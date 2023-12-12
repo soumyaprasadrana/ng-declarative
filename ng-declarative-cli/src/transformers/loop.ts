@@ -124,6 +124,8 @@ export async function transform(metadata: any, node: any, compiler: any) {
   const innerLoopItems = compiler.getAttributeFromNode(node, "inner-loop-items");
   const outerLoopItem = compiler.getAttributeFromNode(node, "outer-loop-item");
   const outerLoopIndex = compiler.getAttributeFromNode(node, "outer-loop-index");
+  const dataset = compiler.getAttributeFromNode(node, "dataset");
+  const loopLoadingClass = compiler.getAttributeFromNode(node, "loop-loading-class");
   compiler.addLoop({
     id: id,
     attributes: attributes,
@@ -134,6 +136,8 @@ export async function transform(metadata: any, node: any, compiler: any) {
     innerLoopItems: innerLoopItems,
     outerLoopItem: outerLoopItem,
     outerLoopIndex: outerLoopIndex,
+    loopLoadingClass: loopLoadingClass,
+    dataset: dataset,
     route: compiler.getCurrentRoute()
   });
 

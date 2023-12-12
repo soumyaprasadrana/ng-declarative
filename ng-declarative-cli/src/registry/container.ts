@@ -4,6 +4,8 @@ import {
 
 export const metadata = {
   tag: "container",
+  type: "LAYOUT",
+  description: "A bootstrap configurable container.",
   attributes: getBaseAttributes([
     {
       name: "size",

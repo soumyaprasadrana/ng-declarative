@@ -10,6 +10,8 @@ import {
 
 export const metadata = {
   tag: "foldable-block-header",
+  type: "WIDGET",
+  description: "Header for a foldable block.",
   customprocess: true,
   processor: async (
     node: any,

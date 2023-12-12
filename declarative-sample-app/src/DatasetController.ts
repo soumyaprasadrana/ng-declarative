@@ -78,6 +78,7 @@ export class DatasetController {
             </block>
     </column>
     .......`;
+    testUrl = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=zFN5CcUscU5jFK98fkzgcYXuFdhSV8GV";
     constructor(private app: any) {
         this.sample = jsonData as any[];
     }

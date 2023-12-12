@@ -16,13 +16,14 @@ import {
 import { AnimationService } from "./ng-declarative-animation.service";
 import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
+import { IntersectionObserverService } from "./ng-declarative-interaction.service";
 
 @Component({
   selector: "ng-declarative-block",
   template: `
     <div
-      [ngClass]="blockClasses"
-      [ngStyle]="blockStyle"
+      [ngClass]="getBlockClasses()"
+      [ngStyle]="getBlockStyles()"
       [class]="customClass"
       [style.height]="height"
       [style.width]="width"
@@ -53,13 +54,20 @@ export class Block extends Base implements OnInit, AfterViewInit {
   @Input() manageChildren: boolean = false;
   @Input() childrenSizes: string = "";
   @Input() childrenFlexValues: string = "";
-  @Input() responsive: boolean = true;
+  @Input() responsive: boolean = false;
   @Input() override transition: string = ""; // Set the default transition to none
   @Input() override transitionDuration: string = "0.5s"; // Set the default duration to 0.5s
   @Input() skipFlexClasses: boolean = false;
 
   blockClasses: string = "";
   blockStyle: object = {};
+
+  responsiveClasses: string = '';
+  @Input() viewportSM: "row" | "column" = "column";
+  @Input() viewportMD: "row" | "column" = "row";
+  @Input() viewportLG: "row" | "column" = "row";
+  @Input() viewportXL: "row" | "column" = "row";
+  @Input() viewportXXL: "row" | "column" = "row";
 
   @Output() blockRefChange: EventEmitter<Block> = new EventEmitter<Block>();
 
@@ -71,7 +79,8 @@ export class Block extends Base implements OnInit, AfterViewInit {
   constructor(
     elementRef: ElementRef,
     animationService: AnimationService,
-    app: ApplicationService
+    app: ApplicationService,
+    private _observer: IntersectionObserverService
   ) {
     super(elementRef, animationService, app);
 
@@ -81,8 +90,20 @@ export class Block extends Base implements OnInit, AfterViewInit {
     this.blockClasses = this.getBlockClasses();
     this.blockStyle = this.getBlockStyles();
     this.childBlocks = this.elementRef.nativeElement.childNodes[0].childNodes;
+    /* if (this._observer.isSupported()) {
+       this._observer.addTarget(this.elementRef.nativeElement, this.startAnimating);
+     }*/
   }
 
+  private startAnimating() {
+    if (this.transition && this.blockRef) {
+      this.animationService.animate(
+        this.transition,
+        this.blockRef.nativeElement,
+        this.transitionDuration
+      );
+    }
+  }
   override ngAfterViewInit() {
     // Emit the reference to the parent component
     this.blockRefChange.emit(this);
@@ -152,7 +173,7 @@ export class Block extends Base implements OnInit, AfterViewInit {
 
   getBlockClasses(): string {
     let classes = `${this.skipFlexClasses ? " " : " d-flex "}  ${this.customClass}`;
-    if (!this.backgroundColor && !this.backgroundImage && !this.background)
+    if (!this.backgroundColor && !this.backgroundImage && !this.background && !this.customClass)
       classes += ` bg-light `;
     if (!this.skipFlexClasses) {
       if (this.layoutDirection === "row-reverse") {
@@ -163,6 +184,8 @@ export class Block extends Base implements OnInit, AfterViewInit {
         classes += " flex-column-reverse ";
       }
     }
+    if (this.responsive)
+      classes += this.responsiveClasses;
     return classes;
   }
 
@@ -175,15 +198,31 @@ export class Block extends Base implements OnInit, AfterViewInit {
   }
 
   setResponsiveStyles() {
-    if (this.childBlocks) {
-      if (window.innerWidth < 576) {
-        // Small devices (576px and down): Set to column
-        this.layoutDirection = "column";
-      } else {
-        // Larger devices: Reset to default layout
-        this.layoutDirection = "row";
+
+    var resClasses = '';
+    var list = ["sm", "md", "lg", "xl", "xxl"];
+    for (var viewport of list) {
+      switch (viewport) {
+        case "sm":
+          resClasses += ` flex-sm-${this.viewportSM} `;
+          break;
+        case "md":
+          resClasses += ` flex-md-${this.viewportMD} `;
+          break;
+        case "lg":
+          resClasses += ` flex-lg-${this.viewportLG} `;
+          break;
+        case "xl":
+          resClasses += ` flex-xl-${this.viewportXL} `;
+          break;
+        case "xxl":
+          resClasses += ` flex-xxl-${this.viewportXXL} `;
+          break;
+
       }
     }
+    console.log("==== DEBUG SET RESPONSIVE BLOCK===", resClasses);
+    setTimeout(() => this.responsiveClasses = resClasses + " flex-wrap ", 100);
   }
 
   getBlockStyles(): { [key: string]: string } {

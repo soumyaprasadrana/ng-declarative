@@ -7,7 +7,12 @@ import { filter } from 'rxjs';
   selector: 'ng-declarative-navitem',
   template: `
    <li [ngStyle]="getComponentStyles()" [ngClass]="getcComponentClasses()" class="nav-item">
-	    <a class="nav-link mx-2 text-uppercase" [ngClass]="{'active':isActive}" aria-current="page" [routerLink]="[route]">{{label}}</a>
+	    <a class="nav-link mx-2 text-uppercase" [ngClass]="{'active':isActive}" aria-current="page" [routerLink]="[route]">
+      @if(icon){
+        <i class="fs-4 bi-house"></i>
+      }
+       {{label}}
+      </a>
 	  </li>
 
 `,
@@ -24,6 +29,7 @@ import { filter } from 'rxjs';
 export class NavbarItemComponent extends Base {
   @Input() route: string | undefined;
   @Input() label: string | undefined;
+  @Input() icon: string | undefined;
   isActive: boolean = false;
   router: any;
 

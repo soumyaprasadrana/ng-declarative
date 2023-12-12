@@ -1,0 +1,12 @@
+
+{
+  "name": "ng-declarative-doc-app",
+  "version": "1.0.0",
+  "scripts":{
+    "build" : "ng-declarative build"
+  },
+  "description": "Declarative Sample App",
+  "author": "",
+  "license": "MIT"
+}
+

@@ -10,7 +10,7 @@ interface NavbarSlot {
     selector: 'ng-declarative-navbar',
     template: `
 
-<nav [ngStyle]="getComponentStyles()" class="navbar navbar-expand-lg shadow-sm" [ngClass]="{'navbar-light': colorScheme === 'light', 'navbar-dark': colorScheme === 'dark', 'fixed-top': fixedTop}">
+<nav [ngStyle]="getComponentStyles()" class="navbar navbar-expand-lg shadow-sm {{customClass}}" [ngClass]="{'navbar-light': colorScheme === 'light', 'navbar-dark': colorScheme === 'dark', 'fixed-top': fixedTop}">
   <!-- Brand -->
   <div class="container-fluid ms-2 me-2">
   <a class="navbar-brand " href="#">
@@ -21,8 +21,10 @@ interface NavbarSlot {
     <ng-container *ngIf="brandIcon">
         <i [class]="brandIcon+ ' me-2 brand-icon '"></i>
     </ng-container>
-
-    <strong>{{brandText}}</strong></p>
+    @if(brandText){
+        <strong>{{brandText}}</strong>
+    }
+    </p>
   </a>
 
   <!-- Toggler/collapsible Button -->
@@ -39,7 +41,7 @@ interface NavbarSlot {
   </button>
 
   <div class="collapse navbar-collapse" id="navbarNav">
-     <ul class="navbar-nav ms-2">
+     <ul class="navbar-nav">
          <ng-content select="[slotstart]"></ng-content>
      </ul>
 
@@ -108,8 +110,8 @@ interface NavbarSlot {
 `]
 })
 export class NavbarComponent extends Base {
-    @Input() brandText: string = 'Brand';
-    @Input() brandTextCssClass: string | undefined = "";
+    @Input() brandText: string | undefined;
+    @Input() brandTextCssClass: string | undefined;
     @Input() brandIcon: string | null = null;
     @Input() brandImage: string | null = null;
     @Input() colorScheme: 'light' | 'dark' = 'light';

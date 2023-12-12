@@ -1,5 +1,7 @@
 export const metadata = {
   tag: "ng-declarative-app",
+  type: "ROOT",
+  description: "The root component for the ng-declarative application.",
   attributes: [
     {
       name: "base-href",

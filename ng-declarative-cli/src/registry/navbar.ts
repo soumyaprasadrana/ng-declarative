@@ -9,11 +9,13 @@ import {
 
 export const metadata = {
   tag: "navbar",
+  type: "WIDGET",
+  description: "Navigation bar component.",
   attributes: getBaseAttributes([
     {
       name: "brand-text",
       description: "Specify the brand text for the navbar component",
-      required: true,
+      required: false,
       mappedInputAttribute: "brandText",
       type: "string",
       example: `<navbar brand-text="Brand"/>`

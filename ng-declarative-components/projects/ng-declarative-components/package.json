@@ -1,6 +1,9 @@
 {
   "name": "ng-declarative-components",
-  "version": "0.0.1",
+  "version": "1.0.0-pre.4",
+  "description": "Angular components for ng-declarative framework",
+  "author": "Soumya Prasad Rana",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^17.0.0",
     "@angular/core": "^17.0.0",

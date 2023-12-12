@@ -9,6 +9,8 @@ import {
 
 export const metadata = {
   tag: "input",
+  type: "FORM",
+  description: "A configurable input component.",
   attributes: getBaseAttributes([
     {
       name: "theme",
@@ -208,6 +210,14 @@ export const metadata = {
       type: "string",
       example: `<input validators="email" id="exampleInput">`
     },
+    {
+      name: "on-change",
+      description: "event to be invoked when the input value change.",
+      required: false,
+      mappedInputAttribute: "onChangeEvent",
+      type: "object",
+      example: `<input on-change="appCtrl.onChange" id="exampleInput">`
+    }
   ], "input"),
   allowedChildren: null,
   declarativeComponentTag: "ng-declarative-input",

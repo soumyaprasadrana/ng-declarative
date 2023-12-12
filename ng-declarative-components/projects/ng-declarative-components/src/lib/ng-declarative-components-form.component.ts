@@ -23,8 +23,8 @@ import { ButtonComponent } from "./ng-declarative-components-button.component";
   selector: "ng-declarative-form",
   template: `
     <form
-      [ngClass]="blockClasses"
-      [ngStyle]="blockStyle"
+      [ngClass]="getBlockClasses()"
+      [ngStyle]="getBlockStyles()"
       [class]="customClass"
       [style.height]="height"
       [style.width]="width"

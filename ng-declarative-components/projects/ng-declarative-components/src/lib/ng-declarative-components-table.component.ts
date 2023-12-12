@@ -7,11 +7,14 @@ import { AnimationService } from './ng-declarative-animation.service';
     selector: 'ng-declarative-table',
     template: `
         <div class="table-responsive"  [ngClass]="getcComponentClasses()" [ngStyle]="getComponentStyles()">
+        @if(tableOptions.title){
+            <ng-declarative-label theme="bold,heading-large" [text]="tableOptions.title"></ng-declarative-label>
+        }
         <table class="table {{ tableOptions?.cssClass }}" >
         <thead>
         <tr>
             <ng-container *ngFor="let column of tableOptions?.columns">
-            <th [class]="getHeaderClass(column)" (click)="column.sortable && sort(column.field)">
+            <th [style.width]="column.width" [class]="getHeaderClass(column)" (click)="column.sortable && sort(column.field)">
                 @if(!componentLoading){
                 <div style="text-align:center;">
                 {{ column.name }}
@@ -30,7 +33,7 @@ import { AnimationService } from './ng-declarative-animation.service';
         </tr>
         <tr>
             <ng-container *ngFor="let column of tableOptions?.columns">
-            <td >
+            <td [style.width]="column.width" >
                 
                 <div *ngIf="column.filterable">
                 @if(!componentLoading){
@@ -73,7 +76,7 @@ import { AnimationService } from './ng-declarative-animation.service';
       
         <tr *ngFor="let item of pagedData; let rowIndex = index" (click)="rowClick(item, rowIndex)" [class.clicked]="rowIndex === clickedRowIndex">
             <ng-container *ngFor="let column of tableOptions?.columns">
-            <td [class]="getCellClass(column)">
+            <td [style.width]="column.width" [class]="getCellClass(column)">
             @if(column.isChildDataset){
                 <th  *ngFor="let subitem of column.childKeyList">
                     {{subitem.name}}
@@ -157,7 +160,6 @@ import { AnimationService } from './ng-declarative-animation.service';
 export class TableComponent extends Base implements OnChanges, OnInit {
     @Input() datasetName: any | undefined;
     @Input() tableOptions: TableOptions | any;
-
     public filteredData: any[] = [];
     public pagedData: any[] = [];
     public sortedColumn: string | null = null;
@@ -181,28 +183,17 @@ export class TableComponent extends Base implements OnChanges, OnInit {
     override ngOnInit() {
         console.log("Table Component STyle DEBUG from base:", this.getComponentStyles())
         try {
-            if (this.app.datasets[this.datasetName].isReady()) {
-                this.dataset = this.app.datasets[this.datasetName].dataset$;
+
+            this.app.datasets[this.datasetName].dataset.subscribe((value: any) => {
+                console.log("===============>>>>>>>>>>>> DEBUG TABLE SUBSCRIBE :: :: ::", value)
+                this.dataset = value;
                 this.filteredData = this.dataset; // Initial copy of dataset
                 this.pageSize = this.tableOptions?.pageSize || this.pageSize;
                 this.applyFilters();
                 this.updatePagedData();
                 setTimeout(() => this.componentLoading = false, 1000)
 
-
-
-
-            } else {
-                this.app.datasets[this.datasetName].dataset.subscribe((value: any) => {
-                    this.dataset = value;
-                    this.filteredData = this.dataset; // Initial copy of dataset
-                    this.pageSize = this.tableOptions?.pageSize || this.pageSize;
-                    this.applyFilters();
-                    this.updatePagedData();
-                    setTimeout(() => this.componentLoading = false, 1000)
-
-                });
-            }
+            });
 
 
         } catch (err) {
@@ -222,7 +213,7 @@ export class TableComponent extends Base implements OnChanges, OnInit {
     }
 
     getCellValue(item: any, column: TableColumn): any {
-        return column.template ? column.template(item, column, item[column.field]) : item[column.field];
+        return column.template ? column.template(item[column.field], column, item) : item[column.field];
     }
 
     sort(column: string): void {
@@ -254,11 +245,12 @@ export class TableComponent extends Base implements OnChanges, OnInit {
     }
 
     getHeaderClass(column: TableColumn): string {
-        return column.sortable ? 'sortable' : '';
+        return column.sortable ? `sortable ${column.headerClass ? column.headerClass : ''}` : `  ${column.headerClass ? column.headerClass : ''} `;
     }
 
     getCellClass(column: TableColumn): string {
-        return column.filterable ? 'filterable' : '';
+        return column.filterable ? `filterable ${column.cellClass ? column.cellClass : ''}` : ` ${column.cellClass ? column.cellClass : ''} `
+            ;
     }
 
     applyFilters(): void {
@@ -267,7 +259,7 @@ export class TableComponent extends Base implements OnChanges, OnInit {
         this.filteredData = this.dataset.filter((item) =>
             this.tableOptions?.columns.every((column: any) => {
                 if (column.filterable) {
-                    const value = item[column.field].toString().toLowerCase();
+                    const value = item[column.field] ? item[column.field].toString().toLowerCase() : '';
                     const filter = this.columnFilters[column.field]?.toLowerCase(); // Use columnFilters instead of tableOptions.filters
                     return value.includes(filter || '');
                 }
@@ -335,6 +327,9 @@ interface TableColumn {
     field: string;
     sortable?: boolean;
     filterable?: boolean;
+    headerClass?: string,
+    width?: string,
+    cellClass?: string,
     template?: (item: any, column: any, value: any) => string; // Template function for custom rendering
     isChildDataset?: boolean;
     childKeyList: [{ name: string, field: string }];

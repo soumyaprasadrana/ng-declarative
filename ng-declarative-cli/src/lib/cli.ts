@@ -180,6 +180,54 @@ export function getHelp(componentClass: any, attributeName: any) {
   }
 }
 
+export async function generateDocAppData() {
+  // Specify the directory path
+  const directoryPath = path.join(__dirname, '..', 'registry');
+  const docAppPath = path.join(__dirname, "..", "..", "..", "ng-declarative-doc-app", "src");
+  let componentsMetadatas: any = [];
+  console.log("DEBUG :: DIR PATH :: ", directoryPath);
+  // Read the contents of the directory
+  fs.readdirSync(directoryPath).forEach((file) => {
+    const filePath = path.join(directoryPath, file);
+
+    // Check if it's a JavaScript file
+    if (fs.statSync(filePath).isFile() && path.extname(file) === '.js' && !file.startsWith('.') && !file.includes("utils")) {
+      // Dynamically import the module
+      const module = require(filePath);
+
+      // Now you can use the module as needed
+      console.log(`Module ${file} imported:`, module.metadata.tag);
+      for (var index in module.metadata.attributes) {
+        if (module.metadata.attributes[index].requiredIfAttributeNotPresent) {
+          module.metadata.attributes[index].required = "true";
+          if (Array.isArray(module.metadata.attributes[index].requiredIfAttributeNotPresent))
+            module.metadata.attributes[index].requiredIfAttributeNotPresent = module.metadata.attributes[index].requiredIfAttributeNotPresent.join(",")
+        }
+      }
+      componentsMetadatas.push(module.metadata);
+    }
+  });
+
+  const componentsGroupBy = exports.groupBy(componentsMetadatas, "type");
+  //console.log(componentsGroupBy);
+  const metadatajsonfilepath = path.join(docAppPath, "assets", "metadata.json");
+  console.log(metadatajsonfilepath);
+  fs.writeFileSync(metadatajsonfilepath, JSON.stringify(componentsGroupBy, null, 4));
+
+  console.log("Wow! Your app created successfully! ");
+}
+export function groupBy(list: any, key: any) {
+  return list.reduce((result: any, item: any) => {
+    const keyValue = item[key];
+    if (!result.hasOwnProperty(keyValue)) {
+      result[keyValue] = [];
+    }
+    result[keyValue].push(item);
+    return result;
+  }, {});
+}
+
+
 export async function buildApp(watch: any) {
   const sourceXmlPath = path.join(process.cwd(), "src", "source.xml");
 
@@ -191,11 +239,12 @@ export async function buildApp(watch: any) {
       idProcessor.processIDs();
       const sourceXml = await fs.promises.readFile(sourceXmlPath, "utf-8");
       const compiler = new Compiler();
+      //console.log("DEBUG Before compiler.compile");
       await compiler.compile(sourceXml);
 
       console.log("Built ng-declarative app");
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.log('\x1b[31m\x1b[1m%s\x1b[0m', error.message);
     }
   };
 

@@ -8,6 +8,8 @@ import {
 
 export const metadata = {
   tag: "paragraph",
+  type: "TEXT",
+  description: "Represents a paragraph of text.",
   attributes: getBaseAttributes([
     {
       name: "font-size",

@@ -6,15 +6,26 @@ import {
   Directive,
   HostListener,
   Component,
+  inject,
+  OnDestroy,
 } from "@angular/core";
 import { AnimationService } from "./ng-declarative-animation.service";
 import { ApplicationService } from "./ng-declarative-components.service";
+import { NgbScrollSpyService } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
+  selector: 'ng-declarative-base',
   template: `
+      <ng-content></ng-content>
   `,
+  styles: [`
+  :host{
+    width: 100%;
+  }
+  `]
+
 })
-export class Base implements OnInit, AfterViewInit {
+export class Base implements OnInit, AfterViewInit, OnDestroy {
   @Input() background: string | undefined;
   @Input() backgroundColor: string | undefined;
   @Input() backgroundImage: string | undefined;
@@ -34,6 +45,7 @@ export class Base implements OnInit, AfterViewInit {
   @Input() width: string | undefined;
   @Input() transition: string = ""; // Set the default transition to none
   @Input() transitionDuration: string = "0.5s"; // Set the default duration to 0.5s
+  @Input() transitionOnScroll: boolean = false;
   @Input() onClickEvent: any | undefined;
   @Input() onClickEventArgs: any | undefined;
   @Input() paddingStart: any;
@@ -50,13 +62,16 @@ export class Base implements OnInit, AfterViewInit {
   componentStyle: object = {};
 
   componentLoading: boolean = false;
-
+  scrollSpy = inject(NgbScrollSpyService);
 
   constructor(
     public elementRef: ElementRef,
     public animationService: AnimationService,
     public app: ApplicationService
   ) { }
+  ngOnDestroy(): void {
+
+  }
 
   ngOnInit() {
     this.componentClasses = this.getcComponentClasses();

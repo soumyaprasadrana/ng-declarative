@@ -1,0 +1,155 @@
+
+<ng-declarative-app controller="AppController" name="declarative-doc-app" id="atA0rMN">
+  <navbar color-scheme="dark" sticky="true" css-class="app-nav" brand-text="ng-declarative" brand-image="assets/ng-declarative-small.png" id="bUYgwdF">
+    <navbar-end id="vdweRWwhi">
+      <navitem route="/home" label="Home" id="fiwde6fyb"></navitem>
+      <navitem route="/components" label="Components" id="fiwwede6fyb"></navitem>
+    </navbar-end>
+  </navbar>
+  <route controller="HomeController" uri="/home" title="Documentation" id="home">
+    <dataset name="nyttopsciencestories" data-key="results" type="url" src="&apos;https://api.nytimes.com/svc/topstories/v2/science.json?api-key=zFN5CcUscU5jFK98fkzgcYXuFdhSV8GV&apos;" id="it9RAzz"></dataset>
+    <block css-class="doc-app-home-main" width="full" height="auto" id="GSz5kNz">
+      <block padding="large" direction="column" css-class="doc-app-home-main-content" background-color="transperant" id="main" width="full" height="auto" margin-top="define-80px">
+        <container id="x3OpuoG">
+          <row id="MVHSfWb">
+            <card margin="large" css-class="doc-app-card" width="full" id="XAcDHEZ">
+              <card-body id="r79t74R">
+                <container id="OfjDgQ7">
+                  <row id="A30SnkB">
+                    <column transition="tada" transition-duration="long" size="4" id="C9ge4Br">
+                      <image type="image" src="assets/ng-declarative.svg" id="TucPryD"></image>
+                    </column>
+                    <column size="8" id="nVJMB16">
+                      <block padding-start="large" margin-start="large" background-color="transperant" direction="column" id="LNLfEyr">
+                        <label theme="wrap,bold,muted,display-large" text="Get started with NG Declarative Framework" id="izXZkrO"></label>
+                        <paragraph css-class="doc-app-intro-p text-muted" text="the intuitive solution for Angular app development. Simplify UI design using XML components, making your development experience seamless and efficient." id="usG71rp"></paragraph>
+                        <label theme="wrap,muted,lighter,heading-normal" text="Install with NPM" id="ljToZ80"></label>
+                        <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8IQ">
+                          <label padding-start="small" theme="muted" text="npm i -g ng-declarative" id="NDdk9dk"></label>
+                          <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyInstallCmd" id="hOLgYcQ"></button>
+                        </block>
+                        <alert type="%%appCtrl.copyMessageType%%" text="%%appCtrl.copyMessage%%" display-condition="appCtrl.showCopyMessage" id="dXOhCj5"></alert>
+                        <paragraph margin-top="large" css-class="text-muted" text="Currently under development..." id="jd1zmQC"></paragraph>
+                        <alert text="Version: pre-release" type="warning" id="zspqn1u"></alert>
+                        <block align-items="center" justify-contents="end" direction="row" background-color="#fff" id="IFRGfo5">
+                          <label margin="small" text="Powered By" theme="muted" id="M8KpVmO"></label>
+                          <image margin="small" type="image" src="assets/angular.svg" height="define-30px" width="define-30px" id="UahtCCn"></image>
+                          <image margin="small" type="image" src="assets/bootstrap.png" height="define-35px" width="define-40px" id="UahftCCn"></image>
+                          <image margin="small" type="image" src="assets/ng-bootstrap.svg" height="define-30px" width="define-30px" id="UahsftCCn"></image>
+                        </block>
+                      </block>
+                    </column>
+                  </row>
+                </container>
+              </card-body>
+            </card>
+          </row>
+          <row width="full" id="sB4MxZwz">
+            <card width="full" margin="large" css-class="doc-app-card" id="Gayxdg06W">
+              <card-body width="full" id="JVeSxdMDn">
+                <block background="transperant" width="full" direction="column" id="fc7owv42">
+                  <label theme="wrap,bold,muted,display-large" text="Getting Started" id="izsweXZkrO"></label>
+                </block>
+              </card-body>
+            </card>
+          </row>
+        </container>
+      </block>
+    </block>
+  </route>
+  <route uri="/examples" controller="ExampleController" title="Examples" id="examples">
+    <block css-class="doc-app-home-main" width="full" height="auto" id="IM3RDPb">
+      <block padding="large" direction="column" css-class="doc-app-home-main-content" background-color="transperant" width="full" height="auto" margin-top="define-80px" id="baJRSO7">
+        <container id="GVf58NT">
+          <row id="sB4MZwz">
+            <card margin="large" css-class="doc-app-card" id="Gayg06W">
+              <card-body id="JVeSMDn">
+                <block direction="column" id="f7owv42">
+                  <label theme="wrap,bold,muted,display-large" text="Magic of ng-declartive" id="izsXZkrO"></label>
+                  <paragraph text="This example illustrates how developers can effortlessly leverage the dataset component to seamlessly load API data with a single line of code, simplifying the design process and embracing a more declarative approach.
+
+In this particular instance, the New York Times API, accompanied by an API key, is employed to retrieve top science stories for the day within a dataset component. Subsequently, two loop components are employed—one for displaying titles and the other for showcasing images.Notably, the entire process is accomplished without relying on a single line of additional JavaScript code.  To streamline the presentation, a display condition is implemented to exhibit only half of the retrieved stories and the initial image of each story. This approach aims to streamline design complexities and promote a more straightforward, declarative methodology." id="oThiFLU"></paragraph>
+                  <row padding-start="extra-large" padding-end="extra-large" id="Sv1gY6y">
+                    <column id="hjNFmXL">
+                      <row width="full" id="Tjw8fCz">
+                        <column id="t3yN373">
+                          <paragraph css-class="code-section" text="%%routeCtrl.example3source%%" id="trYf38y"></paragraph>
+                        </column>
+                      </row>
+                    </column>
+                    <column transition="tada" transition-duration="long" border="minimal" border-color="var(--bs-warning)" height="define-880px" overflow="scroll" id="kbz8tUT">
+                      <block padding="large" direction="column" id="EXJZIE8">
+                        <row background-color="#000" justify-contents="center" id="P7BIo8V">
+                          <column id="WMmbIkT">
+                            <label text-color="var(--bs-warning)" theme="wrap,bold,heading-large" text="New York Times Top Science Stories" id="abO70Js"></label>
+                          </column>
+                        </row>
+                        <row padding="small" id="abDY3Tp">
+                          <loop dataset="nyttopsciencestories" id="zst5YJP">
+                            <label display-condition="$index!=0 and $index%2==0 and item.title!=&apos;&apos;" theme="wrap,bold,heading-smallest" text="Title: %%item.title%%" id="hzpZL8S"></label>
+                            <loop display-condition="$index!=0 and $index%2==0 and item.title!=&apos;&apos;" outer-loop-item="item" outer-loop-index="$index" inner-loop="true" inner-loop-items="item.multimedia" id="AURlGo1">
+                              <image display-condition="$index==0" type="image" src="%%item.url%%" id="Jb0gYS7"></image>
+                            </loop>
+                          </loop>
+                        </row>
+                      </block>
+                    </column>
+                  </row>
+                </block>
+              </card-body>
+            </card>
+          </row>
+        </container>
+      </block>
+    </block>
+  </route>
+  <route uri="/components" controller="ComponentsController" title="Components" id="I4YDJxv">
+    <dataset name="componentsTable" type="json" src="%%routeCtrl._currentcomponentsTableDataset%%" id="Zis6ggh"></dataset>
+    <block css-class="doc-app-getting-started-main" width="full" height="full" id="YTWJM2t">
+      <block height="full" padding="large" direction="column" css-class="doc-app-home-main-content" background-color="transperant" width="full" margin-top="define-80px" id="AeTBLwo">
+        <container id="snNI9Ql">
+          <row id="Y2D806P">
+            <card margin="large" css-class="doc-app-card" width="full" id="kJjqRoa">
+              <card-body id="zVnBv5w">
+                <sidebar width="define-20%" css-class="app-sidebar bg-dark text-white" id="Vi429d8">
+                  <sidebar-start id="I89168r">
+                    <block background-color="transperent" direction="column" id="DzrCZzg">
+                      <label theme="wrap,bold,heading-large" text="Components" id="t8FsSfY"></label>
+                      <form width="full" id="U0YGPBp">
+                        <input css-class="doc-app-search-input" on-change="routeCtrl.onSearchChange" placeholder="Search..." theme="text" model="routeCtrl.sidebarSearch" attribute-name="sidebarSearch" id="Tmla2vF"></input>
+                      </form>
+                    </block>
+                  </sidebar-start>
+                  <sidebar-center height="define-500px" overflow="scroll" id="TZZt32t">
+                    <loop items="routeCtrl.componentsGroups" id="TcI3A0F">
+                      <block width="full" background-color="transperant" direction="row" justify-contents="space-between" id="U0xjLD6">
+                        <label text="%%item.description%%" theme="wrap,bold,heading-small" id="ayLggNh"></label>
+                        <image display-condition="item.isCollapsed" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" type="icon" css-class="text-white" icon="bi bi-caret-down text-bold link" id="rl3eAqw"></image>
+                        <image display-condition="!item.isCollapsed" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" type="icon" css-class="text-white" icon="bi bi-caret-up text-bold link" id="rl3eAvdqw"></image>
+                      </block>
+                      <base is-collapsed="item.isCollapsed" id="OyVBV0m">
+                        <loop inner-loop="true" outer-loop-item="item" inner-loop-items="routeCtrl.getComponentsArray(item.type)" id="ciCAFiQ">
+                          <block width="full" background-color="transperant" align-items="center" id="KbqWL7O">
+                            <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag==routeCtrl.currentComponent.tag" css-class="link link-active" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="DzMY3iv"></label>
+                            <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag!=routeCtrl.currentComponent.tag" css-class="link" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="DzMds  Y3iv"></label>
+                          </block>
+                        </loop>
+                      </base>
+                    </loop>
+                  </sidebar-center>
+                  <sidebar-content id="IGM2IU1">
+                    <block padding-start="large" background-color="#fff" direction="column" id="ogLA5Ly">
+                      <label theme="bold,heading-large" css-class="text-primary" text="%%routeCtrl.currentComponent.tag%%" id="Jq6QNkA"></label>
+                      <label text="%%routeCtrl.currentComponent.description%%" id="ZrSHns8"></label>
+                    </block>
+                    <table margin="large" dataset="componentsTable" table-options="routeCtrl.currentcomponentsTableOptions" id="Td2jK1l"></table>
+                  </sidebar-content>
+                </sidebar>
+              </card-body>
+            </card>
+          </row>
+        </container>
+      </block>
+    </block>
+  </route>
+</ng-declarative-app>

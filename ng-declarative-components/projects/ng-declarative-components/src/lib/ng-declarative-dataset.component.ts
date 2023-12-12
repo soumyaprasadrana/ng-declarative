@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ApplicationService } from './ng-declarative-components.service';
@@ -7,7 +7,7 @@ import { ApplicationService } from './ng-declarative-components.service';
     selector: 'ng-declarative-dataset',
     template: ``
 })
-export class DataLoaderComponent {
+export class DataLoaderComponent implements OnChanges {
     @Input() name: string | undefined;
     @Input() type: string = 'json';
     @Input() src: string | object[] = '';
@@ -46,6 +46,23 @@ export class DataLoaderComponent {
                 this.isDatasetReady = true;
         });
     }
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(">>>> DATASET DEBUG NG ON CHANGES >>>>>");
+        if (this.type === 'json') {
+            this.datasetSubject.next(this.src as object[]);
+        } else if (this.type === 'json-file') {
+            this.loadDataFromFile(this.src as string).subscribe((data) => {
+                this.datasetSubject.next(data);
+            });
+        } else if (this.type === 'url') {
+            this.loadDataFromUrl(this.src as string).subscribe((data: any) => {
+                if (this.dataKey)
+                    this.datasetSubject.next(data[this.dataKey]);
+                else
+                    this.datasetSubject.next(data);
+            });
+        }
+    }
 
     isReady() {
         return this.isDatasetReady;
@@ -58,6 +75,7 @@ export class DataLoaderComponent {
 
 
     ngOnInit() {
+        console.log(">>>> DATASET DEBUG NG ONINIT >>>>> ")
         if (this.preLoad) {
             this.load();
         }

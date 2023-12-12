@@ -188,6 +188,7 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   @Input() predefinedValidations: any | undefined;
   @Input() disableInputBorder: boolean = false;
   @Input() signal: any;
+  @Input() onChangeEvent: any;
 
   @ViewChild("inputField") inputField: ElementRef | undefined;
 
@@ -333,11 +334,22 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
         this.app.datasets[this.dataset].newItem[this.datasetattribute] = this.inputField?.nativeElement.value;
     }
     this.runValidations();
+    if (this.onChangeEvent) {
+      if (typeof this.onChangeEvent == "string") {
+        if (this.onChangeEvent.includes("appCtrl.")) {
+          this.app.getAppController()[this.onChangeEvent.split(".")[1]](this.inputField?.nativeElement.value);
+        } else if (this.onChangeEvent.includes("routeCtrl.")) {
+          this.app.getCurrentRoute().getController()[this.onChangeEvent.split(".")[1]](this.inputField?.nativeElement.value);
+        }
+      }
+      else
+        this.onChangeEvent(this.inputField?.nativeElement.value);
+    }
 
   }
   getInputClasses(): string {
     // Apply Bootstrap classes along with custom class
-    let classes = `${this.customClass}`;
+    let classes = ` ${this.customClass} `;
     if (this.theme && this.theme != "") {
       let size: string | undefined;
       let themeS: string | undefined;
@@ -350,32 +362,32 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
       }
       switch (themeS) {
         case "email":
-          classes += " form-group";
+          classes += " form-group ";
           this.inputType = "email";
           break;
         case "password":
-          classes += " form-group";
+          classes += " form-group ";
           this.inputType = "password";
           break;
         case "checkbox":
-          classes += " form-check";
+          classes += " form-check ";
           this.inputType = "checkbox";
           this.labelCssClass = this.labelCssClass ? this.labelCssClass += " form-check-label" : "form-check-label";
           break;
         case "text":
-          classes += " form-group";
+          classes += " form-group ";
           this.inputType = "text";
           break;
         case "readonly":
-          classes += " disabled";
+          classes += " disabled ";
           break;
       }
       switch (size) {
         case "large":
-          this.inputClass = this.inputClass + " form-control-lg";
+          this.inputClass = this.inputClass + " form-control-lg ";
           break;
         case "small":
-          this.inputClass = this.inputClass + " form-control-sm";
+          this.inputClass = this.inputClass + " form-control-sm ";
           break;
       }
     }

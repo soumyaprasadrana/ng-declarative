@@ -8,6 +8,9 @@ import {
 
 export const metadata = {
   tag: "form",
+  type: "FORM",
+  description: "Represents an HTML form",
+
   attributes: getBaseAttributes([
     {
       name: "direction",
