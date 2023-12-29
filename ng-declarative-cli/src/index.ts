@@ -44,7 +44,7 @@ program
     generateDocAppData();
   });
 program
-  .version('1.0.0.pre.7')
+  .version('1.0.0.pre.8')
   .description('CLI for ng-declarative framework')
   .option('-v, --version', 'output the version number')
   .parse(process.argv);

@@ -1,6 +1,6 @@
 {
   "name": "ng-declarative-cli",
-  "version": "1.0.0-pre.7",
+  "version": "1.0.0-pre.8",
   "description": "CLI for ng-declarative framework",
   "main": "./dist/index.js",
   "bin": {
