@@ -69,9 +69,9 @@ export async function transformToSource(metadata: any, node: any, compiler: any)
     );
 
     if (missingAttributes.length === 0) {
-      console.log("All required attributes have values.");
+      Logger.debug("All required attributes have values.");
     } else {
-      console.log(
+      Logger.log(
         `Missing values for required attributes: ${missingAttributes.join(
           ", "
         )} for tag ${tagName}`

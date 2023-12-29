@@ -18,6 +18,8 @@ import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
 import { InputComponent } from "./ng-declarative-components-input.component";
 import { ButtonComponent } from "./ng-declarative-components-button.component";
+import { Utils } from "./ng-declarative-utils";
+import { TypeaheadComponent } from "./ng-declarative-components-typeahead.component";
 
 @Component({
   selector: "ng-declarative-form",
@@ -73,16 +75,19 @@ export class Form extends Base implements OnInit, AfterViewInit {
 
   @ContentChildren(InputComponent, { descendants: true }) inputFields: QueryList<ElementRef> | undefined;
 
+  @ContentChildren(TypeaheadComponent, { descendants: true }) typeAheadields: QueryList<ElementRef> | undefined;
+
   @ContentChildren(ButtonComponent, { descendants: true }) actionButtons: QueryList<ElementRef> | undefined;
 
   @ViewChild("blockRef") blockRef: ElementRef | undefined;
-
+  utils: any;
   constructor(
     elementRef: ElementRef,
     animationService: AnimationService,
     app: ApplicationService
   ) {
     super(elementRef, animationService, app);
+    this.utils = new Utils(this.app);
 
   }
 
@@ -102,6 +107,10 @@ export class Form extends Base implements OnInit, AfterViewInit {
       const instance: any = item;
       values[instance.getInputAttributeName()] = instance.getCurrentValue();
     }
+    for (let item of this.typeAheadields ? this.typeAheadields.toArray() : []) {
+      const instance: any = item;
+      values[instance.getInputAttributeName()] = instance.getCurrentValue();
+    }
     return values;
   }
 
@@ -110,10 +119,19 @@ export class Form extends Base implements OnInit, AfterViewInit {
       let instance: any = item;
       instance.updateSubmitted(submitted);
     }
+    for (var item of this.typeAheadields ? this.typeAheadields.toArray() : []) {
+      let instance: any = item;
+      instance.updateSubmitted(submitted);
+    }
   }
 
   checkIfFormIsValid() {
     for (var item of this.inputFields ? this.inputFields.toArray() : []) {
+      let instance: any = item;
+      if (!instance.isValid())
+        return false;
+    }
+    for (var item of this.typeAheadields ? this.typeAheadields.toArray() : []) {
       let instance: any = item;
       if (!instance.isValid())
         return false;
@@ -129,15 +147,15 @@ export class Form extends Base implements OnInit, AfterViewInit {
     console.log("===>DEBUG ==> FORM", this.actionButtons);
 
     for (let item of this.actionButtons ? this.actionButtons.toArray() : []) {
-      console.log("===========> DEBUG FORM ACTION ::", item);
       let instance: any = item;
-      console.log(item);
-      const fun = () => {
-        this.updateInputFieldsForSubmitted(true);
-        if (this.checkIfFormIsValid())
-          this.formAction(this.formValues());
+      if (instance.type == "submit" && this.formAction) {
+        const fun = () => {
+          this.updateInputFieldsForSubmitted(true);
+          if (this.checkIfFormIsValid())
+            this.utils.handleClick(this.formAction, [this.formValues()]);
+        }
+        instance.setOnClickEvent(fun);
       }
-      instance.setOnClickEvent(fun);
     }
 
     if (this.manageChildren) {
@@ -240,18 +258,10 @@ export class Form extends Base implements OnInit, AfterViewInit {
   }
 
   getBlockStyles(): { [key: string]: string } {
-    let styles: any = {
-      "background-color": this.backgroundColor,
-      border: this.border,
-      "border-color": this.borderColor,
-      float: this.float,
-      "justify-content": this.justifyContent,
-      "align-items": this.alignItems,
-      height: this.height,
-      width: this.width,
-    };
-    if (this.padding) styles.padding = this.padding;
-    if (this.margin) styles.margin = this.margin;
+    let styles: any = this.getComponentStyles();
+    if (this.float) styles.float = this.float;
+    if (this.justifyContent) styles["justify-content"] = this.justifyContent;
+    if (this.alignItems) styles["align-items"] = this.alignItems;
     return styles;
   }
 }

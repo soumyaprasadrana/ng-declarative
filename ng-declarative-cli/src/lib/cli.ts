@@ -3,12 +3,12 @@ import { Compiler } from "../compiler/compiler";
 import * as fs from "fs";
 import * as path from "path";
 import { IDProcessor } from "../compiler/idprocessor";
+import { Logger } from "../logger/logger";
 
 export function createApp(name: string): void {
 
   console.log("Creating an awsome app " + name + " ....");
   const sourceXMLContent = `
-    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ng-declarative-app controller="AppController" name="${name}" id="FeNV5u8">
   <navbar sticky="true" color-scheme="dark" brand-text-css-class="text-warning" brand-icon="bi bi-airplane-engines text-warning" brand-text="%%appCtrl.appName%%" id="bUYgwdF">
     <navbar-center id="iynGj1C">
@@ -102,13 +102,20 @@ export function createApp(name: string): void {
 {
   "name": "${name}",
   "version": "1.0.0",
-  "scripts":{
-    "build" : "ng-declarative build"
+  "scripts": {
+    "build": "ng-declarative build",
+    "start": "ng-declarative start",
+    "build-prod": "ng-declarative build-prod",
+    "build-watch": "ng-declarative build --watch"
   },
   "description": "Declarative Sample App",
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ng-declarative-components": "next"
+  }
 }
+
 
 `;
   const workspaceHome = path.join(name);
@@ -245,7 +252,7 @@ export async function buildApp(watch: any) {
       //console.log("DEBUG Before compiler.compile");
       await compiler.compile(sourceXml);
 
-      console.log("Built ng-declarative app");
+      Logger.logSuccess("Built ng-declarative app");
     } catch (error: any) {
       console.log('\x1b[31m\x1b[1m%s\x1b[0m', error.message);
     }
@@ -303,6 +310,25 @@ export async function serveApp() {
   try {
     execSync(`npm run start`, { cwd: appPath, stdio: 'inherit' });
     console.log("Serving ng-declarative app");
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+}
+export async function initApp() {
+  const sourceXmlPath = path.join(process.cwd(), "src", "source.xml");
+  if (!fs.existsSync(sourceXmlPath)) {
+    console.log('\x1b[31m\x1b[1m%s\x1b[0m', "unknown workspace");
+    return;
+  }
+  const sourceXML = await fs.promises.readFile(sourceXmlPath, "utf-8"); 4
+  const compiler = new Compiler();
+  const appName: any = await compiler.getAppName(sourceXML);
+  const appPath = path.join(process.cwd(), "dist", appName);
+
+  try {
+    execSync(`yarn install`, { cwd: appPath, stdio: 'inherit' });
+    console.log("Starting depndacy downloading for ng-declarative app");
   } catch (error) {
     console.error('Error:', error);
   }

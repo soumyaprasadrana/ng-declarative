@@ -77,7 +77,7 @@ export async function processAttributes(
       })
       .filter((name: any) => name !== null);
 
-    Logger.log(
+    Logger.debug(
       METHOD + " :: requiredAttributes",
       requiredAttributes
     );
@@ -87,9 +87,9 @@ export async function processAttributes(
     );
 
     if (missingAttributes.length === 0) {
-      console.log("All required attributes have values.");
+      Logger.debug("All required attributes have values.");
     } else {
-      console.log(
+      Logger.log(
         `Missing values for required attributes: ${missingAttributes.join(
           ", "
         )} for tag ${tagName}`
@@ -215,9 +215,13 @@ export async function processAttributes(
       attrs = attrs + " " + defaultValues;
     }
 
-    // Adding ID Ref to host elements 
+    // Adding ID Ref to host elements and html element id
     if (!attrs.includes("#" + id)) {
       attrs = attrs + " " + "#" + id
+    }
+
+    if (!attrs.includes(`id="${id}"`)) {
+      attrs = attrs + " " + `id="${id}"`
     }
 
 
@@ -282,6 +286,16 @@ export async function processChildren(children: any, compiler: any, parentNode: 
     //console.log("==> DEBUG ", childrenArray);
     if (Array.isArray(childrenArray)) {
       for (let child of childrenArray) {
+
+        //Test code to add children IDs to compiler
+        if (!compiler.childrenIDsOfRoute[compiler.getCurrentRoute()] && child["#name"] != "route") {
+          compiler.childrenIDsOfRoute[compiler.getCurrentRoute()] = [];
+          compiler.childrenIDsOfRoute[compiler.getCurrentRoute()].push(child.$.id);
+        }
+        else {
+          if (child["#name"] != "route")
+            compiler.childrenIDsOfRoute[compiler.getCurrentRoute()].push(child.$.id);
+        }
         const result = await compiler.processNode({ [child["#name"]]: child }, parentNode);
         results.push(result);
       }

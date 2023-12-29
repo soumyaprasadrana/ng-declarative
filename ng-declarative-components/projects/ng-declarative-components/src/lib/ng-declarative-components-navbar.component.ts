@@ -2,15 +2,15 @@ import { Component, Input } from '@angular/core';
 import { Base } from './ng-declarative-components-base.component';
 
 interface NavbarSlot {
-    name: string;
-    position: 'start' | 'end';
+  name: string;
+  position: 'start' | 'end';
 }
 
 @Component({
-    selector: 'ng-declarative-navbar',
-    template: `
+  selector: 'ng-declarative-navbar',
+  template: `
 
-<nav [ngStyle]="getComponentStyles()" class="navbar navbar-expand-lg shadow-sm {{customClass}}" [ngClass]="{'navbar-light': colorScheme === 'light', 'navbar-dark': colorScheme === 'dark', 'fixed-top': fixedTop}">
+<nav [ngStyle]="getComponentStyles()" class="navbar navbar-expand-lg {{disableShadow?'':'shadow-sm'}} {{customClass}}" [ngClass]="{'navbar-light': colorScheme === 'light', 'navbar-dark': colorScheme === 'dark', 'fixed-top': fixedTop}">
   <!-- Brand -->
   <div class="container-fluid ms-2 me-2">
   <a class="navbar-brand " href="#">
@@ -72,7 +72,7 @@ interface NavbarSlot {
 
 
 `,
-    styles: [`
+  styles: [`
     /* Add this CSS in your component's style file or in the global styles */
 .navbar-container {
   display: flex;
@@ -110,15 +110,16 @@ interface NavbarSlot {
 `]
 })
 export class NavbarComponent extends Base {
-    @Input() brandText: string | undefined;
-    @Input() brandTextCssClass: string | undefined;
-    @Input() brandIcon: string | null = null;
-    @Input() brandImage: string | null = null;
-    @Input() colorScheme: 'light' | 'dark' = 'light';
-    @Input() fixedTop: boolean = false;
-    @Input() brandIconSize: number = 24; // Default size in pixels
+  @Input() brandText: string | undefined;
+  @Input() brandTextCssClass: string | undefined;
+  @Input() brandIcon: string | null = null;
+  @Input() brandImage: string | null = null;
+  @Input() colorScheme: 'light' | 'dark' = 'light';
+  @Input() fixedTop: boolean = false;
+  @Input() brandIconSize: number = 24; // Default size in pixels
+  @Input() disableShadow: boolean = false;
 
-    override ngOnInit(): void {
-        console.log("=++++= DEBUG NavbarComponent ON INIT ", this.brandTextCssClass);
-    }
+  override ngOnInit(): void {
+    console.log("=++++= DEBUG NavbarComponent ON INIT ", this.brandTextCssClass, this.disableShadow);
+  }
 }

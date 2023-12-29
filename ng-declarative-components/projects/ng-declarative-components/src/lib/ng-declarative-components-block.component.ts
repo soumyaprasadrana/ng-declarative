@@ -63,11 +63,12 @@ export class Block extends Base implements OnInit, AfterViewInit {
   blockStyle: object = {};
 
   responsiveClasses: string = '';
-  @Input() viewportSM: "row" | "column" = "column";
-  @Input() viewportMD: "row" | "column" = "row";
-  @Input() viewportLG: "row" | "column" = "row";
-  @Input() viewportXL: "row" | "column" = "row";
-  @Input() viewportXXL: "row" | "column" = "row";
+  @Input() viewportSM: "row" | "column" | "none" | "block-row" | "block-column" = "column";
+  @Input() viewportMD: "row" | "column" | "none" | "block-row" | "block-column" = "row";
+  @Input() viewportLG: "row" | "column" | "none" | "block-row" | "block-column" = "row";
+  @Input() viewportXL: "row" | "column" | "none" | "block-row" | "block-column" = "row";
+  @Input() viewportXXL: "row" | "column" | "none" | "block-row" | "block-column" = "row";
+  @Input() viewportXS: "row" | "column" | "none" | "block" = "column";
 
   @Output() blockRefChange: EventEmitter<Block> = new EventEmitter<Block>();
 
@@ -175,7 +176,7 @@ export class Block extends Base implements OnInit, AfterViewInit {
     let classes = `${this.skipFlexClasses ? " " : " d-flex "}  ${this.customClass}`;
     if (!this.backgroundColor && !this.backgroundImage && !this.background && !this.customClass)
       classes += ` bg-light `;
-    if (!this.skipFlexClasses) {
+    if (!this.skipFlexClasses && !this.responsive) {
       if (this.layoutDirection === "row-reverse") {
         classes += " flex-row-reverse ";
       } else if (this.layoutDirection === "column") {
@@ -200,29 +201,71 @@ export class Block extends Base implements OnInit, AfterViewInit {
   setResponsiveStyles() {
 
     var resClasses = '';
-    var list = ["sm", "md", "lg", "xl", "xxl"];
+    var list = ["xs", "sm", "md", "lg", "xl", "xxl"];
     for (var viewport of list) {
       switch (viewport) {
+        case "xs":
+          resClasses += this.generateResponsiveClasses("xs", this.viewportXS);
+          break;
         case "sm":
-          resClasses += ` flex-sm-${this.viewportSM} `;
+          resClasses += this.generateResponsiveClasses("sm", this.viewportSM);
           break;
         case "md":
-          resClasses += ` flex-md-${this.viewportMD} `;
+          resClasses += this.generateResponsiveClasses("md", this.viewportMD);
           break;
         case "lg":
-          resClasses += ` flex-lg-${this.viewportLG} `;
+          resClasses += this.generateResponsiveClasses("lg", this.viewportLG);;
           break;
         case "xl":
-          resClasses += ` flex-xl-${this.viewportXL} `;
+          resClasses += this.generateResponsiveClasses("xl", this.viewportXL);;
           break;
         case "xxl":
-          resClasses += ` flex-xxl-${this.viewportXXL} `;
+          resClasses += this.generateResponsiveClasses("xxl", this.viewportXXL);;
           break;
 
       }
     }
     console.log("==== DEBUG SET RESPONSIVE BLOCK===", resClasses);
     setTimeout(() => this.responsiveClasses = resClasses + " flex-wrap ", 100);
+  }
+
+  generateResponsiveClasses(viewport: any, value: any) {
+    let resClasses = ``;
+    if (viewport != "xs") {
+      switch (value) {
+        case "row":
+        case "column":
+          resClasses += ` flex-${viewport}-${value} `;
+          if (this.viewportXS == "none") {
+            resClasses += ` d-${viewport}-block `;
+          }
+          break;
+        case "none":
+          resClasses += ` d-${viewport}-none `;
+          break;
+        case "block-row":
+        case "block-column":
+          resClasses += ` d-${viewport}-block flex-${viewport}-${value.split("-")[1]}`;
+          break;
+      }
+
+    } else {
+      switch (value) {
+        case "column":
+          resClasses += ` flex-column `;
+          break;
+        case "row":
+          resClasses += ` flex-row `;
+          break;
+        case "none":
+          resClasses += ` d-none `;
+          break;
+        case "block":
+          resClasses += ` d-block `;
+
+      }
+    }
+    return resClasses;
   }
 
   getBlockStyles(): { [key: string]: string } {

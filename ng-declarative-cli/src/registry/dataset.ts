@@ -15,10 +15,21 @@ export const metadata = {
       name: "pre-load",
       required: false,
       mappedInputAttribute: "preLoad",
+      objectbinding: true,
       type: "boolean",
       validate: validateBoolean,
       allowedValues: "true | false"
-    }, {
+    },
+    {
+      name: "parse-response",
+      required: false,
+      mappedInputAttribute: "parseresponse",
+      objectbinding: true,
+      type: "boolean",
+      validate: validateBoolean,
+      allowedValues: "true | false"
+    },
+    {
       name: "auto-upgrade",
       required: false,
       mappedInputAttribute: " autoupgrade",

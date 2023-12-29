@@ -1,125 +1,122 @@
 
 <ng-declarative-app controller="AppController" name="declarative-doc-app" id="atA0rMN">
-  <navbar color-scheme="dark" sticky="true" css-class="app-nav" brand-text="ng-declarative" brand-image="assets/ng-declarative-small.png" id="bUYgwdF">
+  <signal name="calculatorDisplay" type="number" value="0" id="aGI5km1"></signal>
+  <dataset name="nyttopsciencestories" data-key="results" type="url" src="&apos;https://api.nytimes.com/svc/topstories/v2/science.json?api-key=zFN5CcUscU5jFK98fkzgcYXuFdhSV8GV&apos;" id="it9RAzz"></dataset>
+  <navbar sticky="true" css-class="app-nav bg-white" brand-text="ng-declarative" brand-image="assets/ng-declarative-small.png" id="bUYgwdF">
     <navbar-end id="vdweRWwhi">
       <navitem route="/home" label="Home" id="fiwde6fyb"></navitem>
       <navitem route="/components" label="Components" id="fiwwede6fyb"></navitem>
+      <navitem route="/examples" label="Examples" id="fiwwdsfyb"></navitem>
     </navbar-end>
   </navbar>
   <route controller="HomeController" uri="/home" title="Documentation" id="home">
-    <dataset name="nyttopsciencestories" data-key="results" type="url" src="&apos;https://api.nytimes.com/svc/topstories/v2/science.json?api-key=zFN5CcUscU5jFK98fkzgcYXuFdhSV8GV&apos;" id="it9RAzz"></dataset>
     <block css-class="doc-app-home-main" width="full" height="auto" id="GSz5kNz">
       <block padding="large" direction="column" css-class="doc-app-home-main-content" background-color="transperant" id="main" width="full" height="auto" margin-top="define-80px">
         <container id="x3OpuoG">
           <row id="MVHSfWb">
-            <card margin="large" css-class="doc-app-card" width="full" id="XAcDHEZ">
-              <card-body id="r79t74R">
-                <container id="OfjDgQ7">
-                  <row id="A30SnkB">
-                    <column transition="tada" transition-duration="long" size="4" id="C9ge4Br">
-                      <image type="image" src="assets/ng-declarative.svg" id="TucPryD"></image>
-                    </column>
-                    <column size="8" id="nVJMB16">
-                      <block padding-start="large" margin-start="large" background-color="transperant" direction="column" id="LNLfEyr">
-                        <label theme="wrap,bold,muted,display-large" text="Get started with NG Declarative Framework" id="izXZkrO"></label>
-                        <paragraph css-class="doc-app-intro-p text-muted" text="the intuitive solution for Angular app development. Simplify UI design using XML components, making your development experience seamless and efficient." id="usG71rp"></paragraph>
-                        <label theme="wrap,muted,lighter,heading-normal" text="Install with NPM" id="ljToZ80"></label>
-                        <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8IQ">
-                          <label padding-start="small" theme="muted" text="npm i -g ng-declarative-cli" id="NDdk9dk"></label>
-                          <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyInstallCmd" id="hOLgYcQ"></button>
-                        </block>
-                        <alert type="%%appCtrl.copyMessageType%%" text="%%appCtrl.copyMessage%%" display-condition="appCtrl.showCopyMessage" id="dXOhCj5"></alert>
-                        <paragraph margin-top="large" css-class="text-muted" text="Currently under development..." id="jd1zmQC"></paragraph>
-                        <alert text="Version: pre-release" type="warning" id="zspqn1u"></alert>
-                        <block align-items="center" justify-contents="end" direction="row" background-color="#fff" id="IFRGfo5">
-                          <label margin="small" text="Powered By" theme="muted" id="M8KpVmO"></label>
-                          <image margin="small" type="image" src="assets/angular.svg" height="define-30px" width="define-30px" id="UahtCCn"></image>
-                          <image margin="small" type="image" src="assets/bootstrap.png" height="define-35px" width="define-40px" id="UahftCCn"></image>
-                          <image margin="small" type="image" src="assets/ng-bootstrap.svg" height="define-30px" width="define-30px" id="UahsftCCn"></image>
-                        </block>
-                      </block>
-                    </column>
-                  </row>
-                </container>
-              </card-body>
-            </card>
-          </row>
-          <row width="full" id="sB4MxZwz">
-            <card width="full" margin="large" css-class="doc-app-card" id="Gayxdg06W">
-              <card-body width="full" id="JVeSxdMDn">
-                <block background="transperant" width="full" direction="column" id="fc7owv42">
-                  <label css-class="doc-app-text" theme="wrap,bold,display-small" text="Getting Started" id="izsweXZkrO"></label>
-                  <block direction="column" margin-start="medium" background="transperant" id="Oc1OONM">
-                    <label theme="wrap,bold,muted,heading-large" text="Installation" id="k3ghxRX"></label>
-                    <paragraph text="To get started with ng-declarative, you need to install the CLI tool globally using npm. Open your terminal and run the following command:" id="qYUNIvS"></paragraph>
-                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8fweIQ">
-                      <label padding-start="small" theme="muted" text="npm i -g ng-declarative-cli" id="ewffwe"></label>
-                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['npm i -g ng-declarative-cli']" id="hOvLgYcQ"></button>
-                    </block>
-                    <paragraph padding-top="large" text="Once the CLI is installed, you can verify the installation by checking the version:" id="G1A6yp9"></paragraph>
-                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6idaC8fweIQ">
-                      <label padding-start="small" theme="muted" text="ng-declarative --version" id="ewfdcfwe"></label>
-                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative --version']" id="hOvLdscgYcQ"></button>
-                    </block>
-                    <paragraph text="This should display the version number of ng-declarative." id="Oqgvm2t"></paragraph>
-                    <label theme="wrap,bold,muted,heading-large" text="Creating a New App using CLI" id="k3ghrxRX"></label>
-                    <paragraph text="Now that you have ng-declarative installed, you can create a new application using the following command:" id="iqWMix6"></paragraph>
-                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedaC8fweIQ">
-                      <label padding-start="small" theme="muted" text="ng-declarative create {APP_NAME}" id="ewfdcewfwe"></label>
-                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative create {APP_NAME}']"  id="hOvLewdscgYcQ"></button>
-                    </block>
-                    <paragraph text="Replace {APP_NAME} with the desired name for your application." id="u0QDFb1"></paragraph>
-                    <label theme="wrap,bold,muted,heading-large" text="Folder Structure" id="k3gdhrxRX"></label>
-                    <paragraph text="After creating your application, you will find a basic folder structure:" id="FIljQHu"></paragraph>
-                    <block margin-start="large" direction="column" id="DtKTQbm">
-                      <block direction="row" id="I3bzQ92">
-                        <label theme="bold" text="src/:&amp;nbsp;" id="UJxZDEk"></label>
-                        <paragraph text="This folder contains the core files of your application." id="iCLcREU"></paragraph>
-                      </block>
-                      <block direction="column" margin-start="thick" id="YSUpFXe">
-                        <block direction="row" id="rUPDOW9">
-                          <label text="source.xml:&amp;nbsp;" theme="bold" id="Q7A94EW"></label>
-                          <paragraph text="The main file where you define your application&apos;s UI." id="O4u4Lsdsf"></paragraph>
-                        </block>
-                        <block direction="row" id="rsdUPDOwWdw9">
-                          <paragraph text="TypeScript classes (e.g.," id="bQ4njQz"></paragraph>
-                          <label text="AppController.ts:&amp;nbsp;)" theme="bold" id="csQ7A9dwe4EW"></label>
-                          <paragraph text=": Application-level controllers." id="O4udsdcwe4Lsf"></paragraph>
-                        </block>
-                        <block direction="row" id="rUPDOqqW9">
-                          <label text="styles.scss:&amp;nbsp;" theme="bold" id="Qdwqd7A94EW"></label>
-                          <paragraph text="Styles for your application." id="O4u4Lssf"></paragraph>
-                        </block>
-                      </block>
-                      <block direction="row" id="I3bzdQ92">
-                        <label theme="bold" text="dist/:&amp;nbsp;" id="UJxZqDEk"></label>
-                        <paragraph text="This folder contains the core files of your application." id="iCLcREUq"></paragraph>
-                      </block>
-                    </block>
-                    <label theme="wrap,bold,muted,heading-large" text="Build Your Application" id="k3ghxRwX"></label>
-                    <paragraph text="To build your application, navigate to your application folder and run:" id="Qyz4b3K"></paragraph>
-                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedaweC8fweIQ">
-                      <label padding-start="small" theme="muted" text="ng-declarative build" id="ewfdcewweewfwe"></label>
-                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative build']"  id="hOvLewdwescgYcQ"></button>
-                    </block>
-                    <paragraph text="To watch for file changes and automatically rebuild, use the --watch parameter:" id="Qynkz4b3K"></paragraph>
-                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedslknaweC8fweIQ">
-                      <label padding-start="small" theme="muted" text="ng-declarative build --watch" id="ewfdcskcdewweewfwe"></label>
-                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative build --watch']" id="hOvscocgYcQ"></button>
-                    </block>
-                    <paragraph text="This will compile your source files and generate the necessary distribution files." id="pbDxPjB"></paragraph>
-                    <label theme="wrap,bold,muted,heading-large" text="Start Your Application" id="k3ghxRvdwX"></label>
-                    <paragraph text="Once your application is built, you can start it by running:" id="DHRxHH2"></paragraph>
-                    <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="cP5lq2X">
-                      <label padding-start="small" theme="muted" text="ng-declarative start" id="qKpx98u"></label>
-                      <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="['ng-declarative start']" id="nuyxiHb"></button>
-                    </block>
-                    <paragraph text="This command will launch your ng-declarative application, and you can view it in your browser." id="S6V9udx"></paragraph>
-                    <paragraph margin-top="large" text="That&apos;s it! You&apos;ve successfully created, built, and started your ng-declarative application. Explore additional features and configurations as you continue developing your ng-declarative application." id="TWdrHqJ"></paragraph>
+            <container id="OfjDgQ7">
+              <block direction="row" width="full" responsive="true" viewport-xs="column" viewport-sm="column" id="OHjLEZ6">
+                <block background-color="transperant" transition="tada" transition-duration="long" responsive="true" viewport-xs="none" viewport-sm="none" justify-contents="center" align-items="center" width="define-30%" id="fTKv2F8">
+                  <image type="image" src="assets/ng-declarative.svg" id="TucPryD"></image>
+                </block>
+                <block responsive="true" viewport-xs="block" viewport-sm="block-column" viewport-md="none" viewport-lg="none" viewport-xl="none" viewport-xxl="none" justify-contents="center" align-items="center" width="full" id="fTKv2Fsd8">
+                  <image type="image" src="assets/ng-declarative.svg" id="TsucPryD"></image>
+                </block>
+                <block width="define-67%" padding-start="large" padding-end="large" margin-start="large" background-color="transperant" direction="column" id="LNLfEyr">
+                  <label theme="wrap,bold,muted,display-large" text="Get started with NG Declarative Framework" id="izXZkrO"></label>
+                  <paragraph css-class="doc-app-intro-p text-muted" text="the intuitive solution for Angular app development. Simplify UI design using XML components, making your development experience seamless and efficient." id="usG71rp"></paragraph>
+                  <label theme="wrap,muted,lighter,heading-normal" text="Install with NPM" id="ljToZ80"></label>
+                  <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8IQ">
+                    <label padding-start="small" theme="muted" text="npm i -g ng-declarative-cli" id="NDdk9dk"></label>
+                    <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyInstallCmd" id="hOLgYcQ"></button>
+                  </block>
+                  <paragraph margin-top="large" css-class="text-muted" text="Currently under development..." id="jd1zmQC"></paragraph>
+                  <alert text="Version: pre-release" type="warning" id="zspqn1u"></alert>
+                  <block align-items="center" justify-contents="end" direction="row" id="IFRGfo5">
+                    <label margin="small" text="Powered By" theme="muted" id="M8KpVmO"></label>
+                    <image margin="small" type="image" src="assets/angular.svg" height="define-30px" width="define-30px" id="UahtCCn"></image>
+                    <image margin="small" type="image" src="assets/bootstrap.png" height="define-35px" width="define-40px" id="UahftCCn"></image>
+                    <image margin="small" type="image" src="assets/ng-bootstrap.svg" height="define-30px" width="define-30px" id="UahsftCCn"></image>
                   </block>
                 </block>
-              </card-body>
-            </card>
+              </block>
+            </container>
+          </row>
+          <row width="full" id="sB4MxZwz">
+            <block background="transperant" width="full" direction="column" id="fc7owv42">
+              <label css-class="doc-app-text" theme="wrap,bold,display-small" text="Getting Started" id="izsweXZkrO"></label>
+              <block direction="column" margin-start="medium" background="transperant" id="Oc1OONM">
+                <label theme="wrap,bold,muted,heading-large" text="Installation" id="k3ghxRX"></label>
+                <paragraph text="To get started with ng-declarative, you need to install the CLI tool globally using npm. Open your terminal and run the following command:" id="qYUNIvS"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6aC8fweIQ">
+                  <label padding-start="small" theme="muted" text="npm i -g ng-declarative-cli" id="ewffwe"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;npm i -g ng-declarative-cli&apos;]" id="hOvLgYcQ"></button>
+                </block>
+                <paragraph padding-top="large" text="Once the CLI is installed, you can verify the installation by checking the version:" id="G1A6yp9"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6idaC8fweIQ">
+                  <label padding-start="small" theme="muted" text="ng-declarative --version" id="ewfdcfwe"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;ng-declarative --version&apos;]" id="hOvLdscgYcQ"></button>
+                </block>
+                <paragraph text="This should display the version number of ng-declarative." id="Oqgvm2t"></paragraph>
+                <label theme="wrap,bold,muted,heading-large" text="Creating a New App using CLI" id="k3ghrxRX"></label>
+                <paragraph text="Now that you have ng-declarative installed, you can create a new application using the following command:" id="iqWMix6"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedaC8fweIQ">
+                  <label padding-start="small" theme="muted" text="ng-declarative create {APP_NAME}" id="ewfdcewfwe"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;ng-declarative create {APP_NAME}&apos;]" id="hOvLewdscgYcQ"></button>
+                </block>
+                <paragraph text="Replace {APP_NAME} with the desired name for your application." id="u0QDFb1"></paragraph>
+                <label theme="wrap,bold,muted,heading-large" text="Folder Structure" id="k3gdhrxRX"></label>
+                <paragraph text="After creating your application, you will find a basic folder structure:" id="FIljQHu"></paragraph>
+                <block margin-start="large" direction="column" id="DtKTQbm">
+                  <block direction="row" id="I3bzQ92">
+                    <label theme="bold" text="src/:&amp;nbsp;" id="UJxZDEk"></label>
+                    <paragraph text="This folder contains the core files of your application." id="iCLcREU"></paragraph>
+                  </block>
+                  <block direction="column" margin-start="thick" id="YSUpFXe">
+                    <block direction="row" id="rUPDOW9">
+                      <label text="source.xml:&amp;nbsp;" theme="bold" id="Q7A94EW"></label>
+                      <paragraph text="The main file where you define your application&apos;s UI." id="O4u4Lsdsf"></paragraph>
+                    </block>
+                    <block direction="row" id="rsdUPDOwWdw9">
+                      <paragraph template="TypeScript classes &lt;b&gt;(e.g.AppController.ts:&amp;nbsp;)&lt;/b&gt; : Application-level controllers." id="bQ4njQz"></paragraph>
+                    </block>
+                    <block direction="row" id="rUPDOqqW9">
+                      <label text="styles.scss:&amp;nbsp;" theme="bold" id="Qdwqd7A94EW"></label>
+                      <paragraph text="Styles for your application." id="O4u4Lssf"></paragraph>
+                    </block>
+                  </block>
+                  <block direction="row" id="I3bzdQ92">
+                    <label theme="bold" text="dist/:&amp;nbsp;" id="UJxZqDEk"></label>
+                    <paragraph text="This folder contains the core files of your application." id="iCLcREUq"></paragraph>
+                  </block>
+                </block>
+                <label theme="wrap,bold,muted,heading-large" text="Build Your Application" id="k3ghxRwX"></label>
+                <paragraph text="To build your application, navigate to your application folder and run:" id="Qyz4b3K"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedaweC8fweIQ">
+                  <label padding-start="small" theme="muted" text="ng-declarative build" id="ewfdcewweewfwe"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;ng-declarative build&apos;]" id="hOvLewdwescgYcQ"></button>
+                </block>
+                <paragraph text="To watch for file changes and automatically rebuild, use the --watch parameter:" id="Qynkz4b3K"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="s6iedslknaweC8fweIQ">
+                  <label padding-start="small" theme="muted" text="ng-declarative build --watch" id="ewfdcskcdewweewfwe"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;ng-declarative build --watch&apos;]" id="hOvscocgYcQ"></button>
+                </block>
+                <paragraph text="This will compile your source files and generate the necessary distribution files." id="pbDxPjB"></paragraph>
+                <label theme="wrap,bold,muted,heading-large" text="Start Your Application" id="k3ghxRvdwX"></label>
+                <paragraph text="Once your application is built, you need to run init before starting the application to install dependacies:" id="DHRxHH2"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="cP5lqds2X">
+                  <label padding-start="small" theme="muted" text="ng-declarative init" id="qKsdpdsx98u"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;ng-declarative init&apos;]" id="nuyxdsiHb"></button>
+                </block>
+                <paragraph text="Once your application dependacies are resolved, you can start the application by running:" id="DHRdxHH2"></paragraph>
+                <block height="define-50px" justify-contents="space-between" align-items="center" direction="row" id="cP5dlq2X">
+                  <label padding-start="small" theme="muted" text="ng-declarative start" id="qKpx9d8u"></label>
+                  <button icon="bi bi-copy" theme="secondary" on-click="appCtrl.copyCmd" on-click-args="[&apos;ng-declarative start&apos;]" id="nuydxiHb"></button>
+                </block>
+                <paragraph text="This command will launch your ng-declarative application, and you can view it in your browser." id="S6V9udx"></paragraph>
+                <paragraph margin-top="large" text="That&apos;s it! You&apos;ve successfully created, built, and started your ng-declarative application. Explore additional features and configurations as you continue developing your ng-declarative application." id="TWdrHqJ"></paragraph>
+              </block>
+            </block>
           </row>
         </container>
       </block>
@@ -130,22 +127,20 @@
       <block padding="large" direction="column" css-class="doc-app-home-main-content" background-color="transperant" width="full" height="auto" margin-top="define-80px" id="baJRSO7">
         <container id="GVf58NT">
           <row id="sB4MZwz">
-            <card margin="large" css-class="doc-app-card" id="Gayg06W">
-              <card-body id="JVeSMDn">
-                <block direction="column" id="f7owv42">
-                  <label theme="wrap,bold,muted,display-large" text="Magic of ng-declartive" id="izsXZkrO"></label>
-                  <paragraph text="This example illustrates how developers can effortlessly leverage the dataset component to seamlessly load API data with a single line of code, simplifying the design process and embracing a more declarative approach.
+            <block background-color="transperant" direction="column" id="f7owv42">
+              <label theme="wrap,bold,muted,display-large" text="Magic of ng-declartive" id="izsXZkrO"></label>
+              <paragraph text="This example illustrates how developers can effortlessly leverage the dataset component to seamlessly load API data with a single line of code, simplifying the design process and embracing a more declarative approach.
 
 In this particular instance, the New York Times API, accompanied by an API key, is employed to retrieve top science stories for the day within a dataset component. Subsequently, two loop components are employed—one for displaying titles and the other for showcasing images.Notably, the entire process is accomplished without relying on a single line of additional JavaScript code.  To streamline the presentation, a display condition is implemented to exhibit only half of the retrieved stories and the initial image of each story. This approach aims to streamline design complexities and promote a more straightforward, declarative methodology." id="oThiFLU"></paragraph>
-                  <row padding-start="extra-large" padding-end="extra-large" id="Sv1gY6y">
-                    <column id="hjNFmXL">
-                      <row width="full" id="Tjw8fCz">
-                        <column id="t3yN373">
-                          <paragraph css-class="code-section" text="%%routeCtrl.example3source%%" id="trYf38y"></paragraph>
-                        </column>
-                      </row>
-                    </column>
-                    <column transition="tada" transition-duration="long" border="minimal" border-color="var(--bs-warning)" height="define-880px" overflow="scroll" id="kbz8tUT">
+              <row padding-start="extra-large" padding-end="extra-large" id="Sv1gY6y">
+                <tab-group id="Gq1bqFH">
+                  <tab tab-id="1" title="Source" id="kyWSAOs">
+                    <tab-content id="nOmm6mt">
+                      <paragraph css-class="code-section" text="%%routeCtrl.example3source%%" id="trYfd38y"></paragraph>
+                    </tab-content>
+                  </tab>
+                  <tab tab-id="2" title="Result" id="zDWFAbi">
+                    <tab-content id="KFJHLq9">
                       <block padding="large" direction="column" id="EXJZIE8">
                         <row background-color="#000" justify-contents="center" id="P7BIo8V">
                           <column id="WMmbIkT">
@@ -161,11 +156,53 @@ In this particular instance, the New York Times API, accompanied by an API key, 
                           </loop>
                         </row>
                       </block>
-                    </column>
-                  </row>
-                </block>
-              </card-body>
-            </card>
+                    </tab-content>
+                  </tab>
+                </tab-group>
+              </row>
+            </block>
+          </row>
+          <row id="wcJOm7F"></row>
+          <row id="ERBBmvX">
+            <block direction="column" width="full" id="CEQMpqI">
+              <label theme="wrap,bold,muted,display-large" text="A Simple calculator" id="izsXZwekrO"></label>
+              <paragraph text="A simple yet responsive calculator using ng-declarative framework" id="oTdhiFLU"></paragraph>
+              <block background="none" justify-contents="center" width="full" direction="row" margin-bottom="8px" id="EofsdkXd9">
+                <form margin-start="auto" margin-end="auto" id="LqvbdsTG7">
+                  <input width="full" theme="text" attribute-name="display" signal="app.signals.calculatorDisplay" id="Vv8npedsQ"></input>
+                </form>
+              </block>
+              <block background="none" justify-contents="center" width="full" direction="row" margin-bottom="8px" id="FewDCXU">
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;1&apos;" label="1" id="xR8jcIi"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;2&apos;" label="2" id="l1qcLqc"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;3&apos;" label="3" id="jhIBawV"></button>
+              </block>
+              <block background="none" justify-contents="center" width="full" direction="row" margin-bottom="8px" id="ImoZ0hB">
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;4&apos;" label="4" id="XCHKa5U"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;5&apos;" label="5" id="bmseM6O"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;6&apos;" label="6" id="YeARe52"></button>
+              </block>
+              <block background="none" justify-contents="center" width="full" direction="row" margin-bottom="8px" id="uiFz1oM">
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;7&apos;" label="7" id="yES0F66"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;8&apos;" label="8" id="gKzjc1r"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;9&apos;" label="9" id="gXNupAG"></button>
+              </block>
+              <block background="none" justify-contents="center" width="full" direction="row" id="DQ2X1fM">
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;0&apos;" label="0" id="iu4kh8i"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;+&apos;" label="+" id="mmHAR3i"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;-&apos;" label="-" id="ZF2ClC6"></button>
+              </block>
+              <block background="none" justify-contents="center" width="full" direction="row" id="bmmLPFa">
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;*&apos;" label="*" id="k9LIM3G"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;/&apos;" label="/" id="sTYhs68"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;(&apos;" label="(" id="QuV9H1i"></button>
+              </block>
+              <block background="none" justify-contents="center" width="full" direction="row" id="YPJtUiC">
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.addToDisplay" on-click-args="&apos;)&apos;" label=")" id="zynQc8o"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.handleButtonClick" on-click-args="&apos;C&apos;" label="C" id="OyWD7yW"></button>
+                <button margin="small" width="slim" theme="primary" on-click="routeCtrl.handleButtonClick" on-click-args="&apos;=&apos;" label="=" id="TWVDk43"></button>
+              </block>
+            </block>
           </row>
         </container>
       </block>
@@ -177,44 +214,60 @@ In this particular instance, the New York Times API, accompanied by an API key, 
       <block height="full" padding="large" direction="column" css-class="doc-app-home-main-content" background-color="transperant" width="full" margin-top="define-80px" id="AeTBLwo">
         <container id="snNI9Ql">
           <row id="Y2D806P">
-            <card margin="large" css-class="doc-app-card" width="full" id="kJjqRoa">
-              <card-body id="zVnBv5w">
-                <sidebar width="define-20%" css-class="app-sidebar bg-dark text-white" id="Vi429d8">
-                  <sidebar-start id="I89168r">
-                    <block background-color="transperent" direction="column" id="DzrCZzg">
-                      <label theme="wrap,bold,heading-large" text="Components" id="t8FsSfY"></label>
-                      <form width="full" id="U0YGPBp">
-                        <input css-class="doc-app-search-input" on-change="routeCtrl.onSearchChange" placeholder="Search..." theme="text" model="routeCtrl.sidebarSearch" attribute-name="sidebarSearch" id="Tmla2vF"></input>
-                      </form>
-                    </block>
-                  </sidebar-start>
-                  <sidebar-center height="define-500px" overflow="scroll" id="TZZt32t">
-                    <loop items="routeCtrl.componentsGroups" id="TcI3A0F">
-                      <block width="full" background-color="transperant" direction="row" justify-contents="space-between" id="U0xjLD6">
-                        <label text="%%item.description%%" theme="wrap,bold,heading-small" id="ayLggNh"></label>
-                        <image display-condition="item.isCollapsed" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" type="icon" css-class="text-white" icon="bi bi-caret-down text-bold link" id="rl3eAqw"></image>
-                        <image display-condition="!item.isCollapsed" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" type="icon" css-class="text-white" icon="bi bi-caret-up text-bold link" id="rl3eAvdqw"></image>
+            <sidebar width="define-20%" css-class="app-sidebar bg-light d-none d-sm-none d-md-block d-lg-block d-xl-block d-xxl-block" id="Vi429d8">
+              <sidebar-start responsive="true" viewport-xs="none" viewport-sm="none" id="I89168r">
+                <block background-color="transperent" direction="column" id="DzrCZzg">
+                  <label theme="wrap,bold,heading-large" text="Components" id="t8FsSfY"></label>
+                  <form width="full" id="U0YGPBp">
+                    <input css-class="doc-app-search-input" on-change="routeCtrl.onSearchChange" placeholder="Search..." theme="text" model="routeCtrl.sidebarSearch" attribute-name="sidebarSearch" id="Tmla2vF"></input>
+                  </form>
+                </block>
+              </sidebar-start>
+              <sidebar-center responsive="true" viewport-xs="none" viewport-sm="none" height="define-500px" overflow="scroll" id="TZZt32t">
+                <loop items="routeCtrl.componentsGroups" id="TcI3A0F">
+                  <block width="full" background-color="transperant" direction="row" justify-contents="space-between" id="U0xjLD6">
+                    <label css-class="link" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" text="%%item.description%%" theme="wrap,bold,heading-small" id="ayLggNh"></label>
+                    <image display-condition="item.isCollapsed" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" type="icon" css-class="text-white" icon="bi bi-caret-down text-bold link" id="rl3eAqw"></image>
+                    <image display-condition="!item.isCollapsed" on-click="routeCtrl.toggleCollapse" on-click-args="[item]" type="icon" css-class="text-white" icon="bi bi-caret-up text-bold link" id="rl3eAvdqw"></image>
+                  </block>
+                  <base is-collapsed="item.isCollapsed" id="OyVBV0m">
+                    <loop inner-loop="true" outer-loop-item="item" inner-loop-items="routeCtrl.getComponentsArray(item.type)" id="ciCAFiQ">
+                      <block width="full" background-color="transperant" align-items="center" id="KbqWL7O">
+                        <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag==routeCtrl.currentComponent.tag" css-class="link link-active" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="DzMY3iv"></label>
+                        <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag!=routeCtrl.currentComponent.tag" css-class="link" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="DzMds  Y3iv"></label>
                       </block>
-                      <base is-collapsed="item.isCollapsed" id="OyVBV0m">
-                        <loop inner-loop="true" outer-loop-item="item" inner-loop-items="routeCtrl.getComponentsArray(item.type)" id="ciCAFiQ">
-                          <block width="full" background-color="transperant" align-items="center" id="KbqWL7O">
-                            <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag==routeCtrl.currentComponent.tag" css-class="link link-active" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="DzMY3iv"></label>
-                            <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag!=routeCtrl.currentComponent.tag" css-class="link" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="DzMds  Y3iv"></label>
+                    </loop>
+                  </base>
+                </loop>
+              </sidebar-center>
+              <sidebar-content id="IGM2IU1">
+                <block width="full" responsive="true" viewport-xs="block" viewport-sm="block-column" viewport-md="none" viewport-lg="none" viewport-xl="none" viewport-xxl="none" direction="column" id="dmlSNLg">
+                  <block width="full" background-color="transperent" direction="column" id="DzdrCZzg">
+                    <label theme="wrap,bold,heading-large" text="Components" id="t8FdsSfY"></label>
+                    <form width="full" id="U0YdGPBp">
+                      <input width="full" css-class="doc-app-search-input" on-change="routeCtrl.onSearchChange" placeholder="Search..." theme="text" model="routeCtrl.sidebarSearch" attribute-name="sidebarSearch" id="Tmdla2vF"></input>
+                    </form>
+                  </block>
+                  <block width="full" direction="column" height="define-200px" overflow="scroll" id="ex5zobT">
+                    <loop items="routeCtrl.componentsGroups" id="eEFqzoR">
+                      <block width="full" background-color="transperant" direction="column" justify-contents="space-between" id="TxNk1QR">
+                        <loop inner-loop="true" outer-loop-item="item" inner-loop-items="routeCtrl.getComponentsArray(item.type)" id="M5kulbp">
+                          <block width="full" background-color="transperant" align-items="center" id="lo4umHs">
+                            <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag==routeCtrl.currentComponent.tag" css-class="link link-active" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="FGFYNTc"></label>
+                            <label width="full" padding-top="small" padding-bottom="small" padding-end="small" display-condition="item.tag!=routeCtrl.currentComponent.tag" css-class="link" on-click="routeCtrl.setCurrentComponentItem" on-click-args="[outerLoopItem.type,item.tag]" padding-start="large" theme="heading-smallest" text="%%item.tag%%" id="Tw5b277"></label>
                           </block>
                         </loop>
-                      </base>
+                      </block>
                     </loop>
-                  </sidebar-center>
-                  <sidebar-content id="IGM2IU1">
-                    <block padding-start="large" background-color="#fff" direction="column" id="ogLA5Ly">
-                      <label theme="bold,heading-large" css-class="text-primary" text="%%routeCtrl.currentComponent.tag%%" id="Jq6QNkA"></label>
-                      <label text="%%routeCtrl.currentComponent.description%%" id="ZrSHns8"></label>
-                    </block>
-                    <table margin="large" dataset="componentsTable" table-options="routeCtrl.currentcomponentsTableOptions" id="Td2jK1l"></table>
-                  </sidebar-content>
-                </sidebar>
-              </card-body>
-            </card>
+                  </block>
+                </block>
+                <block padding-start="large" background-color="#fff" direction="column" id="ogLA5Ly">
+                  <label theme="bold,heading-large" css-class="text-primary" text="%%routeCtrl.currentComponent.tag%%" id="Jq6QNkA"></label>
+                  <label text="%%routeCtrl.currentComponent.description%%" id="ZrSHns8"></label>
+                </block>
+                <table margin="large" dataset="componentsTable" table-options="routeCtrl.currentcomponentsTableOptions" id="Td2jK1l"></table>
+              </sidebar-content>
+            </sidebar>
           </row>
         </container>
       </block>

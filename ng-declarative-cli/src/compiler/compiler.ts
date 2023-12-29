@@ -23,20 +23,17 @@ export class Compiler {
   private appTitle: string = "Ng Declarative App Title";
   private appController: any = null;
   private appControllerFileName: any = null;
+  private authController: any = null;
+  private authControllerFileName: any = null;
   private currentRoute: string = "";
   private loops: any = [];
   private resourcesTobeProcessed: any = [];
   private appDatasets: any = [];
+  private appDataobjects: any = [];
   private appNavbars: any = [];
   public isinsideForm: boolean = false;
+  public childrenIDsOfRoute: any = {};
 
-  private ngDeclarativeComponents = [
-    "Application",
-    "Label",
-    "Block",
-    "RouteComponent",
-    "Link",
-  ];
   private ngDeclarativeModule = "NgDeclarativeModule";
   private ngDeclarativeServices = ["ApplicationService"];
 
@@ -195,6 +192,26 @@ export class Compiler {
             throw er;
           }
         }
+        if (this.getAttributeFromNode(node, "auth-controller") != null) {
+          try {
+            let filePath = path.join(
+              "src",
+              this.getAttributeFromNode(node, "auth-controller") + ".ts"
+            );
+            if (fs.existsSync(filePath)) {
+              this.authController = path.join(
+                "src",
+                this.getAttributeFromNode(node, "auth-controller") + ".ts"
+              );
+              this.authControllerFileName =
+                this.getAttributeFromNode(node, "auth-controller") + ".ts";
+            } else {
+              throw new Error(`File does not exist: ${filePath}`);
+            }
+          } catch (er) {
+            throw er;
+          }
+        }
       }
 
       if (!resultOfValidateChildrens.result)
@@ -258,6 +275,13 @@ export class Compiler {
             id: this.getAttributeFromNode(node, "id")
           })
         }
+        if (nodeName == "dataobject" && Object.keys(parentNode)[0] == "ng-declarative-app") {
+          this.appDataobjects.push({
+            name: this.getAttributeFromNode(node, "name"),
+            template: templateS,
+            id: this.getAttributeFromNode(node, "id")
+          })
+        }
         //Process Application level navbar
         if (nodeName == "navbar" && Object.keys(parentNode)[0] == "ng-declarative-app") {
           this.appNavbars.push({
@@ -270,6 +294,7 @@ export class Compiler {
           this.isinsideForm = false;
         }
         resolve(templateS);
+        Logger.logSuccess("Proccessed node " + nodeName + ` [${node[metadata.tag].$.id}] ` + ".")
       }
     });
 
@@ -340,6 +365,7 @@ export class Compiler {
     const uri = this.getAttributeFromNode(node, "uri");
     const id = this.getAttributeFromNode(node, "id");
     const title = this.getAttributeFromNode(node, "title");
+    let requiredAuth = this.getAttributeFromNode(node, "required-auth");
     const updatedTemplateString = template
       .replace(/(>,+<)/g, "><")
       .replace(/,</g, "<");
@@ -370,10 +396,12 @@ export class Compiler {
         throw er;
       }
     }
+
     this.addRoute({
       route: uri.startsWith("/") ? uri.substring(1) : uri,
       component: "Route" + id,
       template: updatedTemplateString,
+      requiredAuth: requiredAuth ? requiredAuth : null,
       id: id,
       controller: routeController ? routeController : null,
       controllerFileName: routeControllerFileName ? routeControllerFileName : null,
@@ -502,6 +530,7 @@ export class Compiler {
     })
     export class ${loop.component} implements OnInit {
         public appCtrl: any;
+        public authCtrl: any;
         public app: any;
         public routeCtrl: any;
         @Input() innerLoopItems: any;
@@ -513,6 +542,7 @@ export class Compiler {
         constructor(public appPropvider: ApplicationServiceProvider) {
              this.app = appPropvider.getApp();
              this.appCtrl = this.app.getAppController();
+             this.authCtrl = this.app.getAuthController();
              this.routeCtrl = this.app.getCurrentRoute().getController();
              this.componentLoading = true;
           }
@@ -564,6 +594,7 @@ export class Compiler {
     })
     export class ${loop.component} {
         public appCtrl: any;
+        public authCtrl: any;
         public app: any;
         public routeCtrl: any;
         @Input() innerLoopItems: any;
@@ -572,6 +603,7 @@ export class Compiler {
         constructor(public appPropvider: ApplicationServiceProvider) {
              this.app = appPropvider.getApp();
              this.appCtrl = this.app.getAppController();
+             this.authCtrl = this.app.getAuthController();
              this.routeCtrl = this.app.getCurrentRoute().getController();
           }
     
@@ -604,11 +636,13 @@ export class Compiler {
     })
     export class ${loop.component} {
         public appCtrl: any;
+        public authCtrl: any;
         public app: any;
         public routeCtrl: any;
         constructor(public appPropvider: ApplicationServiceProvider) {
              this.app = appPropvider.getApp();
              this.appCtrl = this.app.getAppController();
+             this.authCtrl = this.app.getAuthController();
              this.routeCtrl = this.app.getCurrentRoute().getController();
           }
     
@@ -624,12 +658,13 @@ export class Compiler {
   }
 
   private createRouteComponents(workspacePath: any) {
+
     for (var route of this.routes) {
       const fileContent = `
-      import { Component, OnInit } from '@angular/core';
+      import { Component, OnInit, AfterViewChecked ,  QueryList, ViewChildren } from '@angular/core';
 
 import { ApplicationServiceProvider } from "./app.provider.service";
-
+import { Dialog } from "ng-declarative-components";
 ${route.controller ? `import { ${route.controllerFileName.replace(".ts", "")} } from "./${route.controllerFileName.replace(".ts", "")}"` : ''}
 
 @Component({
@@ -641,21 +676,61 @@ ${route.controller ? `import { ${route.controllerFileName.replace(".ts", "")} } 
     }
   \`]
 })
-export class ${route.component} implements OnInit {
+export class ${route.component} implements OnInit, AfterViewChecked {
  public appCtrl: any;
+ public authCtrl: any;
+ public routeUri : any = "${route.route}";
   public app: any;
   ${route.controller ? 'public routeCtrl: any;' : ''}
+
+   @ViewChildren(Dialog) dialogs: QueryList<Dialog>;
+   ${this.childrenIDsOfRoute[route.id] ? `@ViewChildren("${this.childrenIDsOfRoute[route.id].join(",")}") childComponents: QueryList<any>;` : ''}
+   
+
   constructor(
     public appPropvider: ApplicationServiceProvider
     ) {
     this.app = appPropvider.getApp();
     this.appCtrl = this.app.getAppController();
+    this.authCtrl = this.app.getAuthController();
     ${route.controller ? `this.routeCtrl = new ${route.controllerFileName.replace(".ts", "")}(this.app);` : ''}
     this.app.setCurrentRoute(this);
+    ${route.requiredAuth ? `
+    let checkAuth = async () => {
+      console.log("This route required authentication: ");
+      let authRes = await this.authCtrl.isAuthenticated();
+      console.log("Authentication result = " + authRes);
+      if (!authRes) {
+        console.log("Authentication failed inoking on authentication failed hook");
+        this.authCtrl.onAuthenticationFailed();
+      } else {
+        console.log("User is authenticated.");
+      }
+    }
+    checkAuth();
+    `: ''}
     
   }
    ngOnInit() {
     this.app.setCurrentRoute(this);
+    ${route.controller ? `
+    if(this.routeCtrl.routeOnInit){
+      try{
+      this.routeCtrl.routeOnInit();
+      }catch(e){
+        console.log("Failed while invoking route life cycle hook routeOnInit",e);
+      }
+    }`: ''}
+  }
+   ngAfterViewChecked(): void {
+    ${route.controller ? `
+    if(this.routeCtrl.routeOnContinnue){
+      try{
+      this.routeCtrl.routeOnContinnue();
+      }catch(e){
+        console.log("Failed while invoking route life cycle hook routeOnContinnue",e);
+      }
+    }`: ''}
   }
   getController() : any {
   ${route.controller ? `
@@ -677,10 +752,12 @@ import { ApplicationServiceProvider } from "./app.provider.service";
 })
 export class ${route.component}Outlet {
   public appCtrl: any;
+  public authCtrl: any;
   public app: any;
   constructor(public appPropvider: ApplicationServiceProvider) {
     this.app = appPropvider.getApp();
     this.appCtrl = this.app.getAppController();
+    this.authCtrl = this.app.getAuthController();
   }
 }      
       `;
@@ -694,7 +771,8 @@ import { ${route.component} } from "./${route.component}.component";
 import { RouterModule } from "@angular/router";
 import { ${route.component}Outlet } from "./${route.component}-outlet.component";
 import { ${route.component}RoutingModule } from "./${route.component}-routing.module";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule,NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
 
 ${this.buildLoopsImportStatement(route)}
 
@@ -707,7 +785,9 @@ ${this.buildResourceImportStatement(route)}
   imports: [
     CommonModule,
     ${this.ngDeclarativeModule},
+    NgbNavModule,
     NgbModule,
+    FormsModule,
     RouterModule,
     ${route.component}RoutingModule,
    
@@ -841,6 +921,16 @@ export class ${route.component}RoutingModule {}
     return content;
   }
 
+  private processAppDataObjects() {
+    let content = "";
+    for (var dataset of this.appDataobjects) {
+      content = content + `
+      ${dataset.template}
+      `
+    }
+    return content;
+  }
+
   private processAppNavbars() {
     let content = "";
     for (var navbar of this.appNavbars) {
@@ -859,6 +949,16 @@ export class ${route.component}RoutingModule {}
     for (var dataset of this.appDatasets) {
       content = content + `
       @ViewChild("${dataset.id}") ${dataset.name} : ElementRef | undefined;
+      `
+    }
+    return content;
+  }
+
+  private processAppDataObjectsViewChildStatements() {
+    let content = "";
+    for (var dataobject of this.appDataobjects) {
+      content = content + `
+      @ViewChild("${dataobject.id}") ${dataobject.name} : ElementRef | undefined;
       `
     }
     return content;
@@ -995,6 +1095,13 @@ ${this.appController
         )} } from "./${this.appControllerFileName.replace(".ts", "")}";`
         : ""}
 
+${this.authController
+        ? `import { ${this.authControllerFileName.replace(
+          ".ts",
+          ""
+        )} } from "./${this.authControllerFileName.replace(".ts", "")}";`
+        : ""}
+
 
 ${routesDeclaration}
 
@@ -1005,6 +1112,7 @@ ${routesDeclaration}
   <ng-declarative-app name="${this.appName}" title="${this
         .appTitle}" [inputSignals]="inputSignals">
         ${this.processAppDataSets()}
+        ${this.processAppDataObjects()}
         ${this.processAppNavbars()}
     <router-outlet></router-outlet>
   </ng-declarative-app>
@@ -1021,8 +1129,10 @@ ${routesDeclaration}
 export class App {
   inputSignals : any = ${this.stringifyList(this.appSignals)};
   ${this.processAppDatasetsViewChildStatements()}
+  ${this.processAppDataObjectsViewChildStatements()}
 
   appCtrl:any;
+  authCtrl:any;
 
   constructor(
       private app: ApplicationService,
@@ -1039,6 +1149,16 @@ export class App {
         )}(this.app);
         this.app.setAppController(this.appCtrl);`
         : ""}
+        
+         ${this.authController
+        ? `
+        this.authCtrl = new ${this.authControllerFileName.replace(
+          ".ts",
+          ""
+        )}(this.app);
+        this.app.setAuthController(this.authCtrl);`
+        : ""}
+
       this.appProvider.setApp(this.app);
 
       this.router.events.pipe(  
@@ -1421,7 +1541,7 @@ export class ApplicationServiceProvider {
     fs.writeFileSync(tsconfigjsonPath, tsconfigjsoncontent);
     fs.writeFileSync(appServiceProviderPath, appServiceProviderContent);
     fs.writeFileSync(polyfillsPath, polyfillcontents);
-    Logger.log("Angular app structure created successfully.");
+    Logger.logSuccess("Angular app structure created successfully.");
 
     //Copy asset folder
     if (fs.existsSync(path.join("src", "assets")))
@@ -1452,7 +1572,7 @@ export class ApplicationServiceProvider {
         const ext = path.extname(file);
         if (ext === `.${fileExtension}`) {
           fs.copyFileSync(curSource, curTarget);
-          console.log("Copied file " + curSource);
+          Logger.logSuccess("Copied file " + curSource);
         }
       }
     });
@@ -1494,7 +1614,7 @@ export class ApplicationServiceProvider {
   private copyDirectory(source: string, target: string): void {
     try {
       this.copyFolderRecursiveSync(source, target);
-      console.log('Directory ' + source + ' copied to ' + target + ' successfully!');
+      Logger.logSuccess('Directory ' + source + ' copied to ' + target + ' successfully!');
     } catch (err) {
       console.error('Error copying directory:', err);
     }
@@ -1508,7 +1628,7 @@ export class ApplicationServiceProvider {
       if (fs.existsSync(sourcePath)) {
         // Copy the file
         fs.copyFileSync(sourcePath, destinationPath);
-        console.log(`File copied from ${sourcePath} to ${destinationPath}`);
+        Logger.logSuccess(`File copied from ${sourcePath} to ${destinationPath}`);
       }
 
     } catch (err) {

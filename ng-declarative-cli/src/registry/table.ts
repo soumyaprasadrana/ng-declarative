@@ -25,6 +25,6 @@ export const metadata = {
         },
 
     ], "table"),
-    allowedChildren: null,
+    allowedChildren: ["*"],
     declarativeComponentTag: "ng-declarative-table",
 };

@@ -95,6 +95,7 @@ export class FoldableBlocks${id} extends Base implements OnInit, AfterViewInit {
   @ViewChild("${id}") blockRef: ElementRef | undefined;
 
   public appCtrl:any ;
+  public authctrl: any;
   public api:any ;  
   public routeCtrl:any;
   constructor(
@@ -105,6 +106,7 @@ export class FoldableBlocks${id} extends Base implements OnInit, AfterViewInit {
     super(elementRef,new AnimationService(),appx);
     this.app = this.appPropvider.getApp();
     this.appCtrl = this.app.getAppController();
+    this.authCtrl = this.app.getAuthController();
     this.routeCtrl = this.app.getCurrentRoute().getController();
   }
 
@@ -249,6 +251,12 @@ export class FoldableBlocks${id} extends Base implements OnInit, AfterViewInit {
       if (!content.includes("#" + id)) {
         content = content + " " + "#" + id
       }
+
+      if (!content.includes(`id="${id}"`)) {
+        content = content + " " + `id="${id}"`
+      }
+
+
       return content;
     }
     compiler.addResourceTobeProcessed({

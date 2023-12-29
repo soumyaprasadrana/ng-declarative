@@ -7,7 +7,7 @@ import { AnimationService } from "./ng-declarative-animation.service";
   selector: "ng-declarative-alert",
   template: `
     <ngb-alert [type]="type" [dismissible]="dismiss" [ngClass]="getAlertClasses()" [ngStyle]="getAlertStyles()">
-      {{ text }}
+      <p style="margin-bottom:0" [innerHtml]="text"></p>
     </ngb-alert>
   `,
   styles: [`:host{

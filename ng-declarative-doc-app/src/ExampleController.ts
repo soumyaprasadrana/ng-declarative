@@ -21,4 +21,46 @@ export class ExampleController {
     </column>
     .......`;
     constructor(private app: any) { }
+
+
+    public addToDisplay(value: any) {
+        console.log(value);
+        this.app.signals.calculatorDisplay.update((valueA: any) => {
+            if (valueA == "0") valueA = "";
+            console.log(valueA, value);
+            return valueA + value;
+        });
+    }
+
+    public updateDisplay(value: string) {
+        this.app.signals.calculatorDisplay.set(value);
+    }
+
+    public handleButtonClick(buttonValue: string) {
+        const currentDisplay = this.app.signals.calculatorDisplay();
+
+        // Handle different button clicks
+        switch (buttonValue) {
+            case "=":
+                // Evaluate expression and update display
+                try {
+                    const result = eval(currentDisplay);
+                    this.updateDisplay(result.toString());
+                } catch (error) {
+                    this.updateDisplay("Error");
+                }
+                break;
+            case "C":
+                // Clear the display
+                this.updateDisplay("0");
+                break;
+            default:
+                // Update display with the clicked button value
+                const newDisplay =
+                    currentDisplay === "0" ? buttonValue : currentDisplay + buttonValue;
+                this.updateDisplay(newDisplay);
+                break;
+        }
+    }
+
 }

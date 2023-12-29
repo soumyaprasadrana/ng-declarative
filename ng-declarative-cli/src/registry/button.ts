@@ -1,4 +1,4 @@
-import { getBaseAttributes } from "./utils";
+import { getBaseAttributes, isBindingString, removeBindingCharacters } from "./utils";
 
 export const metadata = {
     tag: "button",
@@ -45,8 +45,8 @@ export const metadata = {
             mappedInputAttribute: "onClickEvent",
             type: "object",
             bindingtransform: (value: any) => {
-                if (exports.isBindingString(value)) {
-                    return exports.removeBindingCharacters(value);
+                if (isBindingString(value)) {
+                    return removeBindingCharacters(value);
                 } else {
                     return value;
                 }

@@ -80,7 +80,8 @@ export class ComponentsController {
             name: "Required If Attributes Not Present?",
             sortable: true,
             filterable: true,
-            cellClass: "text-center"
+            cellClass: "text-center",
+            headerClass: "required-if-not-present"
 
         },
         {

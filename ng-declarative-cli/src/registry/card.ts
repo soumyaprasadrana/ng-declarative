@@ -13,12 +13,36 @@ export const metadata = {
   description: "Bootstrap card component.",
   attributes: getBaseAttributes([
     {
+      name: "start-icon",
+      description: "Associates an icon at the top of the card.",
+      required: false,
+      mappedInputAttribute: "iconTop",
+      type: "string",
+      example: `<card start-icon="bi bi-plus"></card>`
+    },
+    {
+      name: "start-icon-parent-css",
+      description: "Associates a css class to the icon section.",
+      required: false,
+      mappedInputAttribute: "iconClass",
+      type: "string",
+      example: `<card start-icon="bi bi-plus" icon-class="text-center"></card>`
+    },
+    {
       name: "start-image",
       description: "Associates an image at the top of the card.",
       required: false,
       mappedInputAttribute: "imageTop",
       type: "string",
       example: `<card start-image="/path/to/image.jpg"></card>`
+    },
+    {
+      name: "start-image-parent-css",
+      description: "Associates a css class to the parent of the image section.",
+      required: false,
+      mappedInputAttribute: "imageClass",
+      type: "string",
+      example: `<card start-icon="bi bi-plus" icon-class="text-center"></card>`
     },
     {
       name: "start-image-css",

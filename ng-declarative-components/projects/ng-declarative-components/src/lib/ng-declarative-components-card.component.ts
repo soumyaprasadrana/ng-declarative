@@ -13,10 +13,14 @@ import { AnimationService } from "./ng-declarative-animation.service";
           <ng-content select="[cardheader]"></ng-content>
         </div>
       }
+        <div class="image-section {{imageClass}} {{iconClass}}">
         @if(imageTop){
           <img [ngClass]="imageTopCss" [src]="imageTop" class="card-img-top" alt="card-img-top">
         }
-        
+         @if(iconTop){
+          <i [ngClass]="iconTop" alt="card-icon-top"></i>
+        }
+        </div>
         <div class="card-body" [ngClass]="{'card-img-overlay':imageOverlay}">
         @if(cardTitle){
           <h2 class="card-title" [ngClass]="cardTitleCssClass">{{cardTitle}}</h2>
@@ -45,6 +49,9 @@ import { AnimationService } from "./ng-declarative-animation.service";
 })
 export class Card extends Base implements OnInit {
   @Input() imageTop: string | undefined;
+  @Input() iconTop: string | undefined;
+  @Input() imageClass: string | undefined;
+  @Input() iconClass: string | undefined;
   @Input() imageTopCss: string | undefined;
   @Input() imageBottom: string | undefined;
   @Input() imageBottomCss: string | undefined;
@@ -117,6 +124,9 @@ export class Card extends Base implements OnInit {
             break;
           case "dark":
             classes = classes + " text-white bg-dark ";
+            break;
+          case "danger":
+            classes = classes + " text-white bg-danger ";
             break;
           case "border-primary":
             classes = classes + " border-primary ";

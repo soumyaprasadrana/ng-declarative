@@ -8,11 +8,11 @@ import { Base } from './ng-declarative-components-base.component';
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div [ngStyle]="getComponentStyles()" [ngClass]="getcComponentClasses()" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2  min-vh-100">
+            <div class="d-flex  flex-column align-items-center align-items-sm-start px-3 pt-2  min-vh-100">
                 <div class="d-flex align-items-center pb-3 mb-md-0 me-md-auto ">  
                      <ng-content select="[slotstart]"></ng-content>
                 </div>
-                <ul class="nav nav-pills sidebar-menu flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <ng-content select="[slotcenter]"></ng-content>
                 </ul>
                 <hr>

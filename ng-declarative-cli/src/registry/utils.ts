@@ -133,6 +133,10 @@ export function transformHeight(value: string): string {
     switch (value) {
       case "auto":
         return "auto";
+      case "max-content":
+        return "max-content";
+      case "min-content":
+        return "min-content";
       case "short":
         return "10%";
       case "small":
@@ -210,6 +214,13 @@ export function transformDirection(value: string): string {
   }
 }
 
+export function validateDirectionResponsive(value: string): boolean {
+  return value == "block-row" || value == "block-column" || value == "row" || value == "column" || value == "none";
+}
+export function validateDirectionResponsiveXS(value: string): boolean {
+  return value == "row" || value == "column" || value == "none" || value == "block";
+}
+
 export function transformTransitionDuration(value: string): string {
   if (!value.includes("define-")) {
     switch (value) {
@@ -229,6 +240,156 @@ export function transformTransitionDuration(value: string): string {
   }
 }
 
+export function getBlockAttributes(addtionalAttributesList: any, componentName: any) {
+  // Complete File
+  const blockAttrs = getBaseAttributes([
+    {
+      name: "direction",
+      description: "Specifies the layout direction of the block.",
+      required: false,
+      mappedInputAttribute: "layoutDirection",
+      type: "string",
+      allowedValues: "row | column",
+      transform: transformDirection,
+      example: `<${componentName} direction="row">...</${componentName}>`
+    },
+
+    {
+      name: "manage-children",
+      description: "Determines whether the block should manage its children.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "manageChildren",
+      type: "boolean",
+      example: `<${componentName} manage-children="true">...</${componentName}>`
+    },
+
+    {
+      name: "children-sizes",
+      description: "Specifies the sizes of the block's children.",
+      required: false,
+      mappedInputAttribute: "childrenSizes",
+      type: "string",
+      example: `<${componentName} children-sizes="50% 50%">...</${componentName}>`
+    },
+
+    {
+      name: "children-flex-sizes",
+      description: "Specifies the flex sizes of the block's children.",
+      required: false,
+      mappedInputAttribute: "childrenFlexValues",
+      type: "string",
+      example: `<${componentName} children-flex-sizes="1 2">...</${componentName}>`
+    },
+
+    {
+      name: "align-items",
+      description: "Aligns the items of the block along the cross-axis.",
+      required: false,
+      mappedInputAttribute: "alignItems",
+      type: "string",
+      allowedValues: "start | end | center | stretch | baseline",
+      transform: transformAlignItems,
+      example: `<${componentName} align-items="center">...</${componentName}>`
+    },
+
+    {
+      name: "justify-contents",
+      description: "Aligns the content of the block along the main-axis.",
+      required: false,
+      mappedInputAttribute: "justifyContent",
+      type: "string",
+      allowedValues: "start | end | center | right | left | space-between | space-around | space-evenly",
+      transform: transformJustifyContent,
+      example: `<${componentName} justify-contents="space-between">...</${componentName}>`
+    },
+
+    {
+      name: "skip-flex",
+      description: "Determines whether to skip applying flex classes to the block.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "skipFlexClasses",
+      type: "boolean",
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<${componentName} skip-flex="true">...</${componentName}>`
+    },
+    {
+      name: "responsive",
+      description: "Determines whether a block is responsive to device viewport.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "responsive",
+      type: "boolean",
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<${componentName} responsive="true">...</${componentName}>`
+    },
+    {
+      name: "viewport-xs",
+      description: "Set the direction of flex box for xtra small breakpoint viewport (target mobile devices).",
+      required: false,
+      mappedInputAttribute: "viewportXS",
+      type: "string",
+      allowedValues: "row | column | block |  none",
+      validate: validateDirectionResponsiveXS,
+      example: `<${componentName} viewport-xs="none">...</${componentName}>`
+    },
+    {
+      name: "viewport-sm",
+      description: "Set the direction of flex box for small breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportSM",
+      type: "string",
+      allowedValues: "row | column | block-row | block-column |  none",
+      validate: validateDirectionResponsive,
+      example: `<${componentName} viewport-sm="column">...</${componentName}>`
+    },
+    {
+      name: "viewport-md",
+      description: "Set the direction of flex box for medium breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportMD",
+      type: "string",
+      allowedValues: "row | column | block-row | block-column |  none",
+      validate: validateDirectionResponsive,
+      example: `<${componentName} viewport-md="column">...</${componentName}>`
+    },
+    {
+      name: "viewport-lg",
+      description: "Set the direction of flex box for lg breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportLG",
+      type: "string",
+      allowedValues: "row | column | block-row | block-column |  none",
+      validate: validateDirectionResponsive,
+      example: `<${componentName} viewport-lg="column">...</${componentName}>`
+    },
+    {
+      name: "viewport-xl",
+      description: "Set the direction of flex box for xl breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportXL",
+      type: "string",
+      allowedValues: "row | column | block-row | block-column |  none",
+      validate: validateDirectionResponsive,
+      example: `<${componentName} viewport-xl="column">...</${componentName}>`
+    },
+    {
+      name: "viewport-xxl",
+      description: "Set the direction of flex box for xxl breakpoint viewport.",
+      required: false,
+      mappedInputAttribute: "viewportXXL",
+      type: "string",
+      allowedValues: "row | column | block-row | block-column |  none",
+      validate: validateDirectionResponsive,
+      example: `<${componentName} viewport-xxl="column">...</${componentName}>`
+    },
+
+  ], componentName);
+  return [...addtionalAttributesList, ...blockAttrs];
+}
 export function getBaseAttributes(addtionalAttributesList: any, componentName: any) {
   // Complete File
   const baseAtrrList = [
@@ -481,7 +642,7 @@ export function getBaseAttributes(addtionalAttributesList: any, componentName: a
       mappedInputAttribute: "height",
       type: "string",
       allowedValues:
-        "auto | short | small | compact | mid | medium | tall | high | super-high | ultra-high | full",
+        "auto | max-content | min-content |  short | small | compact | mid | medium | tall | high | super-high | ultra-high | full",
       transform: transformHeight,
       description: "Sets the height of a component",
       example: '<' + componentName + ' height="medium" id="sj889"></' + componentName + '>',

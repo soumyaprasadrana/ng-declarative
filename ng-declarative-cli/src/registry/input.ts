@@ -96,25 +96,107 @@ export const metadata = {
       type: "string",
       example: `<input label-css-class="custom-label" id="exampleInput">`
     },
-
     {
-      name: "prepend-text",
+      name: "before",
+      description: "Enable to add text or icon to the before area of an input.",
+      required: false,
+      mappedInputAttribute: "before",
+      objectbinding: true,
+      type: "boolean",
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<input before="true" before-text="$" id="exampleInput">`
+    },
+    {
+      name: "before-text",
       description: "Adds text to the beginning of the input.",
       required: false,
       mappedInputAttribute: "prependText",
       type: "string",
-      example: `<input prepend-text="$" id="exampleInput">`
+      example: `<input before="true" before-text="$" id="exampleInput">`
     },
 
     {
-      name: "prepend-icon-class",
+      name: "before-on-click",
+      description: "Adds text to the beginning of the input.",
+      required: false,
+      mappedInputAttribute: "prependOnClick",
+      type: "string",
+      example: `<input before="true" before-on-click="routeCtrl.invoke" id="exampleInput">`
+    },
+    {
+      name: "before-on-click-agrs",
+      description: "Adds text to the beginning of the input.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "prependOnClickArgs",
+      type: "list",
+      example: `<input before="true" before-on-click="routeCtrl.invoke" id="exampleInput">`
+    },
+    {
+      name: "before-icon-class",
       description: "Adds icon to the beginning of the input.",
       required: false,
       mappedInputAttribute: "prependIcon",
       type: "string",
-      example: `<input prepend-icon-class="bi bi-arrow-down" id="exampleInput">`
+      example: `<input before="true" before-icon-class="bi bi-arrow-down" id="exampleInput">`
+    },
+    {
+      name: "after",
+      description: "Enable to add text or icon to the after area of an input.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "after",
+      type: "boolean",
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<input after="true" after-text="$" id="exampleInput">`
+    },
+    {
+      name: "after-text",
+      description: "Adds text to the end of the input.",
+      required: false,
+      mappedInputAttribute: "afterText",
+      type: "string",
+      example: `<input after="true" after-text="$" id="exampleInput">`
     },
 
+    {
+      name: "after-on-click",
+      description: "Adds on-click event to the after area of the input.",
+      required: false,
+      mappedInputAttribute: "afterOnClick",
+      type: "string",
+      example: `<input after="true" after-on-click="routeCtrl.invoke" id="exampleInput">`
+    },
+    {
+      name: "after-on-click-agrs",
+      description: "Adds on-click event args to the after area of the input.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "afterOnClickArgs",
+      type: "list",
+      example: `<input after="true" after-on-click="routeCtrl.invoke" id="exampleInput">`
+    },
+    {
+      name: "after-icon-class",
+      description: "Adds icon to the end of the input.",
+      required: false,
+      mappedInputAttribute: "afterIcon",
+      type: "string",
+      example: `<input after="true" after-icon-class="bi bi-arrow-down" id="exampleInput">`
+    },
+    {
+      name: "password-eye",
+      description: "Automatically make an input field to type password and add eye-spash icon at end.",
+      required: false,
+      objectbinding: true,
+      mappedInputAttribute: "passwordEyeSlash",
+      type: "boolean",
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<input password-eye="true"  id="exampleInput">`
+    },
     {
       name: "model",
       description: "Binds the input value to a model.",
@@ -125,7 +207,7 @@ export const metadata = {
       validate: (value: any) => {
         return value.includes("app.") || value.includes("appCtrl.") || value.includes("routeCtrl.");
       },
-      requiredIfAttributeNotPresent: ["dataset", "signal"],
+      requiredIfAttributeNotPresent: ["attribute-name", "dataset", "signal"],
       example: `<input model="userName" id="exampleInput">`
     },
     {
@@ -135,7 +217,7 @@ export const metadata = {
       mappedInputAttribute: "signal",
       type: "object",
       objectbinding: "true",
-      requiredIfAttributeNotPresent: ["dataset", "model"],
+      requiredIfAttributeNotPresent: ["dataset", "model", "attribute-name",],
       example: `<input signal="userName" id="exampleInput">`
     },
 
@@ -145,7 +227,7 @@ export const metadata = {
       required: false,
       mappedInputAttribute: "dataset",
       type: "string",
-      requiredIfAttributeNotPresent: ["model", "signal"],
+      requiredIfAttributeNotPresent: ["model", "signal", "attribute-name"],
       example: `<input dataset="userData" id="exampleInput">`
     },
 
@@ -156,6 +238,7 @@ export const metadata = {
       mappedInputAttribute: "attributeName",
       type: "string",
       requiredIfAttributePresent: ["model", "signal"],
+      requiredIfAttributesNotPresent: ["model", "signal", "dataset"],
       example: `<input attribute-name="username" [model]="userName" id="exampleInput">`
     },
 

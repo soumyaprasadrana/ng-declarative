@@ -1,12 +1,16 @@
-
 {
   "name": "ng-declarative-doc-app",
   "version": "1.0.0",
-  "scripts":{
-    "build" : "ng-declarative build"
+  "scripts": {
+    "build": "ng-declarative build",
+    "start": "ng-declarative start",
+    "build-prod": "ng-declarative build-prod",
+    "build-watch": "ng-declarative build --watch"
   },
   "description": "Declarative Sample App",
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ng-declarative-components": "next"
+  }
 }
-

@@ -2,6 +2,9 @@
 
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Base } from './ng-declarative-components-base.component';
+import { AnimationService } from './ng-declarative-animation.service';
+import { ApplicationService } from './ng-declarative-components.service';
+import { Utils } from './ng-declarative-utils';
 
 @Component({
   selector: 'ng-declarative-button',
@@ -100,12 +103,22 @@ export class ButtonComponent extends Base {
   @Input() isError: boolean = false;
   @Input() theme: string = "primary";
   @Input() onclickEvent: any;
+  @Input() onclickEventArgs: any;
   @Input() type: string = "button";
   @Input() label: string | undefined;
   @Input() route: string | undefined;
 
+  utils: any;
+
   @ViewChild("buttonRef") buttonRef: ElementRef | undefined;
 
+  constructor(elementRef: ElementRef,
+    animationService: AnimationService,
+    app: ApplicationService) {
+    super(elementRef, animationService, app);
+    this.utils = new Utils(this.app);
+
+  }
   setSuccess(success: boolean) {
     this.isSuccess = success;
   }
@@ -122,12 +135,15 @@ export class ButtonComponent extends Base {
     console.log("========= DEBUG SET ON CLICK EVENT==", event);
     this.onclickEvent = event;
   }
+  setOnClickEventArgs(eventargs: any) {
+    this.onclickEventArgs = eventargs;
+  }
 
   handleButtonClick(): void {
     if (!this.isLoading) {
       // Add your button click logic here
       if (this.onclickEvent) {
-        this.onclickEvent();
+        this.utils.handleClick(this.onclickEvent, this.onclickEventArgs);
       }
       if (this.route) {
         this.app.navigateTo(this.route);

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ApplicationService } from "./ng-declarative-components.service";
 import { Base } from "./ng-declarative-components-base.component";
 import { AnimationService } from "./ng-declarative-animation.service";
@@ -12,22 +12,43 @@ import { NgModel } from "@angular/forms";
       @if(this.label){
         <label class="form-label" [for]="inputID" [class]="labelCssClass">{{label}}</label>
       }
-      @if(prependText || prependIcon){
+      @if(before || after){
         
         @if(this.required){
           @if(this.signal){
             <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text">
+          @if(prependText || prependIcon){
+        <div (click)="handlePrependClick()" class="input-group-prepend" [ngClass]="{'link':prependOnClick}">
+          <div class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}">
           @if(prependText){
             {{prependText}}
           } @else if(prependIcon){
-            <i class="{{prependIcon}}"></i>
+            <i [class]="prependIcon"></i>
           }
           
           </div>
         </div>
+          }
             <input #inputField #input="ngModel" required (ngModelChange)="this.signal.set($event)" [ngModel]="this.signal()" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+             @if(passwordEyeSlash){
+              <div (click)="handlePasswordEyeSpashClick()" class="input-group-text link" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}">
+          
+            <i [class]="passwordEyeSlashIcon"></i>
+       
+          </div>
+             }
+            @if((afterText || afterIcon) && !passwordEyeSlash){
+        
+          <div (click)="handleAfterClick()" class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid),'link':afterOnClick}">
+          @if(afterText){
+            {{afterText}}
+          } @else if(afterIcon){
+            <i [class]="afterIcon"></i>
+          }
+
+          </div>
+       
+          }
             </div>
              @if(help){
                 <small [id]="helpID" class="form-text text-muted">{{help}}</small>
@@ -42,14 +63,35 @@ import { NgModel } from "@angular/forms";
         
           }@else{
             <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text"> @if(prependText){
+            @if(prependText || prependIcon){
+        <div (click)="handlePrependClick()" class="input-group-prepend" [ngClass]="{'link':prependOnClick}">
+          <div class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}"> @if(prependText){
             {{prependText}}
           } @else if(prependIcon){
-            <i class="{{prependIcon}}"></i>
+            <i [class]="prependIcon"></i>
           }</div>
         </div>
-            <input #inputField #input="ngModel" required (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            }
+            <input #inputField #input="ngModel" required (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel!=null?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            @if(passwordEyeSlash){
+              <div (click)="handlePasswordEyeSpashClick()" class="input-group-text link" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}">
+
+            <i [class]="passwordEyeSlashIcon"></i>
+
+          </div>
+             }
+            @if((afterText || afterIcon) && !passwordEyeSlash){
+
+          <div (click)="handleAfterClick()"  class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid),'link':afterOnClick}">
+          @if(afterText){
+            {{afterText}}
+          } @else if(afterIcon){
+            <i [class]="afterIcon"></i>
+          }
+
+          </div>
+
+          }
             </div>
             @if(help){
                 <small [id]="helpID" class="form-text text-muted">{{help}}</small>
@@ -64,17 +106,39 @@ import { NgModel } from "@angular/forms";
           
           }
           
-        }@else{
+        }
+        @else{
           @if(this.signal){
             <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text"> @if(prependText){
+              @if(prependText || prependIcon){
+        <div (click)="handlePrependClick()" class="input-group-prepend" [ngClass]="{'link':prependOnClick}">
+          <div class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}"> @if(prependText){
             {{prependText}}
           } @else if(prependIcon){
-            <i class="{{prependIcon}}"></i>
+            <i [class]="prependIcon"></i>
           }</div>
         </div>
+              }
             <input #inputField #input="ngModel" (ngModelChange)="this.signal.set($event)" [ngModel]="this.signal()" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+              @if(passwordEyeSlash){
+              <div (click)="handlePasswordEyeSpashClick()" class="input-group-text link" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}">
+
+            <i [class]="passwordEyeSlashIcon"></i>
+
+          </div>
+             }
+            @if((afterText || afterIcon) && !passwordEyeSlash){
+
+          <div (click)="handleAfterClick()"  class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid),'link':afterOnClick}">
+          @if(afterText){
+            {{afterText}}
+          } @else if(afterIcon){
+            <i [class]="afterIcon"></i>
+          }
+
+          </div>
+
+          }
             </div>
             @if(help){
                 <small [id]="helpID" class="form-text text-muted">{{help}}</small>
@@ -86,14 +150,35 @@ import { NgModel } from "@angular/forms";
           
           }@else{
             <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text"> @if(prependText){
+            @if(prependText || prependIcon){
+        <div (click)="handlePrependClick()" class="input-group-prepend" [ngClass]="{'link':prependOnClick}">
+          <div class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}"> @if(prependText){
             {{prependText}}
           } @else if(prependIcon){
-            <i class="{{prependIcon}}"></i>
+            <i [class]="prependIcon"></i>
           }</div>
         </div>
-            <input #inputField #input="ngModel" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            }
+            <input #inputField #input="ngModel" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel!=null?inputModel:inputValue" [type]="inputType" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+              @if(passwordEyeSlash){
+              <div (click)="handlePasswordEyeSpashClick()" class="input-group-text link" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid)}">
+
+            <i [class]="passwordEyeSlashIcon"></i>
+
+          </div>
+             }
+            @if((afterText || afterIcon) && !passwordEyeSlash){
+
+          <div (click)="handleAfterClick()"  class="input-group-text" [ngClass]="{'ng-declarative-input-group-text-bordered':!disableInputBorder,'ng-declarative-input-group-text':disableInputBorder,'is-invalid': submitted && (input.invalid || this.invalid),'link':afterOnClick}">
+          @if(afterText){
+            {{afterText}}
+          } @else if(afterIcon){
+            <i [class]="afterIcon"></i>
+          }
+
+          </div>
+
+          }
             </div>
              @if(help){
                 <small [id]="helpID" class="form-text text-muted">{{help}}</small>
@@ -122,7 +207,7 @@ import { NgModel } from "@angular/forms";
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
           </div>
           }@else{
-            <input #inputField #input="ngModel" required [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            <input #inputField #input="ngModel" required [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel!=null?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
             <div *ngIf="input.invalid && submitted" class="p-2 text-danger">
             <div *ngIf="input.errors && input.errors['required']">{{this.currentKey}} is required.</div>
           </div>
@@ -140,7 +225,7 @@ import { NgModel } from "@angular/forms";
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
           </div>
           }@else{
-            <input #inputField #input="ngModel" [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
+            <input #inputField #input="ngModel" [type]="inputType" (ngModelChange)="onNgModelChange()" [(ngModel)]="dataset?(datasetKey?app.datasets[dataset].dataset$[datasetKey][datasetattribute]:app.datasets[dataset].newItem[datasetattribute]):inputModel!=null?inputModel:inputValue" [class]="inputClass" [id]="inputID" [style.ariaDescribedby]="helpID" placeholder="{{placeholder}}" [ngClass]="{ 'is-invalid': submitted && (input.invalid || this.invalid) }">
              <div *ngIf="this.invalid && this.submitted" class="p-2 text-danger">
             <div *ngIf="this.errors.email">Invalid email address!</div>
             <div *ngIf="this.errors.uppercase">Invalid uppercase value!</div>
@@ -161,9 +246,12 @@ import { NgModel } from "@angular/forms";
   `,
   styles: [`:host{
     display:contents;
-  }`]
+  }
+  
+  
+  `]
 })
-export class InputComponent extends Base implements OnInit, AfterViewInit {
+export class InputComponent extends Base implements OnInit, AfterViewInit, OnChanges {
   @Input() label: string | undefined;
   @Input() fontSize: string | undefined;
   @Input() color: string | undefined;
@@ -182,13 +270,23 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   @Input() datasetKey: any | undefined;
   @Input() datasetattribute: any | undefined;
   @Input() attributeName: any | undefined;
-  @Input() inputModel: any | undefined;
+  @Input() inputModel: any | undefined = null;
   @Output() inputModelChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() required: boolean = false;
   @Input() predefinedValidations: any | undefined;
   @Input() disableInputBorder: boolean = false;
   @Input() signal: any;
   @Input() onChangeEvent: any;
+  @Input() prependOnClick: any;
+  @Input() prependOnClickArgs: any;
+  @Input() before: boolean = false;
+  @Input() after: boolean = false;
+  @Input() afterText: string | undefined;
+  @Input() afterIcon: string | undefined;
+  @Input() afterOnClick: any;
+  @Input() afterOnClickArgs: any;
+  @Input() passwordEyeSlash: boolean | undefined;
+
 
   @ViewChild("inputField") inputField: ElementRef | undefined;
 
@@ -211,6 +309,7 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   groupStyles: any | undefined;
   currentKey: any;
 
+  passwordEyeSlashIcon: string = "bi bi-eye-slash-fill";
 
   constructor(elementRef: ElementRef,
     animationService: AnimationService,
@@ -222,6 +321,33 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   override ngOnInit() {
     this.inputID = this.randomAlphanumeric(7);
     this.helpID = this.randomAlphanumeric(7);
+    this.groupClasses = this.getInputClasses() + " m-2 ";
+    this.groupStyles = this.getInputStyles();
+    this.currentKey = this.getInputAttributeName();
+    if (this.disableInputBorder) {
+      this.inputClass = this.inputClass + " ng-declarative-input ";
+    } else {
+      this.inputClass = this.inputClass + " ng-declarative-input-bottom-bordered ";
+    }
+
+    if (this.required) {
+      this.groupClasses = this.groupClasses + " required";
+    }
+    if (this.passwordEyeSlash) {
+      this.inputType = "password";
+    }
+
+  }
+  handlePasswordEyeSpashClick() {
+    if (this.inputType == "password") {
+      this.inputType = "text";
+      this.passwordEyeSlashIcon = "bi bi-eye-fill";
+    } else {
+      this.inputType = "password";
+      this.passwordEyeSlashIcon = "bi bi-eye-slash-fill";
+    }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
     this.groupClasses = this.getInputClasses() + " m-2 ";
     this.groupStyles = this.getInputStyles();
     this.currentKey = this.getInputAttributeName();
@@ -324,7 +450,7 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
   }
 
   onNgModelChange() {
-    if (this.inputModel) {
+    if (this.inputModel != null) {
       this.inputModelChange.emit(this.inputField?.nativeElement.value);
     }
     else if (this.dataset) {
@@ -377,6 +503,14 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
         case "text":
           classes += " form-group ";
           this.inputType = "text";
+          break;
+        case "number":
+          classes += " form-group ";
+          this.inputType = "number";
+          break;
+        case "file":
+          classes += " form-group ";
+          this.inputType = "file";
           break;
         case "readonly":
           classes += " disabled ";
@@ -454,5 +588,234 @@ export class InputComponent extends Base implements OnInit, AfterViewInit {
 
     console.log(`Generated random alphanumeric: ${result}`);
     return result;
+  }
+
+  handlePrependClick() {
+    if (this.prependOnClick) {
+      if (typeof this.prependOnClick == "string") {
+        if (this.prependOnClick.includes("appCtrl.")) {
+          // console.log(this.app.getAppController());
+          if (!this.prependOnClickArgs)
+            this.app.getAppController()[this.prependOnClick.split(".")[1]]();
+          else {
+            if (Array.isArray(this.prependOnClickArgs)) {
+              this.app.getAppController()[this.prependOnClick.split(".")[1]](...this.prependOnClickArgs);
+            } else {
+              const argStrings = this.prependOnClickArgs.split(/,(?![^{}]*})/);
+              //console.log(argStrings);
+
+              // Map over the argument strings and parse them as JSON if they start with '{'
+              const args = argStrings.map((arg: string) => {
+                console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+                let res = arg.trim().startsWith("{")
+                  ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                  : arg.trim();
+                return res;
+              });
+
+              // Now you have an array of arguments, including the parsed objects
+              console.log(args, this.app.getAppController());
+              this.app.getAppController()[this.prependOnClick.split(".")[1]](...args);
+            }
+          }
+        }
+        else if (this.prependOnClick.includes("routeCtrl.")) {
+          // console.log(this.app.getCurrentRoute().getController());
+          if (!this.prependOnClickArgs)
+            this.app.getCurrentRoute().getController()[this.prependOnClick.split(".")[1]]();
+          else {
+            if (Array.isArray(this.prependOnClickArgs)) {
+              this.app.getCurrentRoute().getController()[this.prependOnClick.split(".")[1]](...this.prependOnClickArgs);
+            } else {
+              const argStrings = this.prependOnClickArgs.split(/,(?![^{}]*})/);
+              console.log(argStrings);
+
+              // Map over the argument strings and parse them as JSON if they start with '{'
+              const args = argStrings.map((arg: string) => {
+                console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+                let res = arg.trim().startsWith("{")
+                  ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                  : arg.trim();
+                return res;
+              });
+
+              // Now you have an array of arguments, including the parsed objects
+              console.log(args, this.app.getCurrentRoute().getController());
+              this.app.getCurrentRoute().getController()[this.prependOnClick.split(".")[1]](...args);
+            }
+          }
+        }
+        else if (this.prependOnClick.includes("app.")) {
+          const appS: any = this.app;
+          if (!this.prependOnClickArgs) {
+            appS[this.prependOnClick.split(".")[1]]();
+          }
+
+          else {
+            if (Array.isArray(this.prependOnClick)) {
+              appS[this.prependOnClick.split(".")[1]](...this.prependOnClickArgs);
+            } else {
+              const argStrings = this.prependOnClickArgs.split(/,(?![^{}]*})/);
+              //console.log(argStrings);
+
+              // Map over the argument strings and parse them as JSON if they start with '{'
+              const args = argStrings.map((arg: string) => {
+                console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+                let res = arg.trim().startsWith("{")
+                  ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                  : arg.trim();
+                return res;
+              });
+
+              // Now you have an array of arguments, including the parsed objects
+              console.log(args, appS);
+              appS[this.prependOnClick.split(".")[1]](...args);
+            }
+          }
+
+        }
+
+      } else {
+
+        if (!this.prependOnClickArgs)
+          this.prependOnClick();
+        else {
+          if (Array.isArray(this.prependOnClickArgs)) {
+            this.prependOnClick(...this.prependOnClickArgs);
+          } else {
+            const argStrings = this.prependOnClickArgs.split(/,(?![^{}]*})/);
+            console.log(argStrings);
+
+            // Map over the argument strings and parse them as JSON if they start with '{'
+            const args = argStrings.map((arg: string) => {
+              console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+              let res = arg.trim().startsWith("{")
+                ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                : arg.trim();
+              return res;
+            });
+
+            // Now you have an array of arguments, including the parsed objects
+            console.log(args, this.app.getAppController());
+            this.prependOnClick(...args);
+          }
+        }
+      }
+
+    }
+  }
+  handleAfterClick() {
+    if (this.afterOnClick) {
+      if (typeof this.afterOnClick == "string") {
+        if (this.afterOnClick.includes("appCtrl.")) {
+          // console.log(this.app.getAppController());
+          if (!this.afterOnClickArgs)
+            this.app.getAppController()[this.afterOnClick.split(".")[1]]();
+          else {
+            if (Array.isArray(this.afterOnClickArgs)) {
+              this.app.getAppController()[this.afterOnClick.split(".")[1]](...this.afterOnClickArgs);
+            } else {
+              const argStrings = this.afterOnClickArgs.split(/,(?![^{}]*})/);
+              console.log(argStrings);
+
+              // Map over the argument strings and parse them as JSON if they start with '{'
+              const args = argStrings.map((arg: string) => {
+                console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+                let res = arg.trim().startsWith("{")
+                  ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                  : arg.trim();
+                return res;
+              });
+
+              // Now you have an array of arguments, including the parsed objects
+              console.log(args, this.app.getAppController());
+              this.app.getAppController()[this.afterOnClick.split(".")[1]](...args);
+            }
+          }
+        }
+        else if (this.afterOnClick.includes("routeCtrl.")) {
+          // console.log(this.app.getCurrentRoute().getController());
+          if (!this.afterOnClickArgs)
+            this.app.getCurrentRoute().getController()[this.afterOnClick.split(".")[1]]();
+          else {
+            if (Array.isArray(this.afterOnClickArgs)) {
+              this.app.getCurrentRoute().getController()[this.afterOnClick.split(".")[1]](...this.afterOnClickArgs);
+            } else {
+              const argStrings = this.afterOnClickArgs.split(/,(?![^{}]*})/);
+              console.log(argStrings);
+
+              // Map over the argument strings and parse them as JSON if they start with '{'
+              const args = argStrings.map((arg: string) => {
+                console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+                let res = arg.trim().startsWith("{")
+                  ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                  : arg.trim();
+                return res;
+              });
+
+              // Now you have an array of arguments, including the parsed objects
+              console.log(args, this.app.getCurrentRoute().getController());
+              this.app.getCurrentRoute().getController()[this.afterOnClick.split(".")[1]](...args);
+            }
+          }
+        }
+        else if (this.afterOnClick.includes("app.")) {
+          const appS: any = this.app;
+          if (!this.afterOnClickArgs) {
+            appS[this.afterOnClick.split(".")[1]]();
+          }
+
+          else {
+            if (Array.isArray(this.afterOnClickArgs)) {
+              appS[this.afterOnClick.split(".")[1]](...this.afterOnClickArgs);
+            } else {
+              const argStrings = this.afterOnClickArgs.split(/,(?![^{}]*})/);
+              console.log(argStrings);
+
+              // Map over the argument strings and parse them as JSON if they start with '{'
+              const args = argStrings.map((arg: string) => {
+                console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+                let res = arg.trim().startsWith("{")
+                  ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                  : arg.trim();
+                return res;
+              });
+
+              // Now you have an array of arguments, including the parsed objects
+              console.log(args, appS);
+              appS[this.afterOnClick.split(".")[1]](...args);
+            }
+          }
+
+        }
+
+      } else {
+
+        if (!this.afterOnClickArgs)
+          this.afterOnClick();
+        else {
+          if (Array.isArray(this.afterOnClickArgs)) {
+            this.afterOnClick(...this.afterOnClickArgs);
+          } else {
+            const argStrings = this.afterOnClickArgs.split(/,(?![^{}]*})/);
+            console.log(argStrings);
+
+            // Map over the argument strings and parse them as JSON if they start with '{'
+            const args = argStrings.map((arg: string) => {
+              console.log(arg, arg.replace(/'([^']*)'/g, '"$1"'));
+              let res = arg.trim().startsWith("{")
+                ? JSON.parse(arg.replace(/'([^']*)'/g, '"$1"'))
+                : arg.trim();
+              return res;
+            });
+
+            // Now you have an array of arguments, including the parsed objects
+            console.log(args, this.app.getAppController());
+            this.afterOnClick(...args);
+          }
+        }
+      }
+
+    }
   }
 }

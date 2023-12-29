@@ -16,6 +16,7 @@ export class DataLoaderComponent implements OnChanges {
     @Input() preLoad: boolean = true;
     @Output() dataLoaded = new EventEmitter<any[]>();
     @Input() autoupgrade: boolean = true;
+    @Input() parseresponse: boolean = false;
 
     private datasetSubject = new BehaviorSubject<any[]>([]);
     private newItem: any = {};
@@ -26,10 +27,17 @@ export class DataLoaderComponent implements OnChanges {
     private isDatasetReady: boolean = false;
     private hasError: boolean = false;
     private errorMessage: string = "";
-
     constructor(private http: HttpClient,
         private app: ApplicationService) {
+        console.log(">>>> DATASET CONSTRUCTOR >>>>>");
         this.datasetSubject.asObservable().subscribe((value) => {
+            if (this.parseresponse && typeof value == "string") {
+                try {
+                    value = JSON.parse(value);
+                } catch (e) {
+                    console.log("Parse Exception:", e);
+                }
+            }
             if (!Array.isArray(value)) {
                 if (this.autoupgrade) {
                     try {

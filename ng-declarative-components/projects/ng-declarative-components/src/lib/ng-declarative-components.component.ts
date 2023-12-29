@@ -12,6 +12,10 @@ import { Router } from "@angular/router";
 @Component({
   selector: "ng-declarative-app",
   template: `
+   <div class="toast-container" >
+        <ng-declarative-toasts aria-live="polite" aria-atomic="true" style="padding:0 !important"></ng-declarative-toasts>
+    </div>
+
     <ng-content></ng-content>
   `,
   styleUrls: ["./styles.scss"],

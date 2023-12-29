@@ -59,7 +59,7 @@ export async function transform(metadata: any, node: any, compiler: any) {
       })
       .filter((name: any) => name !== null);
 
-    Logger.log(
+    Logger.debug(
       METHOD + " :: requiredAttributes",
       requiredAttributes
     );
@@ -69,7 +69,7 @@ export async function transform(metadata: any, node: any, compiler: any) {
     );
 
     if (missingAttributes.length === 0) {
-      console.log("All required attributes have values.");
+      Logger.debug("All required attributes have values.");
     } else {
       console.log(
         `Missing values for required attributes: ${missingAttributes.join(

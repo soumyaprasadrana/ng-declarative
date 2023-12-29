@@ -92,6 +92,7 @@ import { AnimationService } from './ng-declarative-animation.service';
                 }
             }@else{
                 <p [innerHtml]="getCellValue(item, column)"></p>
+                <ng-content selector=".{{column.field}}"></ng-content>
             }
                 
             </td>

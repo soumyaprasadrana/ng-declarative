@@ -4,6 +4,7 @@ import {
     transformDirection,
     transformJustifyContent,
     validateBoolean,
+    isBindingString, removeBindingCharacters
 } from "./utils";
 
 export const metadata = {
@@ -51,8 +52,21 @@ export const metadata = {
         },
         {
             name: "label",
-            required: true,
+            requiredIfAttributeNotPresent: ["icon"],
             mappedInputAttribute: "label",
+            type: "string",
+        },
+        {
+            name: "route",
+            required: false,
+            mappedInputAttribute: "route",
+            type: "string",
+        },
+        {
+            name: "icon",
+            required: false,
+            requiredIfAttributeNotPresent: ["label"],
+            mappedInputAttribute: "iconClass",
             type: "string",
         },
         {
@@ -61,8 +75,8 @@ export const metadata = {
             mappedInputAttribute: "onClickEvent",
             type: "object",
             bindingtransform: (value: any) => {
-                if (exports.isBindingString(value)) {
-                    return exports.removeBindingCharacters(value);
+                if (isBindingString(value)) {
+                    return removeBindingCharacters(value);
                 } else {
                     return value;
                 }

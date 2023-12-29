@@ -15,7 +15,7 @@ import { CommonModule } from "@angular/common";
 import { RouterLink } from "@angular/router";
 import { LoopComponent } from "./ng-declarative-components-loop.component";
 import { FoldableBlocks } from "./ng-declarative-components-foldable-blocks.component";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModalModule, NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AnimationService } from "./ng-declarative-animation.service";
 import { Paragraph } from "./ng-declarative-components-paragraph.component";
 import { Alert } from "./ng-declarative-components-alert.component";
@@ -38,8 +38,16 @@ import { LoaderComponent } from "./ng-declarative-components-loader.component";
 import { Card } from "./ng-declarative-components-card.component";
 import { SidebarComponent } from "./ng-declarative-components-sidebar.component";
 import { SidebarNavbarItemComponent } from "./ng-declarative-components-sidebar-navitem.component";
+import { DataObjectComponent } from "./ng-declarative-dataobject.component";
+import { DynamicContainerComponent } from "./ng-declarative-dynamic-component";
+import { TypeaheadComponent } from "./ng-declarative-components-typeahead.component";
+import { SuggestionFilterPipe } from "./ng-declarative-filtered-suggestions-typeahead";
+import { Dialog } from "./ng-declarative-components-dialog.component";
+import { ToastsContainer } from "./ng-declarative-toast.component";
+import { ToastService } from "./toast-service";
+
 @NgModule({
-  imports: [CommonModule, RouterLink, NgbModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, RouterLink, NgbNavModule, NgbModule, HttpClientModule, FormsModule],
   declarations: [
     Application,
     Link,
@@ -66,8 +74,15 @@ import { SidebarNavbarItemComponent } from "./ng-declarative-components-sidebar-
     LoaderComponent,
     Card,
     SidebarComponent,
-    SidebarNavbarItemComponent
+    SidebarNavbarItemComponent,
+    DataObjectComponent,
+    DynamicContainerComponent,
+    TypeaheadComponent,
+    SuggestionFilterPipe,
+    Dialog,
+    ToastsContainer,
   ],
+  providers: [SuggestionFilterPipe, ToastService],
   exports: [
     Application,
     Link,
@@ -94,14 +109,18 @@ import { SidebarNavbarItemComponent } from "./ng-declarative-components-sidebar-
     LoaderComponent,
     Card,
     SidebarComponent,
-    SidebarNavbarItemComponent
+    SidebarNavbarItemComponent,
+    DataObjectComponent,
+    DynamicContainerComponent,
+    TypeaheadComponent,
+    Dialog,
   ],
 })
 export class NgDeclarativeModule {
   static forRoot(): ModuleWithProviders<NgDeclarativeModule> {
     return {
       ngModule: NgDeclarativeModule,
-      providers: [ApplicationService, AnimationService, HttpClientService],
+      providers: [ApplicationService, AnimationService, HttpClientService, SuggestionFilterPipe],
     };
   }
 }

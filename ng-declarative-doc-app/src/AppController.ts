@@ -2,9 +2,7 @@
 export class AppController {
 
   appName = "ng-declarative-doc-app";
-  showCopyMessage: boolean = false;
-  copyMessage: string = 'sbjhbsdjh ashbhja';
-  copyMessageType: string = '';
+
   subItems = [{
     label: "Test1"
   }]
@@ -21,29 +19,20 @@ export class AppController {
   }
   copyInstallCmd() {
     this.app.copyToClipboard("npm i -g ng-declarative", () => {
-      this.showCopyMessage = true;
-      this.copyMessage = "copied to clipboard.";
-      this.copyMessageType = 'success';
-      setTimeout(() => {
-        this.showCopyMessage = false;
-        this.copyMessage = '';
-        this.copyMessageType = '';
-      }, 1000);
+      this.app.toast.showSuccess("Copied to clipboard.", 5000);
     }, () => {
-      this.showCopyMessage = true;
-      this.copyMessage = "failed to copy to the clipboard.";
-      this.copyMessageType = 'danger';
-      setTimeout(() => {
-        this.showCopyMessage = false;
-        this.copyMessage = '';
-        this.copyMessageType = '';
-      }, 1000);
+      this.app.toast.showDanger("Failed to copy to the clipboard.", 5000);
     })
   }
 
   copyCmd(cmd: any) {
+    console.log("Copy CMD invkoed :: ", cmd)
     this.app.copyToClipboard(cmd, () => {
+      console.log("Copy CMD invkoed :: ", cmd + " :: Copied")
+      this.app.toast.showSuccess("'" + cmd + "' copied to clipboard.", 5000);
     }, () => {
-    })
+      console.log("Copy CMD invkoed :: ", cmd + " :: Failed")
+    });
   }
+
 }

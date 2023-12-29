@@ -22,6 +22,6 @@ export const metadata = {
       type: "string",
     },
   ],
-  allowedChildren: ["route", "signal", "dataset", "navbar"],
+  allowedChildren: ["route", "signal", "dataset", "dataobject", "navbar"],
   declarativeComponentTag: "ng-declarative-app",
 };

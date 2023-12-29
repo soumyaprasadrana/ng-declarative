@@ -91,20 +91,7 @@ export const metadata = {
       description: "Sets the action for the form.",
       required: false,
       mappedInputAttribute: "formAction",
-      type: "object",
-      objectbinding: true,
-      bindingtransform: (value: any) => {
-        if (exports.isBindingString(value)) {
-          return exports.removeBindingCharacters(value);
-        } else {
-          return value;
-        }
-      },
-      bindingkeytransform: (key: any, value: any) => {
-        const methodPattern = /^([\w\.]+\([^\)]*\))*$/;
-        const result = methodPattern.test(value) ? "(click)" : "[" + key + "]";
-        return result;
-      },
+      type: "string",
       example: `<form action="appCtrl.submitForm" id="exampleForm"></form>`
     }
 

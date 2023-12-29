@@ -1,9 +1,29 @@
 {
   "name": "ng-declarative-components",
-  "version": "1.0.0-pre.5",
+  "version": "1.0.0-pre.7",
   "description": "Angular components for ng-declarative framework",
   "author": "Soumya Prasad Rana",
   "license": "MIT",
+  "keywords": [
+    "angular",
+    "declarative",
+    "xmlui",
+    "uiframework",
+    "bootstrap",
+    "ngbootstrap",
+    "ng-declarative",
+    "angular-declarative"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+   "bugs": {
+    "url": "https://github.com/soumyaprasadrana/ng-declarative/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soumyaprasadrana/ng-declarative/tree/dev/ng-declarative-components"
+  },
   "peerDependencies": {
     "@angular/common": "^17.0.0",
     "@angular/core": "^17.0.0",

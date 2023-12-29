@@ -1,6 +1,6 @@
 {
   "name": "ng-declarative-cli",
-  "version": "1.0.0-pre.6",
+  "version": "1.0.0-pre.7",
   "description": "CLI for ng-declarative framework",
   "main": "./dist/index.js",
   "bin": {
@@ -13,6 +13,26 @@
   },
   "author": "Soumya Prasad Rana",
   "license": "MIT",
+  "keywords": [
+    "angular",
+    "declarative",
+    "xmlui",
+    "uiframework",
+    "bootstrap",
+    "ngbootstrap",
+    "ng-declarative",
+    "angular-declarative"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+   "bugs": {
+    "url": "https://github.com/soumyaprasadrana/ng-declarative/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soumyaprasadrana/ng-declarative/tree/dev/ng-declarative-cli"
+  },
   "dependencies": {
     "commander": "latest",
     "fast-xml-parser": "^4.3.2",

@@ -69,6 +69,17 @@ export const metadata = {
       validate: validateBoolean,
       example: `<navbar fixed-top="true"/>`
     },
+    {
+      name: "disable-shadow",
+      description: "If true show for navbar will be disabled",
+      required: false,
+      mappedInputAttribute: "disableShadow",
+      type: "boolean",
+      objectbinding: true,
+      allowedValues: "true | false",
+      validate: validateBoolean,
+      example: `<navbar disabled-shadow="true"/>`
+    },
 
 
   ], "navbar"),
